@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 public class StudyTree {
 
+
     @Id
     @GeneratedValue
     @Column(name = "STUDY_TREE_ID")

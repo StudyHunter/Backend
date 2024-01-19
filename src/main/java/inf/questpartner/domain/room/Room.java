@@ -19,6 +19,7 @@ import java.util.List;
 @Entity
 public class Room {
 
+
     @Id
     @GeneratedValue
     @Column(name = "ROOM_ID")

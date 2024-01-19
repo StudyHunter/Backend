@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Item {
+
     @Id
     @GeneratedValue
     @Column(name = "ITEM_ID")

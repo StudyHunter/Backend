@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class QuestReward {
-
+public class QuestReward {  //아이템에서 본인이 획득한 것 item과 Quest 사이의 테이블
     @Id
     @GeneratedValue
     @Column(name = "QUEST_REWARD_ID")

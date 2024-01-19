@@ -1,6 +1,6 @@
 package inf.questpartner.domain.chat;
 
-import inf.questpartner.domain.studytree.StudyTree;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

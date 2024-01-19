@@ -7,6 +7,7 @@ public enum TagOption {
     /**
      * 관심 분야
      */
+
     AI("인공지능"),
     DEEPLEARNING("딥러닝"),
     CODINGTEST("코딩테스트"),

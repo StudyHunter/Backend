@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 public enum RoomTagGroup {
 
+
+
     INTERESTS("관심분야", new TagOption[]{
             TagOption.AI, TagOption.DEEPLEARNING, TagOption.CODINGTEST, TagOption.ALGORITHM, TagOption.DEVELOP, TagOption.INTERVIEW, TagOption.STARTUP}),
     SKILL("기술", new TagOption[]{

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Chatting {
 
+
     @Id
     @GeneratedValue
     @Column(name = "CHATTING_ID")

@@ -26,10 +26,8 @@ public class StudyTree {
      * (tree -> quest) 트리에 퀘스트(목표)를 n개 세울 수 있다.
      */
     @OneToMany(mappedBy = "STUDY_TREE", orphanRemoval = true)
-    private List<QuestReward> rewardList = new ArrayList<>();
+    private List<Item> ItemList = new ArrayList<>();
 
     @OneToMany(mappedBy = "STUDY_TREE", orphanRemoval = true)
     private List<Quest> questList = new ArrayList<>();
-
-
 }

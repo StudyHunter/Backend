@@ -18,6 +18,9 @@ public class Item {
     private String itemName;
     private String itemImgPath; // 아이템 이미지
 
+    @ManyToOne
+    @JoinColumn(name = "STUDY_TREE_ID")
+    private StudyTree studyTree;
 }
 
 /**

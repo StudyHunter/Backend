@@ -16,10 +16,6 @@ public class QuestReward {  //아이템에서 본인이 획득한 것 item과 Qu
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "STUDY_TREE_ID")
-    private StudyTree studyTree;
-
-    @ManyToOne
     @JoinColumn(name = "QUEST_ID")
     private Quest quest;
 
@@ -32,7 +28,4 @@ public class QuestReward {  //아이템에서 본인이 획득한 것 item과 Qu
         this.quest = quest;
         this.item = item;
     }
-
-
-
 }

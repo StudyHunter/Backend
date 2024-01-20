@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class quoteController {
 
-    public String randomQuote(Model model){
+    public String randomQuote(Model model) {
         String[] quotes = {
                 "행복은 습관이다. 그것을 몸에 지니라. " + "-허버드-",
                 "고개 숙이지 마십시오. 세상을 똑바로 정면으로 바라보십시오. " + "-헬렌 켈러-",

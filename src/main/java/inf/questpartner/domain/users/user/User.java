@@ -1,6 +1,6 @@
 package inf.questpartner.domain.users.user;
 
-import inf.questpartner.domain.room.Room;
+import inf.questpartner.domain.room.RoomUser;
 import inf.questpartner.domain.studytree.StudyTree;
 import inf.questpartner.domain.users.common.UserBase;
 import inf.questpartner.domain.users.common.UserProfileImg;
@@ -41,9 +41,6 @@ public class User extends UserBase {
     @JoinColumn(name = "STUDY_TREE_ID")
     private StudyTree studyTree;
 
-
     @OneToMany(mappedBy = "USERS", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Room> rooms = new ArrayList<>();
-
-
+    private List<RoomUser> roomUserList = new ArrayList<>();
 }

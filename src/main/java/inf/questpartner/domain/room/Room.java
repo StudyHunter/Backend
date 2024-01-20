@@ -5,7 +5,6 @@ import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
 import inf.questpartner.domain.room.common.RoomType;
 import inf.questpartner.domain.room.common.tag.TagOption;
-import inf.questpartner.domain.users.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -42,12 +41,15 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomThumbnail thumbnail; // 섬네일 선택지
 
-    // n : 1 양방향
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    private User user;
-
     // 1 : 1 양방향
     @OneToOne(mappedBy = "ROOM", cascade = CascadeType.ALL, orphanRemoval = true)
     private Chatting chatting;
+
+//    N : M
+    @OneToMany(mappedBy = "Room", orphanRemoval = true)
+    private List<RoomUser> roomUserList = new ArrayList<>();
+
+    public void addRoomUser(RoomUser user) {
+        roomUserList.add(user);
+    }
 }

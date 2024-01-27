@@ -1,5 +1,6 @@
 package inf.questpartner.domain.users.user;
 
+import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.RoomUser;
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.studytree.StudyTree;
@@ -59,6 +60,9 @@ public class User extends UserBase {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomUser> roomUserList = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Room> rooms = new ArrayList<>();
 
     @Builder
     public User(Long id, String email, String password,
@@ -128,5 +132,9 @@ public class User extends UserBase {
 
     public void addWishTags(TagOption tagOption) {
         tags.add(tagOption);
+    }
+
+    public void createRoom(Room room) {
+        this.rooms.add(room);
     }
 }

@@ -2,10 +2,13 @@ package inf.questpartner.service;
 
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.common.tag.TagOption;
+import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.RoomTag;
 import inf.questpartner.dto.UserWishTag;
 import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.repository.room.RoomRepository;
+import inf.questpartner.util.exception.room.NotFoundRoomException;
+import inf.questpartner.util.exception.users.NotFoundUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +22,23 @@ import java.util.stream.Collectors;
 public class RoomService {
     private final RoomRepository roomRepository;
 
-
+    @Transactional(readOnly = true)
     public List<Room> findAll() {
         return roomRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Room findById(Long id) {
+        return roomRepository.findById(id)
+                .orElseThrow(() -> new NotFoundRoomException("해당 " + id  + "번방이 존재하지 않습니다."));
+    }
+
+    public Long createRoom(User user, CreateRoomRequest req) {
+        Room room = req.toEntity(req.getAuthor());
+        Long id = roomRepository.save(room).getId();
+
+        user.createRoom(room);
+        return id;
     }
 
     @Transactional(readOnly = true)
@@ -42,9 +59,6 @@ public class RoomService {
                 .collect(Collectors.toSet());
     }
 
-    public Room createRoom(CreateRoomRequest req) {
-        return roomRepository.save(req.roomEntity());
-    }
 
     // 취향 방 추천
     @Transactional(readOnly = true)

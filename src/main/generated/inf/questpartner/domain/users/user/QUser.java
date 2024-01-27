@@ -43,6 +43,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final inf.questpartner.domain.users.common.QUserProfileImg profileImg;
 
+    public final ListPath<inf.questpartner.domain.room.Room, inf.questpartner.domain.room.QRoom> rooms = this.<inf.questpartner.domain.room.Room, inf.questpartner.domain.room.QRoom>createList("rooms", inf.questpartner.domain.room.Room.class, inf.questpartner.domain.room.QRoom.class, PathInits.DIRECT2);
+
     public final ListPath<inf.questpartner.domain.room.RoomUser, inf.questpartner.domain.room.QRoomUser> roomUserList = this.<inf.questpartner.domain.room.RoomUser, inf.questpartner.domain.room.QRoomUser>createList("roomUserList", inf.questpartner.domain.room.RoomUser.class, inf.questpartner.domain.room.QRoomUser.class, PathInits.DIRECT2);
 
     public final NumberPath<Integer> studyTime = createNumber("studyTime", Integer.class);

@@ -1,17 +1,21 @@
 package inf.questpartner.controller.api;
 
+import inf.questpartner.controller.response.CreateRoomResponse;
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.RoomTag;
+import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.service.RoomService;
 import inf.questpartner.service.UserService;
+import inf.questpartner.util.validation.argumentResolver.CurrentUser;
+import inf.questpartner.util.validation.argumentResolver.Login;
+import inf.questpartner.util.validation.dto.SessionUser;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
@@ -23,6 +27,17 @@ public class RoomApiController {
 
     private final RoomService roomService;
     private final UserService userService;
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public CreateRoomResponse createRoom(@Validated @RequestBody CreateRoomRequest dto) { //@CurrentUser SessionUser sessionUser
+
+        User user = userService.findByNickname("dawn0");
+        Long id = roomService.createRoom(user, dto);
+        return new CreateRoomResponse(id);
+    }
+
+
 
     // 검색 조회
     @GetMapping

@@ -48,6 +48,8 @@ public class QRoom extends EntityPathBase<Room> {
 
     public final StringPath title = createString("title");
 
+    public final inf.questpartner.domain.users.user.QUser user;
+
     public QRoom(String variable) {
         this(Room.class, forVariable(variable), INITS);
     }
@@ -67,6 +69,7 @@ public class QRoom extends EntityPathBase<Room> {
     public QRoom(Class<? extends Room> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.chatting = inits.isInitialized("chatting") ? new inf.questpartner.domain.chat.QChatting(forProperty("chatting"), inits.get("chatting")) : null;
+        this.user = inits.isInitialized("user") ? new inf.questpartner.domain.users.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

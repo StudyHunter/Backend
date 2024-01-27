@@ -5,6 +5,7 @@ import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
 import inf.questpartner.domain.room.common.RoomType;
 import inf.questpartner.domain.room.common.tag.TagOption;
+import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.RoomTag;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -36,7 +37,6 @@ public class Room {
     private int likeCount; // 좋아요 수
     private int matchingScore; // 매칭 점수
 
-
     @Enumerated(EnumType.STRING)
     private List<TagOption> tags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
@@ -44,7 +44,7 @@ public class Room {
     private RoomType roomType; // 방 유형 ex: STUDY(스터디), PROJECT(팀 프로젝트)
 
     @Enumerated(EnumType.STRING)
-    private RoomStatus roomStatus; // 모집 상태 (자리 남았는지?)
+    private RoomStatus roomStatus; // 모집 상태 (자리 남았는지? OPEN /CLOSED)
 
     @Enumerated(EnumType.STRING)
     private RoomThumbnail thumbnail; // 섬네일 선택지
@@ -52,9 +52,29 @@ public class Room {
     // 1 : 1 양방향
     @OneToOne(mappedBy = "room")
     private Chatting chatting;
-//    N : M
+
+    // n : 1 양방향
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    //    N : M
     @OneToMany(mappedBy = "room", orphanRemoval = true)
     private List<RoomUser> roomUserList = new ArrayList<>();
+
+    @Builder(builderMethodName = "roomBuild")
+    public Room(String author, String title, int expectedUsers, int expectedSchedule, List<TagOption> tags, RoomType roomType, RoomThumbnail thumbnail) {
+        this.author = author;
+        this.title = title;
+        this.expectedUsers = expectedUsers;
+        this.expectedSchedule = expectedSchedule;
+        this.likeCount = 0;
+        this.matchingScore = 0;
+        this.tags = tags;
+        this.roomType = roomType;
+        this.roomStatus = RoomStatus.OPEN;
+        this.thumbnail = thumbnail;
+    }
 
 
     @Builder

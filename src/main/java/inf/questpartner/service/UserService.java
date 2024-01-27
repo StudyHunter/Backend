@@ -22,7 +22,13 @@ public class UserService {
         return userRepository.save(requestDto.toEntity());
     }
 
+    @Transactional(readOnly = true)
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundUserException("존재하지 않는 회원입니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public User findByNickname(String nickname) {
+        return userRepository.findByNickname(nickname);
     }
 }

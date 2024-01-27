@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!-- You can include your CSS and other head elements here -->
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Include the header -->
+    {{> fragments/header}}
+
+    <div>
+        <div>
+            <form class="form-inline">
+                <div class="form-group mx-sm-1 mb-2">
+                    <select name="userSearchCondition" class="form-control">
+                        <option value="">검색조건</option>
+                        {{#userSearch}}
+                            {{#id}}
+                                <input class="input--style-1" type="text" name="{{id}}" value="{{id}}">
+                            {{/id}}
+                            {{#email}}
+                                <input class="input--style-1" type="text" name="{{email}}" value="{{email}}">
+                            {{/email}}
+                            {{^id}}
+                                <input class="input--style-1" type="text" name="defaultId" value="User ID">
+                            {{/id}}
+                            {{^email}}
+                                <input class="input--style-1" type="text" name="defaultEmail" value="User Email">
+                            {{/email}}
+                        {{/userSearch}}
+                        {{^userSearch}}
+                            <!-- Handle the case when userSearch is empty or null -->
+                            <input class="input--style-1" type="text" name="defaultUser" value="empty or null">
+                        {{/userSearch}}
+
+
+                    </select>
+
+                </div>
+                <div class="form-group mb-2">
+                    <input type="text" class="form-control" placeholder="입력해주세요."/>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">검색</button>
+            </form>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>회원 아이디</th>
+                <th>이메일</th>
+                <th>가입유무</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#orders}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td><a href="/admin/users/{{id}}">{{email}}</td>
+                    <td>{{userLevel}}</td>
+                </tr>
+            {{/orders}}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Include the footer -->
+    {{> fragments/footer}}
+
+</div> <!-- /container -->
+
+</body>
+<script>
+    function cancel(id) {
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/orders/" + id + "/cancel");
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+
+
+<div class="container">
+    <div class="jumbotron well">
+        <h1 class="text-center">관리자 페이지</h1>
+
+    </div>
+
+    <div class="card card-7 text-center">
+        <div class="card-body">
+            <div class="input-group input--medium">
+                <label>회원 아이디</label>
+                <input class="input--style-1" type="text" th:field="${userSearch.id}" th:value="id">
+            </div>
+            <div class="input-group input--large">
+                <label>회원 이메일</label>
+                <input class="input--style-1" type="text" th:field="${userSearch.email}" th:value="email">
+            </div>
+
+            <div class="input-group input--medium">
+                <label>회원가입 유무</label>
+                <select type="text" id="userLevel" name="userLevel" class="form-control nice-select wide">
+                    <option value="">==회원가입 유무 선택==</option>
+                    <option th:each="level : ${userLevel}"
+                            th:value="${level.name()}" th:text="${level.getLevelInfo()}"></option>
+                </select>
+            </div>
+            <button th:onclick="goSearch()" class="btn-submit" type="submit">search</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">전체 회원</div>
+            <div class="panel-body" th:unless="${#lists.size(users) != 0}">
+                검색결과가 없습니다.
+            </div>
+            <div class="panel-body" th:if="${#lists.size(users) != 0}">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>회원ID</th>
+                        <th>회원 Email</th>
+                        <th>회원 level</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}"><a th:href="@{/admin/users/{id}(id=${user.id})}"></a></td>
+                        <td th:text="${user.email}"></td>
+                        <td th:text="${user.userLevel}"></td>
+                        <td>
+
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="text-center" th:if="${#lists.size(users) != 0}">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm">
+                        <li th:if="${page.isPrev()}" class="page-item"><a th:onclick="goPage([[${page.curPage-1}]],[[${page.sortParam}]]);" class="page-link">Prev</a></li>
+                        <li th:unless="${page.isPrev()}" class="page-item disabled"><a class="page-link">Prev</a></li>
+                        <li class="page-item" th:each="num, index : ${#numbers.sequence(page.startPage, page.endPage)}">
+                            <a th:if="${#strings.equals(page.curPage+1, num)}" th:text="${num}" class="page-link" style="background-color: #eeeeee">1</a>
+                            <a th:unless="${#strings.equals(page.curPage+1, num)}" th:onclick="goPage([[${index.current-1}]],[[${page.sortParam}]]);" th:text="${num}" class="page-link">1</a>
+                        </li>
+                        <li th:if="${page.isNext()}" class="page-item"><a th:onclick="goPage([[${page.curPage+1}]],[[${page.sortParam}]]);" class="page-link">Next</a></li>
+                        <li th:unless="${page.isNext()}" class="page-item disabled"><a class="page-link">Next</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main JS-->
+<script src="/js/search.js"></script>
+<script>
+    function getSearchParam(searchParam) {
+        var id = document.getElementById('id').value;
+        var email = document.getElementById('email').value;
+        var userLevel = document.getElementById('userLevel').value;
+
+        if (id !== "") {
+            searchParam += "&id=" + id;
+        }
+        if (email !== "") {
+            searchParam += "&email=" + email;
+        }
+
+        if (userLevel !== "") {
+        searchParam += "&userLevel=" + userLevel;
+    }
+
+
+        return searchParam;
+    }
+
+    function goSearch() {
+        var param = "/admin/users?";
+
+        param = getSearchParam(param);
+        location.replace(param);
+        // return searchParam;
+    }
+
+
+    function goPage(page) {
+        var param = "/admin/users?";
+        param += "page=" + page;
+        param = getSearchParam(param);
+
+        location.replace(param);
+    }
+</script>
+
+</body>
+</html>
+

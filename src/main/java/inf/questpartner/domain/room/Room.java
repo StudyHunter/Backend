@@ -5,17 +5,21 @@ import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
 import inf.questpartner.domain.room.common.RoomType;
 import inf.questpartner.domain.room.common.tag.TagOption;
+import inf.questpartner.dto.RoomTag;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(name = "ROOM")
 public class Room {
 
 
@@ -28,6 +32,10 @@ public class Room {
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
     private int expectedSchedule; // 예상 기간
+
+    private int likeCount; // 좋아요 수
+    private int matchingScore; // 매칭 점수
+
 
     @Enumerated(EnumType.STRING)
     private List<TagOption> tags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
@@ -42,14 +50,35 @@ public class Room {
     private RoomThumbnail thumbnail; // 섬네일 선택지
 
     // 1 : 1 양방향
-    @OneToOne(mappedBy = "ROOM", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "room")
     private Chatting chatting;
-
 //    N : M
-    @OneToMany(mappedBy = "Room", orphanRemoval = true)
+    @OneToMany(mappedBy = "room", orphanRemoval = true)
     private List<RoomUser> roomUserList = new ArrayList<>();
 
+
+    @Builder
+    public Room(String author, List<TagOption> tags, RoomType roomType) {
+        this.author = author;
+        this.tags = tags;
+        this.roomType = roomType;
+    }
     public void addRoomUser(RoomUser user) {
         roomUserList.add(user);
+    }
+
+    public RoomTag toRoomTagDto() {
+        return RoomTag.builder()
+                .groupSize(this.expectedUsers)
+                .expectedSchedule(this.expectedSchedule)
+                .tagList(this.tags)
+                .build();
+    }
+
+    @Override
+    public String toString() {
+        return "[Room Info] ->" + "host = " + author +
+                ", tags = " + tags.stream().map(TagOption::toString).collect(Collectors.joining(", ", "[", "]")) +
+                ", room type = " + roomType;
     }
 }

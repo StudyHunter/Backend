@@ -19,4 +19,5 @@ public class Admin extends UserBase {
         this.password = password;
         this.userLevel = userLevel;
     }
+
 }

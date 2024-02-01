@@ -3,7 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.2.1'
 	id 'io.spring.dependency-management' version '1.1.4'
 	// querydsl관련 명령어를 gradle탭에 생성해준다. (권장사항)
-	//id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'inf'
@@ -37,8 +37,14 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	// WebSocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// h2
 	implementation 'com.h2database:h2'
 	runtimeOnly 'com.h2database:h2'
+	// mysql
+	//runtimeOnly 'com.mysql:mysql-connector-j'
 
 	// mustache
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
@@ -53,7 +59,7 @@ dependencies {
 }
 
 // Querydsl 설정부
-/*
+
 def generated = 'src/main/generated'
 
 querydsl {
@@ -74,7 +80,7 @@ configurations {
 	}
 	querydsl.extendsFrom compileClasspath
 }
-*/
+
 
 tasks.named('test') {
 	useJUnitPlatform()

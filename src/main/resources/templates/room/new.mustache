@@ -1,0 +1,51 @@
+{{>layouts/header}}
+<form class="container" action="/room/create" method="post">
+    <div class="mb-3">
+        <label class="form-label">방 만들기</label>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">방장 닉네임</label>
+        <input type="text" class="form-control" name="author">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">제목</label>
+        <textarea class="form-control" rows="3" name="title"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">인원 수 제한</label>
+        <textarea class="form-control" rows="3" name="expectedUsers"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">예상 기간</label>
+        <textarea class="form-control" rows="3" name="expectedSchedule"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">공부 태그</label>
+        <textarea class="form-control" rows="3" name="tags"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">방 종류(STUDY or PROJECT)</label>
+        <textarea class="form-control" rows="3" name="roomType"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">모집상태 (OPEN or CLOSE)</label>
+        <textarea class="form-control" rows="3" name="roomStatus"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">썸네일 선택</label>
+        <textarea class="form-control" rows="3" name="thumbnail"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">확인</button>
+    <a href="/room" class="btn btn-primary">뒤로가기</a>
+</form>
+
+{{>layouts/footer}}

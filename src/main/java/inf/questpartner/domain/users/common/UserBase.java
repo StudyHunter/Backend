@@ -2,8 +2,8 @@ package inf.questpartner.domain.users.common;
 
 import inf.questpartner.domain.BaseTimeEntity;
 import jakarta.persistence.*;
-
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,9 +13,11 @@ import lombok.NoArgsConstructor;
  * 회원 권한구분 (User_Level)
  */
 
+@Table(name = "USER_BASE")
 @Entity
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class UserBase extends BaseTimeEntity {
 

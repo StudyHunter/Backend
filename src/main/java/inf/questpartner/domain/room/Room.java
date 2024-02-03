@@ -1,11 +1,14 @@
-package com.example.demo.domain;
+package inf.questpartner.domain.room;
 
-import inf.questpartner.domain.common.RoomType;
-import com.example.demo.domain.common.RoomThumbnail;
-import com.example.demo.domain.common.RoomStatus;
-import com.example.demo.domain.common.tag.TagOption;
+import inf.questpartner.domain.room.common.RoomStatus;
+import inf.questpartner.domain.room.common.RoomThumbnail;
+import inf.questpartner.domain.room.common.tag.TagOption;
+import inf.questpartner.domain.room.common.RoomType;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;

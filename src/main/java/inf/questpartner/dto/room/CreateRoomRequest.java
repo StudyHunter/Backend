@@ -1,14 +1,13 @@
-package com.example.demo.dto;
+package inf.questpartner.dto.room;
 
-import com.example.demo.domain.Room;
-import com.example.demo.domain.common.RoomThumbnail;
-import com.example.demo.domain.common.RoomType;
-import com.example.demo.domain.common.tag.TagOption;
+import inf.questpartner.domain.room.Room;
+import inf.questpartner.domain.room.common.RoomThumbnail;
+import inf.questpartner.domain.room.common.RoomType;
+import inf.questpartner.domain.room.common.tag.TagOption;
 import lombok.Data;
+
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.example.demo.domain.common.tag.TagOption.AI;
 
 @Data
 public class CreateRoomRequest {

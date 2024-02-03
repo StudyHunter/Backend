@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package inf.questpartner.dto.room;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

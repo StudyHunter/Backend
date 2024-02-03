@@ -42,11 +42,11 @@ public class Room {
     private RoomThumbnail thumbnail; // 섬네일 선택지
 
     // 1 : 1 양방향
-    @OneToOne(mappedBy = "ROOM", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private Chatting chatting;
 
 //    N : M
-    @OneToMany(mappedBy = "Room", orphanRemoval = true)
+    @OneToMany(mappedBy = "room", orphanRemoval = true)
     private List<RoomUser> roomUserList = new ArrayList<>();
 
     public void addRoomUser(RoomUser user) {

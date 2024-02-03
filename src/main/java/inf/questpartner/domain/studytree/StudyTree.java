@@ -14,7 +14,6 @@ import java.util.List;
 @Entity
 public class StudyTree {
 
-
     @Id
     @GeneratedValue
     @Column(name = "STUDY_TREE_ID")
@@ -25,9 +24,9 @@ public class StudyTree {
      * (tree -> item) 트리에 아이템을 n개 담을 수 있다.
      * (tree -> quest) 트리에 퀘스트(목표)를 n개 세울 수 있다.
      */
-    @OneToMany(mappedBy = "STUDY_TREE", orphanRemoval = true)
+    @OneToMany(mappedBy = "studyTree", orphanRemoval = true)
     private List<Item> ItemList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "STUDY_TREE", orphanRemoval = true)
+    @OneToMany(mappedBy = "studyTree", orphanRemoval = true)
     private List<Quest> questList = new ArrayList<>();
 }

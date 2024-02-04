@@ -1,5 +1,6 @@
 package inf.questpartner.dto.users;
 
+import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.service.encrytion.EncryptionService;
 import jakarta.validation.constraints.Email;
@@ -7,6 +8,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class SaveRequest {
@@ -25,13 +28,23 @@ public class SaveRequest {
 
     private String profilePath;
 
+    private List<TagOption> tags;
+
+    private int wishGroupSize;
+
+    private int wishExpectedSchedule;
+
     @Builder
-    public SaveRequest(String nickname, String email, String password, String profilePath) {
+    public SaveRequest(String nickname, String email, String password, String profilePath,
+                       List<TagOption> tags, int wishGroupSize, int wishExpectedSchedule) {
 
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.profilePath = profilePath;
+        this.tags = tags;
+        this.wishGroupSize = wishGroupSize;
+        this.wishExpectedSchedule = wishExpectedSchedule;
     }
 
     public void passwordEncryption(EncryptionService encryptionService) {
@@ -44,6 +57,9 @@ public class SaveRequest {
                 .email(this.email)
                 .password(this.password)
                 .profilePath(this.profilePath)
+                .tags(this.tags)
+                .wishGroupSize(this.wishGroupSize)
+                .wishExpectedSchedule(this.wishExpectedSchedule)
                 .build();
     }
 }

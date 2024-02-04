@@ -90,6 +90,11 @@ public class User extends UserBase {
                 .email(this.getEmail())
                 .nickname(this.getNickname())
                 .userLevel(this.userLevel)
+                .studyTime(this.studyTime)
+                .studyTree(this.studyTree)
+                .wishGroupSize(this.wishGroupSize)
+                .wishExpectedSchedule(this.wishExpectedSchedule)
+                .tags(this.tags)
                 .build();
     }
 

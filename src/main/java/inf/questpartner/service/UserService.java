@@ -124,6 +124,7 @@ public class UserService {
         emailCertificationService.verifyEmail(token, email);
     }
 
+//    이메일 인증 시 userLevel을 Auth로 설정
     @Transactional
     public void updateEmailVerified(String token, String email) {
         validToken(token, email);

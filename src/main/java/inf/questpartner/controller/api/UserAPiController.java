@@ -19,6 +19,8 @@ import static inf.questpartner.util.constant.ResponseConstants.OK;
 
 /*
  예시
+ 프로필 이미지 변경하는 부분이 헷갈리는데
+ 프로필 이미지 경로만 이용하는 방법이 괜찮을까여
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -43,7 +45,7 @@ public class UserAPiController {
         return ResponseEntity.ok(userService.checkNicknameDuplicate(nickname));
     }
 
-    /*추가할 기능: 중복 검사를 완료할 경우에만 회원 가입 성공*/
+    /*회원 가입 시 등록된 메일로 토큰 인증 메일 전송*/
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
     public ResponseEntity<Void> signup(@Valid @RequestBody SaveRequest requestDto) {
@@ -52,12 +54,13 @@ public class UserAPiController {
         return CREATED;
     }
 
-//    처음에 signup 시 UNAUTH로 생성. 이메일 인증 후 AUTH로 update
+    /*등록된 메일 링크*/
     @GetMapping("/email-check-token")
     public void emailCheck(String token, String email) {
         userService.updateEmailVerified(token, email);
     }
 
+    /*마이페이지에서 이메일 인증 재전송 버튼*/
     @PostMapping("/resend-email-token")
     public void resendEmailCheck(@CurrentUser String email) {
         emailCertificationService.sendEmailForEmailCheck(email);
@@ -82,12 +85,7 @@ public class UserAPiController {
         return ResponseEntity.ok(findUserResponse);
     }
 
-    /*추가할 기능: 비밀번호를 잊은 경우 이메일을 통해서 인증 후 수정가능*/
-    @PatchMapping("/forget/password")
-    public void changePasswordByForget(@Valid @RequestBody ChangePasswordRequest requestDto) {
-        userService.updatePasswordByForget(requestDto);
-    }
-
+    /*비밀번호 찾기 : 이메일 인증 후 비밀번호 변경 페이지로 이동*/
     @PostMapping("/email-certification/sends")
     public ResponseEntity sendEmail(@RequestBody EmailCertificationRequest requestDto) {
         emailCertificationService.sendEmailForCertification(requestDto.getEmail());
@@ -99,29 +97,33 @@ public class UserAPiController {
         emailCertificationService.verifyEmail(requestDto);
     }
 
+    @PatchMapping("/forget/password")
+    public void changePasswordByForget(@Valid @RequestBody ChangePasswordRequest requestDto) {
+        userService.updatePasswordByForget(requestDto);
+    }
+
     @GetMapping("/my-infos")
     public ResponseEntity<UserInfoDto> myPage(@CurrentUser String email) {
         UserInfoDto loginUser = sessionLoginService.getCurrentUser(email);
         return ResponseEntity.ok(loginUser);
     }
 
-
     @LoginCheck
-    @PatchMapping("/my-infos/password")
+    @PatchMapping("/password")
     public void changePassword(@CurrentUser String email,
                                @Valid @RequestBody ChangePasswordRequest requestDto) {
         userService.updatePassword(email, requestDto);
     }
 
     @LoginCheck
-    @PatchMapping("/my-infos/wishTag")
+    @PatchMapping("/wish-tag")
     public void changeUserWishTag(@CurrentUser String email,
                                   @Valid @RequestBody ChangeUserWishTag requestDto) {
         userService.updateUserWishTag(email, requestDto);
     }
 
     @LoginCheck
-    @PatchMapping("/my-infos/profileImg")
+    @PatchMapping("/profile-img")
     public void changeProfileImg(@CurrentUser String email,
                                  @Valid @RequestBody ChangeProfileImgRequest requestDto) {
         userService.updateProfileImg(email, requestDto);

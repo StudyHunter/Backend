@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
 
-import static inf.questpartner.common.utils.EmailConstants.LIMIT_TIME_CERTIFICATION_NUMBER;
-import static inf.questpartner.common.utils.EmailConstants.PREFIX_CERTIFICATION;
+import static inf.questpartner.util.constant.EmailConstants.LIMIT_TIME_CERTIFICATION_NUMBER;
+import static inf.questpartner.util.constant.EmailConstants.PREFIX_CERTIFICATION;
 
 @RequiredArgsConstructor
 @Repository

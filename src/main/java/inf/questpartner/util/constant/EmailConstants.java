@@ -1,4 +1,4 @@
-package inf.questpartner.common.utils;
+package inf.questpartner.util.constant;
 
 public class EmailConstants {
     public static final String TITLE_CERTIFICATION = "QuestPartner 인증번호 안내";

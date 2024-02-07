@@ -1,6 +1,6 @@
-package inf.questpartner.common.utils;
+package inf.questpartner.util.constant;
 
-import static inf.questpartner.common.utils.EmailConstants.DOMAIN_NAME;
+import static inf.questpartner.util.constant.EmailConstants.DOMAIN_NAME;
 
 public class EmailContentTemplate {
     public String buildCertificationContent(String certificationNumber) {

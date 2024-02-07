@@ -1,4 +1,4 @@
-package inf.questpartner.common.utils;
+package inf.questpartner.util;
 
 import java.util.Random;
 

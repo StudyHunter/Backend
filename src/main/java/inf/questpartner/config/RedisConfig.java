@@ -1,4 +1,4 @@
-package inf.questpartner.common.config;
+package inf.questpartner.config;
 
 /**
  * @EnableRedisHttpSession 해당 어노테이션은 properties의 spring.session.store-type의 값에 redis를 설정하는 것과 동일하게

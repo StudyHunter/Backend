@@ -1,4 +1,4 @@
-package inf.questpartner.common.config;
+package inf.questpartner.config;
 
 //@Configuration
 //public class TokenConfig {

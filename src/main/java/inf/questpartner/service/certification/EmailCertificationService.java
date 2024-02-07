@@ -1,7 +1,7 @@
 package inf.questpartner.service.certification;
 
 import inf.questpartner.common.properties.AppProperties;
-import inf.questpartner.common.utils.EmailContentTemplate;
+import inf.questpartner.util.constant.EmailContentTemplate;
 import inf.questpartner.dao.EmailCertificationDao;
 import inf.questpartner.dto.users.EmailCertificationRequest;
 import inf.questpartner.util.exception.users.AuthenticationNumberMismatchException;
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-import static inf.questpartner.common.utils.EmailConstants.TITLE_CERTIFICATION;
-import static inf.questpartner.common.utils.EmailConstants.TITLE_EMAIL_CHECK;
-import static inf.questpartner.common.utils.RandomNumberGeneration.makeRandomNumber;
+import static inf.questpartner.util.constant.EmailConstants.TITLE_CERTIFICATION;
+import static inf.questpartner.util.constant.EmailConstants.TITLE_EMAIL_CHECK;
+import static inf.questpartner.util.RandomNumberGeneration.makeRandomNumber;
 
 @Slf4j
 @RequiredArgsConstructor

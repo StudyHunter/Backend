@@ -1,8 +1,11 @@
 package inf.questpartner.domain.room.common.tag;
 
+import lombok.Getter;
+
 /**
  * 스터디 방을 조회할 때 키워드 나열
  */
+@Getter
 public enum TagOption {
     /**
      * 관심 분야

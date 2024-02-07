@@ -1,7 +1,8 @@
 package inf.questpartner.domain.users.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import inf.questpartner.domain.room.Room;
-import inf.questpartner.domain.room.RoomUser;
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.studytree.StudyTree;
 import inf.questpartner.domain.users.common.UserBase;
@@ -11,42 +12,57 @@ import inf.questpartner.domain.users.common.UserStatus;
 import inf.questpartner.dto.UserWishTag;
 import inf.questpartner.dto.users.UserDetailResponse;
 import inf.questpartner.dto.users.UserInfoDto;
-import inf.questpartner.dto.users.UserListResponse;
 import jakarta.persistence.*;
-import jdk.jshell.Snippet;
 import lombok.AccessLevel;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "USERS")
+@Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DiscriminatorValue("USER")
 @Entity
 public class User extends UserBase {
 
     private String nickname; // 닉네임
 
-    private int studyTime; // 총 공부 시간
+    private int studyTime; // 총 누적된 공부시간
 
     @Enumerated(EnumType.STRING)
-    private UserStatus userStatus;
+    private UserStatus userStatus; // 회원 상태(STATUS)는 BAN(관리자에 의해 차단), NOMAL
 
     @Enumerated(EnumType.STRING)
-    private List<TagOption> tags = new ArrayList<>(); // 취향저장
+    private List<TagOption> tags = new ArrayList<>(); // 취향태그 저장
 
-    private int wishGroupSize; //원하는 조건 : 인원/기간
+    private int wishGroupSize; // 스터디방 원하는 조건 : 인원 / 기간
     private int wishExpectedSchedule;
 
-    // 1:1 단방향
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "USER_PROFILE_IMG_ID")
-    private UserProfileImg profileImg;
+    @Enumerated(EnumType.STRING)
+    private UserProfileImg profileImg; // 회원 프로필 사진
+
+    @JsonIgnore
+    @ManyToOne(fetch =  FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private Room room;
+
+
+    @Builder
+    public User(Long id, String email, String password,
+                String nickname, UserProfileImg profileImg, int wishGroupSize, int wishExpectedSchedule, List<TagOption> tags) {
+        super(id, email, password, UserLevel.AUTH);
+        this.nickname = nickname;
+        this.profileImg = profileImg;
+        this.userStatus = UserStatus.NORMAL;
+        this.studyTime = 0;
+        this.wishGroupSize = wishGroupSize;
+        this.wishExpectedSchedule = wishExpectedSchedule;
+        this.tags = tags;
+    }
 
     /**
      * 1 : 1 단방향
@@ -57,38 +73,8 @@ public class User extends UserBase {
     @JoinColumn(name = "STUDY_TREE_ID")
     private StudyTree studyTree;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RoomUser> roomUserList = new ArrayList<>();
 
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Room> rooms = new ArrayList<>();
-
-    @Builder
-    public User(Long id, String email, String password,
-                UserLevel userLevel, String nickname, UserStatus userStatus) {
-        super(id, email, password, userLevel);
-        this.nickname = nickname;
-        this.userLevel = userLevel;
-        this.userStatus = userStatus;
-    }
-
-    @Builder(builderMethodName = "roomTest")
-    public User(Long id, String email, String password,
-                UserLevel userLevel, String nickname, UserStatus userStatus, int wishGroupSize, int wishExpectedSchedule) {
-        super(id, email, password, userLevel);
-        this.nickname = nickname;
-        this.userLevel = userLevel;
-        this.userStatus = userStatus;
-        this.wishGroupSize = wishGroupSize;
-        this.wishExpectedSchedule = wishExpectedSchedule;
-    }
-
-    public void updateUserStatus(UserStatus userStatus) {
-        this.userStatus = userStatus;
-    }
-
-
+    // user 관련 테스트용으로 만든 것 (임시로 둔 것)
     public UserDetailResponse toUserDetailDto() {
         return UserDetailResponse.builder()
                 .id(this.getId())
@@ -117,6 +103,13 @@ public class User extends UserBase {
                 .build();
     }
 
+    // 관리자 권한으로 회원 BAN 처리하기 위한 로직
+    public void updateUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    // 태그 알고리즘 로직들-- (수정중)
+
     public boolean checkUserBanStatus() {
         return this.userStatus == UserStatus.BAN;
     }
@@ -134,7 +127,5 @@ public class User extends UserBase {
         tags.add(tagOption);
     }
 
-    public void createRoom(Room room) {
-        this.rooms.add(room);
-    }
+
 }

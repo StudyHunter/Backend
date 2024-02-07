@@ -40,11 +40,12 @@ dependencies {
 	// WebSocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-	// h2
-	implementation 'com.h2database:h2'
-	runtimeOnly 'com.h2database:h2'
 	// mysql
-	//runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// Security
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
+	//implementation 'org.springframework.security:spring-security-test'
 
 	// mustache
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'

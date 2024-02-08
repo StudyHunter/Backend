@@ -1,12 +1,12 @@
 package inf.questpartner.controller.api;
 
 
-import inf.questpartner.common.annotation.CurrentUser;
-import inf.questpartner.common.annotation.LoginCheck;
 import inf.questpartner.dto.users.*;
 import inf.questpartner.service.SessionLoginService;
 import inf.questpartner.service.UserService;
 import inf.questpartner.service.certification.EmailCertificationService;
+import inf.questpartner.util.validation.argumentResolver.CurrentUser;
+import inf.questpartner.util.validation.argumentResolver.LoginCheck;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +19,6 @@ import static inf.questpartner.util.constant.ResponseConstants.OK;
 
 /*
  예시
- 프로필 이미지 변경하는 부분이 헷갈리는데
- 프로필 이미지 경로만 이용하는 방법이 괜찮을까여
  */
 @Slf4j
 @RequiredArgsConstructor

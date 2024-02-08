@@ -1,4 +1,4 @@
-package inf.questpartner.common.annotation;
+package inf.questpartner.util.validation.argumentResolver;
 
 import inf.questpartner.domain.users.common.UserLevel;
 

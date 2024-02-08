@@ -1,6 +1,7 @@
 package inf.questpartner.dto.users;
 
 import inf.questpartner.domain.room.common.tag.TagOption;
+import inf.questpartner.domain.users.common.UserProfileImg;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.service.encrytion.EncryptionService;
 import jakarta.validation.constraints.Email;
@@ -26,7 +27,7 @@ public class SaveRequest {
     @Size(min = 6, max = 20, message = "비밀번호는 6자 이상 20자 이하로 입력해주세요.")
     private String password;
 
-    private String profilePath;
+    private UserProfileImg profileImg;
 
     private List<TagOption> tags;
 
@@ -35,13 +36,13 @@ public class SaveRequest {
     private int wishExpectedSchedule;
 
     @Builder
-    public SaveRequest(String nickname, String email, String password, String profilePath,
+    public SaveRequest(String nickname, String email, String password, UserProfileImg profileImg,
                        List<TagOption> tags, int wishGroupSize, int wishExpectedSchedule) {
 
         this.nickname = nickname;
         this.email = email;
         this.password = password;
-        this.profilePath = profilePath;
+        this.profileImg = profileImg;
         this.tags = tags;
         this.wishGroupSize = wishGroupSize;
         this.wishExpectedSchedule = wishExpectedSchedule;
@@ -56,7 +57,7 @@ public class SaveRequest {
                 .nickname(this.nickname)
                 .email(this.email)
                 .password(this.password)
-//                .profilePath(this.profilePath)
+                .profileImg(this.profileImg)
                 .tags(this.tags)
                 .wishGroupSize(this.wishGroupSize)
                 .wishExpectedSchedule(this.wishExpectedSchedule)

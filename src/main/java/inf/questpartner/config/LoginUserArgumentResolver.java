@@ -1,7 +1,7 @@
 package inf.questpartner.config;
 
-import inf.questpartner.common.annotation.CurrentUser;
 import inf.questpartner.service.SessionLoginService;
+import inf.questpartner.util.validation.argumentResolver.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -24,6 +24,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        return loginService.getLoginUser();
+        return loginService.retrieveLoginUser();
     }
 }

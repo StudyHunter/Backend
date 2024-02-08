@@ -6,6 +6,8 @@ import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.users.*;
 import inf.questpartner.repository.admin.AdminRepository;
 
+import inf.questpartner.repository.users.UserRepository;
+import inf.questpartner.util.exception.users.NotFoundUserException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -33,6 +35,9 @@ class AdminServiceTest {
     @Autowired
     AdminService adminService;
 
+    @Autowired
+    UserRepository userRepository;
+
 
     private SaveRequest createUserDto() {
         return SaveRequest.builder()
@@ -59,7 +64,9 @@ class AdminServiceTest {
                     .password("num" + i)
                     .build();
 
-            User user = userService.save(requestDto);
+            userService.save(requestDto);
+            User user = userRepository.findByEmail(requestDto.getEmail())
+                    .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
             list.add(user);
         }
         return list;
@@ -77,9 +84,12 @@ class AdminServiceTest {
                 .email("keria@naver.com")
                 .password("!1234!23")
                 .build();
-
-        User user1 = userService.save(request1);
-        User user2 = userService.save(request2);
+        userService.save(request1);
+        User user1 = userRepository.findByEmail(request1.getEmail())
+                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
+        userService.save(request2);
+        User user2 = userRepository.findByEmail(request2.getEmail())
+                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
 
 
         UserListResponse dto1 = UserListResponse.builder()
@@ -121,7 +131,10 @@ class AdminServiceTest {
     @DisplayName("요청한 ID에 해당하는 사용자를 BAN 처리한다.")
     @Test
     public void updateBanUsers() {
-        User user = userService.save(createUserDto());
+        userService.save(createUserDto());
+        User user = userRepository.findByEmail(createUserDto().getEmail())
+                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
+
 
         UserBanRequest userBanRequest = UserBanRequest
                 .builder()
@@ -137,7 +150,9 @@ class AdminServiceTest {
     @Test
     @DisplayName("회원의 상세 정보를 조회한다.")
     public void searchUserDetail() {
-        User user = userService.save(createUserDto());
+        userService.save(createUserDto());
+        User user = userRepository.findByEmail(createUserDto().getEmail())
+                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
 
         UserDetailResponse dto = adminService.getUser(user.getId());
         System.out.println(dto.toString());

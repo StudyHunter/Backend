@@ -7,24 +7,27 @@ import inf.questpartner.dto.users.UserInfoDto;
 import inf.questpartner.repository.users.UserRepository;
 import inf.questpartner.util.exception.users.NotAuthorizedException;
 import inf.questpartner.util.exception.users.NotFoundUserException;
+import inf.questpartner.service.encrytion.EncryptionService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static inf.questpartner.util.constant.Constants.AUTH_STATUS;
-import static inf.questpartner.util.constant.Constants.USER_ID;
+import static inf.questpartner.util.constant.UserConstants.AUTH_STATUS;
+import static inf.questpartner.util.constant.UserConstants.USER_ID;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class SessionLoginService {
+
     private final HttpSession session;
     private final UserRepository userRepository;
+    private final EncryptionService encryptionService;
 
     @Transactional(readOnly = true)
     public void existByEmailAndPassword(LoginRequest loginRequest) {
-
+        loginRequest.passwordEncryption(encryptionService);
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
         if (!userRepository.existsByEmailAndPassword(email, password)) {
@@ -36,7 +39,12 @@ public class SessionLoginService {
     public void login(LoginRequest loginRequest) {
         existByEmailAndPassword(loginRequest);
         String email = loginRequest.getEmail();
+        validateUserLevel(email);
+        session.setAttribute(USER_ID, email);
+    }
 
+    public void logout() {
+        session.removeAttribute(USER_ID);
     }
 
     // 회원 권한 검증 로직
@@ -66,7 +74,7 @@ public class SessionLoginService {
     }
 
     @Transactional(readOnly = true)
-    public UserInfoDto retrieveCurrentUser(String email) {
+    public UserInfoDto getCurrentUser(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다.")).toUserInfoDto();
     }

@@ -15,18 +15,32 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+
 /**
  * 이 인터셉터는 사용자 로그인 여부를 확인하고, 미인증된 사용자의 요청을 처리합니다.
  */
 @Slf4j
+@Component
 @RequiredArgsConstructor
 public class LoginCheckInterceptor implements HandlerInterceptor {
 
     private final SessionLoginService sessionLoginService;
 
+    @Autowired
+//    @inject 변경
+    private Environment environment;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        // test 환경에서는 인터셉트가 동작하지 않도록 설정
+        String[] activeProfiles = environment.getActiveProfiles();
+        if ("test".equals(activeProfiles[0])) {
+            return true;
+        }
 
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;

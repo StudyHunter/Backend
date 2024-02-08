@@ -9,6 +9,8 @@ import inf.questpartner.dto.RoomTag;
 import inf.questpartner.dto.UserWishTag;
 import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.dto.users.SaveRequest;
+import inf.questpartner.repository.users.UserRepository;
+import inf.questpartner.util.exception.users.NotFoundUserException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ class RoomServiceTest {
 
     @Autowired RoomService roomService;
     @Autowired UserService userService;
+    @Autowired
+    UserRepository userRepository;
 
     /**
      * 테스트에 사용할 DTO 선언을 먼저 해둔다
@@ -50,7 +54,7 @@ class RoomServiceTest {
         dto.setExpectedSchedule(6);
         dto.setTags(List.of(TagOption.BOOKREVIEW.name(), TagOption.DEVELOP.name()));
         dto.setRoomType(RoomType.STUDY.name());
-        dto.setThumbnail(RoomThumbnail.JACKSON.name());
+        dto.setThumbnail(RoomThumbnail.THUMB_CODING_VER1.name());
         return dto;
     }
 
@@ -62,7 +66,7 @@ class RoomServiceTest {
         dto.setExpectedSchedule(30);
         dto.setTags(List.of(TagOption.TEAMPROJECT.name(), TagOption.JAVA.name(), TagOption.JAVASCRIPT.name()));
         dto.setRoomType(RoomType.PROJECT.name());
-        dto.setThumbnail(RoomThumbnail.JACKSON.name());
+        dto.setThumbnail(RoomThumbnail.THUMB_CODING_VER1.name());
         return dto;
     }
 
@@ -70,7 +74,9 @@ class RoomServiceTest {
     void test() {
 
         //when : user가 방 2개를 만들었는데
-        User user = userService.save(createUserDto());
+        userService.save(createUserDto());
+        User user = userRepository.findByEmail(createUserDto().getEmail())
+                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
 
         CreateRoomRequest dto1 = createRoomDtoA(user.getNickname());
         CreateRoomRequest dto2 = createRoomDtoB(user.getNickname());

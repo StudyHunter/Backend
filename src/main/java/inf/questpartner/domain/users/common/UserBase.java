@@ -2,7 +2,6 @@ package inf.questpartner.domain.users.common;
 
 import inf.questpartner.domain.BaseTimeEntity;
 import jakarta.persistence.*;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,9 +15,11 @@ import static jakarta.persistence.GenerationType.IDENTITY;
  * 회원 권한구분 (User_Level)
  */
 
+@Table(name = "USER_BASE")
 @Entity
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @DiscriminatorColumn

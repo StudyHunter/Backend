@@ -8,7 +8,7 @@ import inf.questpartner.domain.users.common.UserLevel;
 import inf.questpartner.domain.users.common.UserStatus;
 import inf.questpartner.dto.users.FindUserResponse;
 import inf.questpartner.dto.users.UserInfoDto;
-import inf.questpartner.dto.users.UserWishTag;
+import inf.questpartner.dto.UserWishTag;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

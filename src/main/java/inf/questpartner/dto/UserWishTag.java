@@ -1,4 +1,4 @@
-package inf.questpartner.dto.users;
+package inf.questpartner.dto;
 
 import inf.questpartner.domain.room.common.tag.TagOption;
 import lombok.Builder;

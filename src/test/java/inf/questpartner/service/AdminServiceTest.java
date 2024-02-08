@@ -50,6 +50,7 @@ class AdminServiceTest {
                 .build();
     }
 
+    /*
     private List<User> setUsers() {
         List<User> list = new ArrayList<>();
         for (int i=0; i<2; i++) {
@@ -143,5 +144,6 @@ class AdminServiceTest {
         System.out.println(dto.toString());
     }
 
+     */
 
 }

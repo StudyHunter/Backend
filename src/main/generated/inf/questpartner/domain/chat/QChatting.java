@@ -46,7 +46,7 @@ public class QChatting extends EntityPathBase<Chatting> {
 
     public QChatting(Class<? extends Chatting> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.room = inits.isInitialized("room") ? new inf.questpartner.domain.room.QRoom(forProperty("room"), inits.get("room")) : null;
+        this.room = inits.isInitialized("room") ? new inf.questpartner.domain.room.QRoom(forProperty("room")) : null;
     }
 
 }

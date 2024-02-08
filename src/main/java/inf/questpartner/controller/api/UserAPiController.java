@@ -115,6 +115,7 @@ public class UserAPiController {
         userService.updatePassword(email, requestDto);
     }
 
+    /*
     @LoginCheck
     @PatchMapping("/wish-tag")
     public void changeUserWishTag(@CurrentUser String email,
@@ -129,6 +130,7 @@ public class UserAPiController {
         userService.updateProfileImg(email, requestDto);
     }
 
+
     @LoginCheck
     @DeleteMapping
     public ResponseEntity<Void> UserWithdrawal(@RequestBody PasswordRequest requestDto,
@@ -138,4 +140,5 @@ public class UserAPiController {
         sessionLoginService.logout();
         return OK;
     }
+    */
 }

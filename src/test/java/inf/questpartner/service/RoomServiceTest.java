@@ -29,6 +29,7 @@ class RoomServiceTest {
     @Autowired RoomService roomService;
     @Autowired UserService userService;
 
+    /*
     /**
      * 테스트에 사용할 DTO 선언을 먼저 해둔다
      *
@@ -41,6 +42,8 @@ class RoomServiceTest {
                 .password("!1234")
                 .build();
     }
+
+    /*
 
     private CreateRoomRequest createRoomDtoA(String author) {
         CreateRoomRequest dto = new CreateRoomRequest();
@@ -105,6 +108,7 @@ class RoomServiceTest {
         }
 
     }
+
 
     /*
 

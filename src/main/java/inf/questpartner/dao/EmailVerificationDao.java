@@ -11,7 +11,8 @@ import static inf.questpartner.util.constant.EmailConstants.PREFIX_VERIFICATION;
 
 @RequiredArgsConstructor
 @Repository
-public class EmailVerificationDao implements EmailCertificationDao {
+public class EmailVerificationDao  implements EmailCertificationDao {
+
 
     private final StringRedisTemplate redisTemplate;
 
@@ -36,4 +37,6 @@ public class EmailVerificationDao implements EmailCertificationDao {
     public boolean hasKey(String email) {
         return redisTemplate.hasKey(PREFIX_VERIFICATION + email);
     }
+
+
 }

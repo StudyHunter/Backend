@@ -56,8 +56,8 @@ public class SaveRequest {
                 .nickname(this.nickname)
                 .email(this.email)
                 .password(this.password)
-                .profilePath(this.profilePath)
-                .tags(this.tags)
+              //  .profilePath(this.profilePath)
+            //    .tags(this.tags)
                 .wishGroupSize(this.wishGroupSize)
                 .wishExpectedSchedule(this.wishExpectedSchedule)
                 .build();

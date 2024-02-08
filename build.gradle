@@ -3,7 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.2.1'
 	id 'io.spring.dependency-management' version '1.1.4'
 	// querydsl관련 명령어를 gradle탭에 생성해준다. (권장사항)
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	// id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'inf'
@@ -29,6 +29,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	implementation 'org.springframework.boot:spring-boot-starter-mustache'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	// for test
@@ -50,6 +52,13 @@ dependencies {
 	// mustache
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
 
+	//	redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.session:spring-session-data-redis'
+
+	//javaMail
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5'
+
 	//Querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
@@ -60,7 +69,7 @@ dependencies {
 }
 
 // Querydsl 설정부
-
+/*
 def generated = 'src/main/generated'
 
 querydsl {
@@ -69,6 +78,7 @@ querydsl {
 }
 sourceSets {
 	main.java.srcDir generated
+
 }
 
 compileQuerydsl{
@@ -81,15 +91,8 @@ configurations {
 	}
 	querydsl.extendsFrom compileClasspath
 }
-
+*/
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
-/*
-tasks.withType(JavaCompile) {
-	options.compilerArgs << "-parameters"
-}
-
- */
-

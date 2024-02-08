@@ -11,6 +11,7 @@ import inf.questpartner.domain.users.common.UserLevel;
 import inf.questpartner.domain.users.common.UserProfileImg;
 import inf.questpartner.domain.users.common.UserStatus;
 import inf.questpartner.dto.UserWishTag;
+import inf.questpartner.dto.users.FindUserResponse;
 import inf.questpartner.dto.users.UserDetailResponse;
 import inf.questpartner.dto.users.UserInfoDto;
 import jakarta.persistence.*;
@@ -97,15 +98,7 @@ public class User extends UserBase {
                 .userLevel(this.userLevel)
                 .build();
     }
-/*
-    public UserWishTag toUserWishDto() {
-        return UserWishTag.builder()
-                .groupSize(this.wishGroupSize)
-                .expectedSchedule(this.wishExpectedSchedule)
-                .tagList(this.userHashTags)
-                .build();
-    }
- */
+
 
     // 관리자 권한으로 회원 BAN 처리하기 위한 로직
     public void updateUserStatus(UserStatus userStatus) {
@@ -131,5 +124,23 @@ public class User extends UserBase {
         this.userHashTags.add(tag);
     }
 
+
+    public FindUserResponse toFindUserDto() {
+        return FindUserResponse.builder()
+                .email(this.getEmail())
+                .build();
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isBan() {
+        return this.userStatus == UserStatus.BAN;
+    }
+
+    public void updateUserLevel() {
+        this.userLevel = UserLevel.AUTH;
+    }
 
 }

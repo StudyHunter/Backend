@@ -3,7 +3,7 @@ package inf.questpartner.service;
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.users.*;
-import inf.questpartner.repository.studytree.StudyTreeRepository;
+
 import inf.questpartner.repository.users.UserRepository;
 import inf.questpartner.service.certification.EmailCertificationService;
 import inf.questpartner.service.encrytion.EncryptionService;
@@ -23,7 +23,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final EncryptionService encryptionService;
-    private final StudyTreeRepository studyTreeRepository;
+    //private final StudyTreeRepository studyTreeRepository;
     private final EmailCertificationService emailCertificationService;
 
 
@@ -87,7 +87,7 @@ public class UserService {
 
         user.updatePassword(passwordAfter);
     }
-
+/*
     @Transactional
     public void updateUserWishTag(String email, ChangeUserWishTag requestDto) {
         int wishGroupSize = requestDto.getWishGroupSize();
@@ -120,9 +120,13 @@ public class UserService {
         userRepository.deleteByEmail(email);
     }
 
+ */
+
     private void validToken(String token, String email) {
         emailCertificationService.verifyEmail(token, email);
     }
+
+
 
 //    이메일 인증 시 userLevel을 Auth로 설정
     @Transactional
@@ -133,4 +137,6 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
         user.updateUserLevel();
     }
+
+
 }

@@ -28,8 +28,6 @@ public class QQuest extends EntityPathBase<Quest> {
 
     public final StringPath questTitle = createString("questTitle");
 
-    public final ListPath<QuestReward, QQuestReward> rewardList = this.<QuestReward, QQuestReward>createList("rewardList", QuestReward.class, QQuestReward.class, PathInits.DIRECT2);
-
     public final QStudyTree studyTree;
 
     public QQuest(String variable) {

@@ -6,22 +6,20 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import inf.questpartner.domain.users.common.UserLevel;
 
 
-import inf.questpartner.dto.users.QUserListResponse;
 import inf.questpartner.dto.users.UserListResponse;
 import inf.questpartner.dto.users.UserSearchCondition;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 
-import static inf.questpartner.domain.users.user.QUser.user;
 import static org.springframework.util.StringUtils.hasText;
 
-public class AdminRepositoryCustomImpl implements AdminRepositoryCustom {
+public class AdminRepositoryCustomImpl {// implements AdminRepositoryCustom {
 
+    /*
     private final JPAQueryFactory queryFactory;
 
     public AdminRepositoryCustomImpl(EntityManager em) {
@@ -31,7 +29,7 @@ public class AdminRepositoryCustomImpl implements AdminRepositoryCustom {
     @Override
     public Page<UserListResponse> searchByUsers(UserSearchCondition searchCondition, Pageable pageable) {
         List<UserListResponse> content = queryFactory
-                .select(new QUserListResponse(user.id, user.email, user.userLevel))
+                .select(new UserListResponse(user.id, user.email, user.userLevel))
                 .from(user)
                 .where(
                         userEmailEq(searchCondition.getEmail()),
@@ -43,7 +41,7 @@ public class AdminRepositoryCustomImpl implements AdminRepositoryCustom {
                 .fetch();
 
         int totalSize = queryFactory // count 쿼리
-                .select(new QUserListResponse(user.id, user.email, user.userLevel))
+                .select(new UserListResponse(user.id, user.email, user.userLevel))
                 .from(user)
                 .where(
                         userEmailEq(searchCondition.getEmail()),
@@ -65,4 +63,6 @@ public class AdminRepositoryCustomImpl implements AdminRepositoryCustom {
     private BooleanExpression userLevelEq(UserLevel userLevel) {
         return userLevel != null ? user.userLevel.eq(userLevel) : null;
     }
+
+     */
 }

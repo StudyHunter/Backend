@@ -15,13 +15,12 @@ import static jakarta.persistence.GenerationType.IDENTITY;
  * 회원 권한구분 (User_Level)
  */
 
-@Table(name = "USER_BASE")
+
 @Entity
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @DiscriminatorColumn
 public abstract class UserBase extends BaseTimeEntity {
 

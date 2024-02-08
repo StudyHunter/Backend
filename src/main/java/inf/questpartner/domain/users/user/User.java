@@ -3,6 +3,7 @@ package inf.questpartner.domain.users.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import inf.questpartner.domain.room.Room;
+
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.studytree.StudyTree;
 import inf.questpartner.domain.users.common.UserBase;
@@ -34,12 +35,13 @@ public class User extends UserBase {
     private int studyTime; // 총 누적된 공부시간
 
     @Enumerated(EnumType.STRING)
-    private UserStatus userStatus; // 회원 상태(STATUS)는 BAN(관리자에 의해 차단), NOMAL
+    private UserStatus userStatus; // 회원 상태(STATUS)는 BAN(관리자에 의해 차단), NORMAL
 
-    @Enumerated(EnumType.STRING)
-    private List<TagOption> tags = new ArrayList<>(); // 취향태그 저장
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<UserWishHashTag> userHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
     private int wishGroupSize; // 스터디방 원하는 조건 : 인원 / 기간
+
     private int wishExpectedSchedule;
 
     @Enumerated(EnumType.STRING)
@@ -53,7 +55,7 @@ public class User extends UserBase {
 
     @Builder
     public User(Long id, String email, String password,
-                String nickname, UserProfileImg profileImg, int wishGroupSize, int wishExpectedSchedule, List<TagOption> tags) {
+                String nickname, UserProfileImg profileImg, int wishGroupSize, int wishExpectedSchedule, List<UserWishHashTag> tags) {
         super(id, email, password, UserLevel.AUTH);
         this.nickname = nickname;
         this.profileImg = profileImg;
@@ -61,7 +63,7 @@ public class User extends UserBase {
         this.studyTime = 0;
         this.wishGroupSize = wishGroupSize;
         this.wishExpectedSchedule = wishExpectedSchedule;
-        this.tags = tags;
+        this.userHashTags = tags;
     }
 
     /**
@@ -72,6 +74,7 @@ public class User extends UserBase {
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "STUDY_TREE_ID")
     private StudyTree studyTree;
+
 
 
     // user 관련 테스트용으로 만든 것 (임시로 둔 것)
@@ -94,14 +97,15 @@ public class User extends UserBase {
                 .userLevel(this.userLevel)
                 .build();
     }
-
+/*
     public UserWishTag toUserWishDto() {
         return UserWishTag.builder()
                 .groupSize(this.wishGroupSize)
                 .expectedSchedule(this.wishExpectedSchedule)
-                .tagList(this.tags)
+                .tagList(this.userHashTags)
                 .build();
     }
+ */
 
     // 관리자 권한으로 회원 BAN 처리하기 위한 로직
     public void updateUserStatus(UserStatus userStatus) {
@@ -123,8 +127,8 @@ public class User extends UserBase {
     }
 
 
-    public void addWishTags(TagOption tagOption) {
-        tags.add(tagOption);
+    public void addWishTags(UserWishHashTag tag) {
+        this.userHashTags.add(tag);
     }
 
 

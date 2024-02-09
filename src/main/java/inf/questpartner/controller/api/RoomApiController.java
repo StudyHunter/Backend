@@ -37,8 +37,6 @@ public class RoomApiController {
         return new CreateRoomResponse(id);
     }
 
-
-
     // 검색 조회
     @GetMapping
     public Set<Room> findRoomByTag(@RequestParam List<TagOption> tags) {
@@ -54,6 +52,4 @@ public class RoomApiController {
 
         return roomService.recommendLogic(user.toUserWishDto(), roomTags);
     }
-
-
 }

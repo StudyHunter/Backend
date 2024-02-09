@@ -1,0 +1,34 @@
+{{>layouts/header}}
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">방장</th>
+        <th scope="col">제목</th>
+        <th scope="col">인원 수</th>
+        <th scope="col">예상시간(분)</th>
+        <th scope="col">공부 태그</th>
+        <th scope="col">방 종류</th>
+        <th scope="col">상태</th>
+        <th scope="col">썸네일(선택)</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#room}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{author}}</td>
+            <td>{{title}}</td>
+            <td>{{expectedUsers}}</td>
+            <td>{{expectedSchedule}}</td>
+            <td>{{tags}}</td>
+            <td>{{roomType}}</td>
+            <td>{{roomStatus}}</td>
+            <td>{{thumbnail}}</td>
+        </tr>
+    {{/room}}
+    </tbody>
+</table>
+<a href="/room/{{room.id}}/edit" class="btn btn-primary">수정</a>
+<a href="/room" class="btn btn-primary">목록</a>
+{{>layouts/footer}}

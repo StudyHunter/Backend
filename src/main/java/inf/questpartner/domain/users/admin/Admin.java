@@ -2,6 +2,7 @@ package inf.questpartner.domain.users.admin;
 
 import inf.questpartner.domain.users.common.UserBase;
 import inf.questpartner.domain.users.common.UserLevel;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DiscriminatorValue("ADMIN")
 @Entity
 public class Admin extends UserBase {
 

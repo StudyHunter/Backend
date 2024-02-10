@@ -2,6 +2,8 @@ package inf.questpartner.service;
 
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
+import inf.questpartner.domain.users.user.UserWishHashTag;
+import inf.questpartner.dto.UserWishTag;
 import inf.questpartner.dto.users.ChangePasswordRequest;
 import inf.questpartner.dto.users.FindUserResponse;
 import inf.questpartner.dto.users.SaveRequest;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -41,11 +44,26 @@ class UserServiceTest {
 //    @Autowired
 //    SessionLoginService sessionLoginService;
 
-    private List<TagOption> createTestTags() {
+    private List<UserWishHashTag> createTestTags(User user) {
         List<TagOption> list = new ArrayList<>();
         list.add(TagOption.TEAMPROJECT);
         list.add(TagOption.JAVA);
-        return list;
+
+        return list.stream()
+                .map(tagOption -> UserWishHashTag.builder()
+                        .user(user)
+                        .tagOption(tagOption)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<UserWishHashTag> createUserWishHashTags(User user, List<TagOption> tagOptions) {
+        return tagOptions.stream()
+                .map(tagOption -> UserWishHashTag.builder()
+                        .user(user)
+                        .tagOption(tagOption)
+                        .build())
+                .collect(Collectors.toList());
     }
 
     private SaveRequest createSaveRequest() {
@@ -54,7 +72,7 @@ class UserServiceTest {
                 .email("test001@gmail.com")
                 .password("12341234!")
 //                .profilePath("testProfilePath1")
-                .tags(createTestTags())
+//                .userHashTags(createTestTags())
                 .wishGroupSize(5)
                 .wishExpectedSchedule(5)
                 .build();
@@ -76,7 +94,7 @@ class UserServiceTest {
                 .email("test001@gmail.com")
                 .password("12341234!")
 //                .profilePath("testProfilePath1")
-                .tags(createTestTags())
+//                .userHashTags(createTestTags())
                 .wishGroupSize(5)
                 .wishExpectedSchedule(5)
                 .build();
@@ -98,7 +116,7 @@ class UserServiceTest {
                 .email("test002@gmail.com")
                 .password("12341234!")
 //                .profilePath("testProfilePath1")
-                .tags(createTestTags())
+//                .tags(createTestTags())
                 .wishGroupSize(5)
                 .wishExpectedSchedule(5)
                 .build();

@@ -1,5 +1,6 @@
 package inf.questpartner.config;
 
+import inf.questpartner.util.validation.argumentResolver.LoginUserArgumentResolver;
 import inf.questpartner.util.validation.interceptor.LoginCheckInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;

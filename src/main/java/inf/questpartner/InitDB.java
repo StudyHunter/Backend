@@ -20,18 +20,18 @@ import static inf.questpartner.domain.room.common.tag.TagOption.*;
 @RequiredArgsConstructor
 public class InitDB {
 
-    void tedy() {
-        Room room = Room.roomBuild()
-                .author("방장")
-                .title("제목")
-                .expectedUsers(3)
-                .expectedSchedule(120)
-                .tags(Collections.singletonList(AI))
-                .roomType(RoomType.PROJECT)
-                .roomStatus(RoomStatus.OPEN)
-                .thumbnail(RoomThumbnail.APPLE)
-                .build();
-        //이넘 타입일 시, .dfdfd(dfdfd.AUTH)
-    }
+//    void tedy() {
+//        Room room = Room.roomBuild()
+//                .author("방장")
+//                .title("제목")
+//                .expectedUsers(3)
+//                .expectedSchedule(120)
+//                .tags(Collections.singletonList(AI))
+//                .roomType(RoomType.PROJECT)
+//                .roomStatus(RoomStatus.OPEN)
+//                .thumbnail(RoomThumbnail.APPLE)
+//                .build();
+//        //이넘 타입일 시, .dfdfd(dfdfd.AUTH)
+//    }
 
 }

@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import inf.questpartner.domain.room.Room;
 
-import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.studytree.StudyTree;
 import inf.questpartner.domain.users.common.UserBase;
 import inf.questpartner.domain.users.common.UserLevel;
 import inf.questpartner.domain.users.common.UserProfileImg;
 import inf.questpartner.domain.users.common.UserStatus;
 import inf.questpartner.dto.UserWishTag;
+import inf.questpartner.dto.users.FindUserResponse;
 import inf.questpartner.dto.users.UserDetailResponse;
 import inf.questpartner.dto.users.UserInfoDto;
 import jakarta.persistence.*;
@@ -37,7 +37,7 @@ public class User extends UserBase {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus; // 회원 상태(STATUS)는 BAN(관리자에 의해 차단), NORMAL
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserWishHashTag> userHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
     private int wishGroupSize; // 스터디방 원하는 조건 : 인원 / 기간
@@ -48,14 +48,17 @@ public class User extends UserBase {
     private UserProfileImg profileImg; // 회원 프로필 사진
 
     @JsonIgnore
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
 
+    public void createRoom(Room room) {
+        this.room = room;
+    }
 
     @Builder
     public User(Long id, String email, String password,
-                String nickname, UserProfileImg profileImg, int wishGroupSize, int wishExpectedSchedule, List<UserWishHashTag> tags) {
+                String nickname, UserProfileImg profileImg, int wishGroupSize, int wishExpectedSchedule, List<UserWishHashTag> userHashTags) {
         super(id, email, password, UserLevel.AUTH);
         this.nickname = nickname;
         this.profileImg = profileImg;
@@ -63,13 +66,13 @@ public class User extends UserBase {
         this.studyTime = 0;
         this.wishGroupSize = wishGroupSize;
         this.wishExpectedSchedule = wishExpectedSchedule;
-        this.userHashTags = tags;
+        this.userHashTags = userHashTags;
     }
 
     /**
      * 1 : 1 단방향
-     *  USER는 하나의 트리만 가질 수 있다.
-     *  트리 또한 여러명의 유저가 함께 사용할 수 없다. 따라서 일대일 매핑으로 처리한다.
+     * USER는 하나의 트리만 가질 수 있다.
+     * 트리 또한 여러명의 유저가 함께 사용할 수 없다. 따라서 일대일 매핑으로 처리한다.
      */
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "STUDY_TREE_ID")
@@ -127,6 +130,34 @@ public class User extends UserBase {
 
     public void addWishTags(UserWishHashTag tag) {
         this.userHashTags.add(tag);
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    public void updateProfileImg(UserProfileImg profileImg) {
+        this.profileImg = profileImg;
+    }
+
+    public FindUserResponse toFindUserDto() {
+        return FindUserResponse.builder()
+                .email(this.getEmail())
+                .build();
+    }
+
+    public void updateUserLevel() {
+        this.userLevel = UserLevel.AUTH;
+    }
+
+    public void updateUserWishTag(int wishGroupSize, int wishExpectedSchedule, List<UserWishHashTag> userHashTags) {
+        this.wishGroupSize = wishGroupSize;
+        this.wishExpectedSchedule = wishExpectedSchedule;
+        this.userHashTags = userHashTags;
+    }
+
+    public boolean isBan() {
+        return this.userStatus == UserStatus.BAN;
     }
 
 

@@ -8,6 +8,7 @@ import inf.questpartner.util.exception.users.AuthenticationNumberMismatchExcepti
 import inf.questpartner.util.exception.users.TokenExpiredException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,13 @@ import static inf.questpartner.util.RandomNumberGeneration.makeRandomNumber;
 public class EmailCertificationService {
 
     private final JavaMailSender mailSender;
+
+    @Qualifier("emailCertificationNumberDao")
     private final EmailCertificationDao emailCertificationNumberDao;
+
+    @Qualifier("emailVerificationDao")
     private final EmailCertificationDao emailVerificationDao;
+
     private final AppProperties appProperties;
 
     // 이메일 전송 및 인증번호 저장

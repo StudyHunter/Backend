@@ -1,8 +1,8 @@
 package inf.questpartner.service;
 
-import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.common.UserProfileImg;
 import inf.questpartner.domain.users.user.User;
+import inf.questpartner.domain.users.user.UserWishHashTag;
 import inf.questpartner.dto.users.*;
 import inf.questpartner.repository.studytree.StudyTreeRepository;
 import inf.questpartner.repository.users.UserRepository;
@@ -102,21 +102,21 @@ public class UserService {
     public void updateUserWishTag(String email, ChangeUserWishTag requestDto) {
         int wishGroupSize = requestDto.getWishGroupSize();
         int wishExpectedSchedule = requestDto.getWishExpectedSchedule();
-        List<TagOption> tags = requestDto.getTags();
+        List<UserWishHashTag> userHashTags = requestDto.getUserHashTags();
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
 
-        user.updateUserWishTag(wishGroupSize, wishExpectedSchedule, tags);
+        user.updateUserWishTag(wishGroupSize, wishExpectedSchedule, userHashTags);
     }
 
     @Transactional
     public void updateProfileImg(String email, ChangeProfileImgRequest requestDto) {
-        UserProfileImg profilePath = requestDto.getProfileImg();
+        UserProfileImg profileImg = requestDto.getProfileImg();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
 
-        user.updateProfileImg(profilePath);
+        user.updateProfileImg(profileImg);
     }
 
     @Transactional
@@ -134,7 +134,7 @@ public class UserService {
         emailCertificationService.verifyEmail(token, email);
     }
 
-//    이메일 인증 시 userLevel을 Auth로 설정
+    //    이메일 인증 시 userLevel을 Auth로 설정
     @Transactional
     public void updateEmailVerified(String token, String email) {
         validToken(token, email);

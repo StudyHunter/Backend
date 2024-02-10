@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class UserWishTag {
@@ -18,5 +19,15 @@ public class UserWishTag {
         this.groupSize = groupSize;
         this.expectedSchedule = expectedSchedule;
         this.userHashTags = userHashTags;
+    }
+
+    // calculateMatchingScore(알고리즘 계산)을 위한 TagOptionList
+    public List<TagOption> getTagList() {
+        if (userHashTags == null) {
+            return null;
+        }
+        return userHashTags.stream()
+                .map(UserWishHashTag::getTagOption)
+                .collect(Collectors.toList());
     }
 }

@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+//user와 tagOption으로 만들게 되면 처음에 가입할 때
+// 등록되지않은 user에 대해서는 생성이 불가능하지 않을까요
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity

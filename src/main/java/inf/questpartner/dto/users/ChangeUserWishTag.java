@@ -1,6 +1,6 @@
 package inf.questpartner.dto.users;
 
-import inf.questpartner.domain.room.common.tag.TagOption;
+import inf.questpartner.domain.users.user.UserWishHashTag;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,16 +11,16 @@ public class ChangeUserWishTag {
     private String email;
     private int wishGroupSize;
     private int wishExpectedSchedule;
-    private List<TagOption> tags;
+    private List<UserWishHashTag> userHashTags;
 
 
     @Builder
     public ChangeUserWishTag(String email, int wishGroupSize,
-                             int wishExpectedSchedule, List<TagOption> tags) {
+                             int wishExpectedSchedule, List<UserWishHashTag> userHashTags) {
 
         this.email = email;
         this.wishGroupSize = wishGroupSize;
         this.wishExpectedSchedule = wishExpectedSchedule;
-        this.tags = tags;
+        this.userHashTags = userHashTags;
     }
 }

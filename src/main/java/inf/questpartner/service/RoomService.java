@@ -1,11 +1,11 @@
 package inf.questpartner.service;
 
+import inf.questpartner.domain.users.user.User;
 import inf.questpartner.util.exception.room.NotFoundRoomException;
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.repository.room.RoomRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +14,7 @@ import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.dto.RoomTag;
 import inf.questpartner.dto.UserWishTag;
 
-import java.util.stream.Collectors;
-import java.util.List;
+import java.util.*;
 
 @Transactional
 @RequiredArgsConstructor
@@ -40,30 +39,30 @@ public class RoomService {
         //User Entity에도 List 필드 값에 생성한 Room을 추가해준다.
         //Room ID를 반환해준다.
 
-        Room room = request.toEntity(request.getAuthor());
+        Room room = request.toRoomEntity();
         Long id = roomRepository.save(room).getId();
 
         user.createRoom(room);
         return id;
     }
 
-    @Transactional(readOnly = true)
-    public List<RoomTag> findRoomTags() {
-        return roomRepository.findAll().stream()
-                .map(Room::toRoomTagDto)
-                .collect(Collectors.toList());
-    }
-
-    // 태그로 방 탐색
-    @Transactional(readOnly = true)
-    public Set<Room> findRoomsByTag(List<TagOption> tags, List<Room> roomList) {
-        return roomList.stream()
-                .filter(room -> room.getTags().stream()
-                        .map(TagOption::getViewName)
-                        .anyMatch(tagViewName -> tags.stream()
-                                .anyMatch(tagOption -> tagOption.getViewName().equals(tagViewName))))
-                .collect(Collectors.toSet());
-    }
+//    @Transactional(readOnly = true)
+//    public List<RoomTag> findRoomTags() {
+//        return roomRepository.findAll().stream()
+//                .map(Room::toRoomTagDto)
+//                .collect(Collectors.toList());
+//    }
+//
+//    // 태그로 방 탐색
+//    @Transactional(readOnly = true)
+//    public Set<Room> findRoomsByTag(List<TagOption> tags, List<Room> roomList) {
+//        return roomList.stream()
+//                .filter(room -> room.getTags().stream()
+//                        .map(TagOption::getViewName)
+//                        .anyMatch(tagViewName -> tags.stream()
+//                                .anyMatch(tagOption -> tagOption.getViewName().equals(tagViewName))))
+//                .collect(Collectors.toSet());
+//    }
 
     // 취향 방 추천
     @Transactional(readOnly = true)

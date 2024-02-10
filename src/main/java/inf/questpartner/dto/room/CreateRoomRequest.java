@@ -13,40 +13,21 @@ import java.util.stream.Collectors;
 @Data
 public class CreateRoomRequest {
 
-    private String author;  //방장 닉네임
+    private String author; // 방장 닉네임
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
-    private int expectedSchedule; // 예상 기간 (분단위)
-    private List<String> tags; // 방에 여러 태그를 붙일 수 있다.
-    private String roomType; // 방 유형 ex: STUDY(스터디), PROJECT(팀 프로젝트)
-    private String thumbnail; // 섬네일 선택지
+    private RoomType roomType; // 방 유형 ex: STUDY(스터디), PROJECT(팀 프로젝트)
+    private RoomThumbnail thumbnail; // 방 섬네일
+    private List<TagOption> tags; // 방 태그표시들
 
-    public Room toEntity(String userName) {
-        return Room.roomBuild()
-                .author(userName)
+    public Room toRoomEntity() {
+        return Room.createRoom()
+                .author(author)
                 .title(title)
                 .expectedUsers(expectedUsers)
-                .expectedSchedule(expectedSchedule)
-                .tags(tagOptionList(tags))
-                .roomType(RoomType.valueOf(roomType))
-                .thumbnail(RoomThumbnail.valueOf(thumbnail))
+                .roomType(roomType)
+                .thumbnail(thumbnail)
                 .build();
     }
-
-    private List<TagOption> tagOptionList(List<String> tags) {
-        return tags.stream()
-                .map(TagOption::valueOf)
-                .collect(Collectors.toList());
-    }
-
-    /*
-    private List<TagOption> tagOptionList_old(List<String> tags) {
-        List<TagOption> temps = new ArrayList<>();
-        for (String tag : tags) {
-            temps.add(TagOption.valueOf(tag));
-        }
-        return temps;
-    }
-     */
 
 }

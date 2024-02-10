@@ -38,18 +38,18 @@ public class RoomApiController {
     }
 
     // 검색 조회
-    @GetMapping
-    public Set<Room> findRoomByTag(@RequestParam List<TagOption> tags) {
-        List<Room> roomList = roomService.findAll();
-        return roomService.findRoomsByTag(tags, roomList);
-    }
-
-    // 데이터 기반으로 추천 받기
-    @GetMapping("/recommend")
-    public List<RoomTag> recommendRooms(@RequestParam(value = "id") Long id) {
-        User user = userService.findById(id);
-        List<RoomTag> roomTags = roomService.findRoomTags();
-
-        return roomService.recommendLogic(user.toUserWishDto(), roomTags);
-    }
+//    @GetMapping
+//    public Set<Room> findRoomByTag(@RequestParam List<TagOption> tags) {
+//        List<Room> roomList = roomService.findAll();
+//        return roomService.findRoomsByTag(tags, roomList);
+//    }
+//
+//    // 데이터 기반으로 추천 받기
+//    @GetMapping("/recommend")
+//    public List<RoomTag> recommendRooms(@RequestParam(value = "id") Long id) {
+//        User user = userService.findById(id);
+//        List<RoomTag> roomTags = roomService.findRoomTags();
+//
+//        return roomService.recommendLogic(user.toUserWishDto(), roomTags);
+//    }
 }

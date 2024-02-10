@@ -33,7 +33,7 @@ public class RoomController {
         log.info(createRoomRequest.toString());
 
         //TO를 Entity로 변환
-        Room room = createRoomRequest.toEntity();
+        Room room = createRoomRequest.toRoomEntity();
         log.info(room.toString());
         //repository로 Entity를 DB에 저장
         Room saved = roomRepository.save(room);
@@ -79,7 +79,7 @@ public class RoomController {
     public String update(CreateRoomRequest createRoomRequest){
         log.info(createRoomRequest.toString());
         //DTO를 엔티티로 변환하기
-        Room room = createRoomRequest.toEntity();
+        Room room = createRoomRequest.toRoomEntity();
         log.info(room.toString());
         //엔티티를 DB에 저장하기
         Room target = roomRepository.findById(room.getId()).orElse(null); //DB에서 기존 데이터 가져옴

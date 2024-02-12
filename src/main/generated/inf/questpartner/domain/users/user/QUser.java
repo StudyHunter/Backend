@@ -41,17 +41,15 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     public final StringPath password = _super.password;
 
-    public final inf.questpartner.domain.users.common.QUserProfileImg profileImg;
+    public final EnumPath<inf.questpartner.domain.users.common.UserProfileImg> profileImg = createEnum("profileImg", inf.questpartner.domain.users.common.UserProfileImg.class);
 
-    public final ListPath<inf.questpartner.domain.room.Room, inf.questpartner.domain.room.QRoom> rooms = this.<inf.questpartner.domain.room.Room, inf.questpartner.domain.room.QRoom>createList("rooms", inf.questpartner.domain.room.Room.class, inf.questpartner.domain.room.QRoom.class, PathInits.DIRECT2);
-
-    public final ListPath<inf.questpartner.domain.room.RoomUser, inf.questpartner.domain.room.QRoomUser> roomUserList = this.<inf.questpartner.domain.room.RoomUser, inf.questpartner.domain.room.QRoomUser>createList("roomUserList", inf.questpartner.domain.room.RoomUser.class, inf.questpartner.domain.room.QRoomUser.class, PathInits.DIRECT2);
+    public final inf.questpartner.domain.room.QRoom room;
 
     public final NumberPath<Integer> studyTime = createNumber("studyTime", Integer.class);
 
     public final inf.questpartner.domain.studytree.QStudyTree studyTree;
 
-    public final ListPath<inf.questpartner.domain.room.common.tag.TagOption, EnumPath<inf.questpartner.domain.room.common.tag.TagOption>> tags = this.<inf.questpartner.domain.room.common.tag.TagOption, EnumPath<inf.questpartner.domain.room.common.tag.TagOption>>createList("tags", inf.questpartner.domain.room.common.tag.TagOption.class, EnumPath.class, PathInits.DIRECT2);
+    public final ListPath<UserWishHashTag, QUserWishHashTag> userHashTags = this.<UserWishHashTag, QUserWishHashTag>createList("userHashTags", UserWishHashTag.class, QUserWishHashTag.class, PathInits.DIRECT2);
 
     //inherited
     public final EnumPath<inf.questpartner.domain.users.common.UserLevel> userLevel = _super.userLevel;
@@ -80,7 +78,7 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.profileImg = inits.isInitialized("profileImg") ? new inf.questpartner.domain.users.common.QUserProfileImg(forProperty("profileImg")) : null;
+        this.room = inits.isInitialized("room") ? new inf.questpartner.domain.room.QRoom(forProperty("room")) : null;
         this.studyTree = inits.isInitialized("studyTree") ? new inf.questpartner.domain.studytree.QStudyTree(forProperty("studyTree")) : null;
     }
 

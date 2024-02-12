@@ -1,7 +1,7 @@
 package inf.questpartner.domain.users.user;
 
 
-import inf.questpartner.domain.room.common.tag.TagOption;
+import inf.questpartner.domain.tag.TagOption;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

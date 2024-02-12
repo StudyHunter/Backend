@@ -39,6 +39,8 @@ dependencies {
 
 	// WebSocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	//json
+	implementation 'com.google.code.gson:gson:2.10.1'
 
 	// mysql
 	runtimeOnly 'com.mysql:mysql-connector-j'

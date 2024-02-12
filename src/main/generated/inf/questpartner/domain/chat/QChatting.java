@@ -22,11 +22,19 @@ public class QChatting extends EntityPathBase<Chatting> {
 
     public static final QChatting chatting = new QChatting("chatting");
 
+    public final QChattingRoom chattingRoom;
+
+    public final StringPath content = createString("content");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath message = createString("message");
+    public final StringPath roomId = createString("roomId");
 
-    public final inf.questpartner.domain.room.QRoom room;
+    public final StringPath sender = createString("sender");
+
+    public final EnumPath<MessageType> type = createEnum("type", MessageType.class);
+
+    public final inf.questpartner.domain.users.user.QUser user;
 
     public QChatting(String variable) {
         this(Chatting.class, forVariable(variable), INITS);
@@ -46,7 +54,8 @@ public class QChatting extends EntityPathBase<Chatting> {
 
     public QChatting(Class<? extends Chatting> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.room = inits.isInitialized("room") ? new inf.questpartner.domain.room.QRoom(forProperty("room"), inits.get("room")) : null;
+        this.chattingRoom = inits.isInitialized("chattingRoom") ? new QChattingRoom(forProperty("chattingRoom")) : null;
+        this.user = inits.isInitialized("user") ? new inf.questpartner.domain.users.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

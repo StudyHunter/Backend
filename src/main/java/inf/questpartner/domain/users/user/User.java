@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import inf.questpartner.domain.room.Room;
 
-import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.studytree.StudyTree;
 import inf.questpartner.domain.users.common.UserBase;
 import inf.questpartner.domain.users.common.UserLevel;
 import inf.questpartner.domain.users.common.UserProfileImg;
 import inf.questpartner.domain.users.common.UserStatus;
-import inf.questpartner.dto.UserWishTag;
 import inf.questpartner.dto.users.UserDetailResponse;
 import inf.questpartner.dto.users.UserInfoDto;
 import jakarta.persistence.*;
@@ -37,7 +35,7 @@ public class User extends UserBase {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus; // 회원 상태(STATUS)는 BAN(관리자에 의해 차단), NORMAL
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserWishHashTag> userHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
     private int wishGroupSize; // 스터디방 원하는 조건 : 인원 / 기간
@@ -108,8 +106,8 @@ public class User extends UserBase {
  */
 
     // 관리자 권한으로 회원 BAN 처리하기 위한 로직
-    public void updateUserStatus(UserStatus userStatus) {
-        this.userStatus = userStatus;
+    public void updateUserStatus() {
+        this.userStatus = UserStatus.BAN;
     }
 
     // 태그 알고리즘 로직들-- (수정중)

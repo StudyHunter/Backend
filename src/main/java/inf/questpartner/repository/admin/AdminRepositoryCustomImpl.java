@@ -1,6 +1,8 @@
 package inf.questpartner.repository.admin;
 
 
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import inf.questpartner.domain.users.common.UserLevel;
@@ -35,7 +37,6 @@ public class AdminRepositoryCustomImpl implements AdminRepositoryCustom {
                 .from(user)
                 .where(
                         userEmailEq(searchCondition.getEmail()),
-                        userIdEq(searchCondition.getId()),
                         userLevelEq(searchCondition.getUserLevel())
                 )
                 .offset(pageable.getOffset())
@@ -47,19 +48,14 @@ public class AdminRepositoryCustomImpl implements AdminRepositoryCustom {
                 .from(user)
                 .where(
                         userEmailEq(searchCondition.getEmail()),
-                        userIdEq(searchCondition.getId()),
                         userLevelEq(searchCondition.getUserLevel())
                 ).fetch().size();
 
         return new PageImpl<>(content, pageable, totalSize);
     }
 
-    private BooleanExpression userIdEq(Long userId) {
-        return userId != null ? user.id.eq(userId) : null;
-    }
-
     private BooleanExpression userEmailEq(String userEmail) {
-        return hasText(userEmail) ? user.email.endsWith(userEmail) : null;
+        return hasText(userEmail) ? user.email.contains(userEmail) : null;
     }
 
     private BooleanExpression userLevelEq(UserLevel userLevel) {

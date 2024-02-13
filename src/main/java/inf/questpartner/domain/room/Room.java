@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +49,10 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
 
+//    시작 시간과 종료 시간
+    private LocalDateTime startTime;
+    private long durationInMinutes;
+
     @Builder(builderMethodName = "createRoom")
     public Room(String author, String title, int expectedUsers, RoomType roomType, RoomThumbnail thumbnail) {
         this.author = author;
@@ -56,6 +61,8 @@ public class Room {
         this.roomStatus = RoomStatus.OPEN;
         this.roomType = roomType;
         this.thumbnail = thumbnail;
+//         방 생성 시 0으로 초기화
+        this.durationInMinutes = 0;
     }
 
     // 스터디룸에 남은 자리가 있는지 확인하는 로직
@@ -70,6 +77,15 @@ public class Room {
 
     public void addHashTag(RoomHashTag tag) {
         this.roomHashTags.add(tag);
+    }
+
+//    룸 타이머 시작과 종료
+    public void startRoomTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void updateRoomTime(Long durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
     }
 
     @Override

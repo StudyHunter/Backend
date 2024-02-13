@@ -5,6 +5,7 @@ import inf.questpartner.util.exception.room.NotFoundRoomException;
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.repository.room.RoomRepository;
+import inf.questpartner.util.exception.users.NotFoundUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,8 @@ import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.dto.RoomTag;
 import inf.questpartner.dto.UserWishTag;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Transactional
@@ -44,6 +47,20 @@ public class RoomService {
 
         user.createRoom(room);
         return id;
+    }
+
+    public void startRoom(Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new NotFoundRoomException("존재하지 않는 room 입니다."));
+        room.startRoomTime(LocalDateTime.now());
+    }
+
+    public void updateRoomTime(Long roomId, LocalDateTime currentTime) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new NotFoundRoomException("존재하지 않는 room 입니다."));
+
+        long durationInMinutes = Duration.between(room.getStartTime(), currentTime).toMinutes();
+        room.updateRoomTime(durationInMinutes);
     }
 
 //    @Transactional(readOnly = true)

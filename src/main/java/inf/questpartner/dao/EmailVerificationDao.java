@@ -34,6 +34,6 @@ public class EmailVerificationDao implements EmailCertificationDao {
 
     @Override
     public boolean hasKey(String email) {
-        return redisTemplate.hasKey(PREFIX_VERIFICATION + email);
+        return Boolean.TRUE.equals(redisTemplate.hasKey(PREFIX_VERIFICATION + email));
     }
 }

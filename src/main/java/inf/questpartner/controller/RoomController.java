@@ -1,4 +1,4 @@
-package inf.questpartner.controller;
+/*package inf.questpartner.controller;
 
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.dto.room.CreateRoomRequest;
@@ -20,6 +20,7 @@ public class RoomController {
     @Autowired
     private RoomRepository roomRepository;
 
+
     //새로운 room 게시
     @GetMapping("/room/new")
     public String newRoomDto(){
@@ -34,10 +35,8 @@ public class RoomController {
 
         //TO를 Entity로 변환
         Room room = createRoomRequest.toEntity();
-        log.info(room.toString());
         //repository로 Entity를 DB에 저장
         Room saved = roomRepository.save(room);
-        log.info(saved.toString());
         // 상세 페이지로 리다이렉트
         return "redirect:/room/" + saved.getId();
 
@@ -77,10 +76,8 @@ public class RoomController {
 
     @PostMapping("/room/update")
     public String update(CreateRoomRequest createRoomRequest){
-        log.info(createRoomRequest.toString());
         //DTO를 엔티티로 변환하기
         Room room = createRoomRequest.toEntity();
-        log.info(room.toString());
         //엔티티를 DB에 저장하기
         Room target = roomRepository.findById(room.getId()).orElse(null); //DB에서 기존 데이터 가져옴
         if (target != null){
@@ -89,5 +86,5 @@ public class RoomController {
         //수정 결과 페이지로 리다이렉트
         return "redirect:/room/" + room.getId();
     }
-
 }
+*/

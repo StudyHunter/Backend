@@ -4,6 +4,7 @@ import inf.questpartner.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@DiscriminatorColumn
 public abstract class UserBase extends BaseTimeEntity {
 
     @Id
@@ -30,4 +33,6 @@ public abstract class UserBase extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     protected UserLevel userLevel;
+
+
 }

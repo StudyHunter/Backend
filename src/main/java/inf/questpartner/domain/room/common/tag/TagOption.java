@@ -15,6 +15,7 @@ public enum TagOption {
     DEVELOP("개발"),
     INTERVIEW("면접준비"),
     STARTUP("창업"),
+    DATA("데이터과학"),
 
     /**
      * 기술 스택

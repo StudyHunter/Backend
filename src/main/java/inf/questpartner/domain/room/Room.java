@@ -1,55 +1,99 @@
 package inf.questpartner.domain.room;
 
-import inf.questpartner.domain.chat.Chatting;
 import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
 import inf.questpartner.domain.room.common.RoomType;
-import inf.questpartner.domain.room.common.tag.TagOption;
+
+import inf.questpartner.domain.users.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Room {
 
-
     @Id
-    @GeneratedValue
-    @Column(name = "ROOM_ID")
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "room_id")
     private Long id;
 
     private String author; // 방장 닉네임
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
-    private int expectedSchedule; // 예상 기간
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<RoomHashTag> roomHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
     @Enumerated(EnumType.STRING)
-    private List<TagOption> tags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
+    private RoomType roomType; // 방 유형 -> STUDY(스터디), PROJECT(팀 프로젝트)
 
     @Enumerated(EnumType.STRING)
-    private RoomType roomType; // 방 유형 ex: STUDY(스터디), PROJECT(팀 프로젝트)
-
-    @Enumerated(EnumType.STRING)
-    private RoomStatus roomStatus; // 모집 상태 (자리 남았는지?)
+    private RoomStatus roomStatus; // 모집 상태 (자리 남았는지? OPEN /CLOSED)
 
     @Enumerated(EnumType.STRING)
     private RoomThumbnail thumbnail; // 섬네일 선택지
 
-    // 1 : 1 양방향
-    @OneToOne(mappedBy = "ROOM", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Chatting chatting;
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
 
-//    N : M
-    @OneToMany(mappedBy = "Room", orphanRemoval = true)
-    private List<RoomUser> roomUserList = new ArrayList<>();
-
-    public void addRoomUser(RoomUser user) {
-        roomUserList.add(user);
+    @Builder(builderMethodName = "createRoom")
+    public Room(String author, String title, int expectedUsers, RoomType roomType, RoomThumbnail thumbnail) {
+        this.author = author;
+        this.title = title;
+        this.expectedUsers = expectedUsers;
+        this.roomStatus = RoomStatus.OPEN;
+        this.roomType = roomType;
+        this.thumbnail = thumbnail;
     }
+
+    // 스터디룸에 남은 자리가 있는지 확인하는 로직
+    public boolean hasExceededUsers() {
+        return this.participants.size() > expectedUsers;
+    }
+
+    // 스터디룸에 참여자 참여
+    public void addParticipant(User user) {
+        this.participants.add(user);
+    }
+
+    public void addHashTag(RoomHashTag tag) {
+        this.roomHashTags.add(tag);
+    }
+
+    @Override
+    public String toString() {
+        return "[Room Info] ->" + "방장명 = " + author +
+                " 방제목 = " + title +
+                ", 방 태그들 = " + roomHashTags.stream().map(RoomHashTag::getTagOption).collect(Collectors.toList()) +
+                ", 방 유형 = " + roomType +
+                ", 방 썸네일 = " + thumbnail.getTypeInfo() +
+                ", 방 제한된 인원수 = " + expectedUsers +
+                ", 현재 모집상태 = " + roomStatus +
+                ", 스터디에 참여한 회원이름" + participants.stream().map(User::getNickname).collect(Collectors.toList());
+    }
+
+
+    // 방 태그검색 테스트용 --
+    /*
+    public RoomTag toRoomTagDto() {
+        return RoomTag.builder()
+                .groupSize(this.expectedUsers)
+                .expectedSchedule(this.expectedSchedule)
+                .tagList(this.tags)
+                .build();
+    }
+
+     */
+
+
 }

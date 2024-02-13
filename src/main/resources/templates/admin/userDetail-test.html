@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div class="container">
+        <div>
+            <h2 class="text-center">회원 상세 페이지</h2>
+        </div>
+
+        <div class="row">
+
+            <form id="userForm" th:object="${users}">
+
+                <input type="hidden" id="userId" th:value="*{id}">
+                <div class="form-group">
+                    <label>회원 email</label>
+                    <input class="form-control" th:value="*{email}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>회원 닉네임</label>
+                    <input class="form-control" th:value="*{nickname}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>가입 날짜</label>
+                    <input class="form-control" th:value="*{createdDate}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>수정 날짜</label>
+                    <input class="form-control" th:value="*{modifiedDate}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>구분</label>
+                    <input class="form-control" th:value="*{userLevel}" readonly>
+                </div>
+
+                <div class="btn_box">
+                    <button th:onclick="banUser()" type="button" class="btn btn-danger">BAN</button>
+                </div>
+
+            </form>
+
+
+            <hr class="my-4">
+
+        </div>
+    </div>
+
+
+    <br/>
+    <div th:replace="fragments/footer :: footer" />
+
+</div> <!-- /container -->
+
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="/js/users/userBan.js"></script>
+
+</body>
+</html>

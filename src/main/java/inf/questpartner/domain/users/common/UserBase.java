@@ -4,8 +4,11 @@ import inf.questpartner.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 /**
  * UserBase는 User 테이블에 필요한 공통 사항을 정의한다.
@@ -17,11 +20,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@DiscriminatorColumn
 public abstract class UserBase extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "USER_ID")
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(unique = true)
@@ -30,4 +35,6 @@ public abstract class UserBase extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     protected UserLevel userLevel;
+
+
 }

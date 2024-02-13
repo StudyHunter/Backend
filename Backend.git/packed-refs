@@ -1,0 +1,11 @@
+# pack-refs with: peeled fully-peeled sorted 
+228bc533eab240ea0b4cd3ee4ea1bb6bdc76ef7a refs/heads/Choihohee
+7a7a14aa69b65f67c7f7d942932cff903191a09b refs/heads/Kim-Gyuri
+1fff8dbad4ffffc58772d687154b98fcc3eea4ed refs/heads/Lanvizu
+c74ccf3eefc9e5d86a354f3f9dbfaf0111280cc8 refs/heads/master
+824e2181bbe22565a8e00d596b8b6519f927ab8b refs/heads/pre-master
+3eb10e98666ae6c36e100ef9e86c76d5b613a609 refs/pull/1/head
+1fff8dbad4ffffc58772d687154b98fcc3eea4ed refs/pull/2/head
+bbae3223a5e7b3d468d1a80610ee1a3a23422872 refs/pull/3/head
+228bc533eab240ea0b4cd3ee4ea1bb6bdc76ef7a refs/pull/4/head
+b2784907e540068d68259108e0de0b9e37addb20 refs/pull/4/merge

@@ -46,7 +46,6 @@ class AdminServiceTest {
         return UserSearchCondition.builder()
                 .email("dawn@naver.com")
                 .userLevel(UserLevel.AUTH)
-                .id(1L)
                 .build();
     }
 
@@ -123,13 +122,7 @@ class AdminServiceTest {
     public void updateBanUsers() {
         User user = userService.save(createUserDto());
 
-        UserBanRequest userBanRequest = UserBanRequest
-                .builder()
-                .id(user.getId())
-                .userStatus(UserStatus.BAN)
-                .build();
-
-        adminService.updateBanUsers(userBanRequest);
+        adminService.updateBanUsers(user.getId());
 
         assertThat(user.getUserStatus()).isEqualTo(UserStatus.BAN);
     }

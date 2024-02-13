@@ -2,7 +2,6 @@ package inf.questpartner.controller.api;
 
 import inf.questpartner.dto.like.LikeRequest;
 import inf.questpartner.dto.like.LikeResponse;
-import inf.questpartner.service.LikeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

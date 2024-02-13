@@ -25,8 +25,6 @@ public class SaveRequest {
                 .nickname(this.nickname)
                 .email(this.email)
                 .password(this.password)
-                .userLevel(UserLevel.AUTH)
-                .userStatus(UserStatus.NORMAL)
                 .build();
     }
 }

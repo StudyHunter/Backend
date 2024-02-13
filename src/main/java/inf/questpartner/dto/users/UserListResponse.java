@@ -5,9 +5,11 @@ import inf.questpartner.domain.users.common.UserLevel;
 import inf.questpartner.domain.users.user.User;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
 public class UserListResponse {
 
     private Long id;

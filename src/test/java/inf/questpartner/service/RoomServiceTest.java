@@ -1,23 +1,11 @@
 package inf.questpartner.service;
 
-import inf.questpartner.domain.room.Room;
-import inf.questpartner.domain.room.common.RoomThumbnail;
-import inf.questpartner.domain.room.common.RoomType;
-import inf.questpartner.domain.room.common.tag.TagOption;
-import inf.questpartner.domain.users.user.User;
-import inf.questpartner.dto.RoomTag;
-import inf.questpartner.dto.UserWishTag;
-import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.dto.users.SaveRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,7 +29,7 @@ class RoomServiceTest {
                 .password("!1234")
                 .build();
     }
-
+/*
     private CreateRoomRequest createRoomDtoA(String author) {
         CreateRoomRequest dto = new CreateRoomRequest();
         dto.setAuthor(author);
@@ -106,6 +94,8 @@ class RoomServiceTest {
 
     }
 
+
+ */
     /*
 
     @Test

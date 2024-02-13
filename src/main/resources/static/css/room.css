@@ -1,0 +1,9 @@
+section > div {
+    text-align: center;
+}
+
+section > div > img {
+    width: 300px;
+    border: 1px solid gray;
+    margin: 15px;
+}

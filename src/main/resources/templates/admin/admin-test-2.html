@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<body>
+
+<div class="container">
+
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div>
+        <div>
+            <form th:object="${userSearch}" class="form-inline">
+                <div class="form-group mb-2">
+                    <input type="text" th:field="*{email}" class="form-control" placeholder="회원 이메일"/>
+                </div>
+
+                <div class="form-group mx-sm-1 mb-2">
+                    <select type="text" id="userLevel" name="userLevel" class="form-control">
+                        <option value="">==회원 구분 선택==</option>
+                        <option th:each="userLevel : ${userLevels}"
+                                th:value="${userLevel.name()}" th:text="${userLevel.getLevelInfo()}"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">검색</button>
+            </form>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>회원 ID</th>
+                <th>회원 Email</th>
+                <th>회원 구분</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td><a th:href="@{/admin/users/{id}(id=${user.id})}" th:text="${user.id}"></a></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.userLevel}"></td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center" th:if="${#lists.size(users) != 0}">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-sm">
+                <li th:if="${page.isPrev()}" class="page-item"><a th:onclick="goPage([[${page.curPage-1}]],[[${page.sortParam}]]);" class="page-link">Prev</a></li>
+                <li th:unless="${page.isPrev()}" class="page-item disabled"><a class="page-link">Prev</a></li>
+                <li class="page-item" th:each="num, index : ${#numbers.sequence(page.startPage, page.endPage)}">
+                    <a th:if="${#strings.equals(page.curPage+1, num)}" th:text="${num}" class="page-link" style="background-color: #eeeeee">1</a>
+                    <a th:unless="${#strings.equals(page.curPage+1, num)}" th:onclick="goPage([[${index.current-1}]],[[${page.sortParam}]]);" th:text="${num}" class="page-link">1</a>
+                </li>
+                <li th:if="${page.isNext()}" class="page-item"><a th:onclick="goPage([[${page.curPage+1}]],[[${page.sortParam}]]);" class="page-link">Next</a></li>
+                <li th:unless="${page.isNext()}" class="page-item disabled"><a class="page-link">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"/>
+
+</div> <!-- /container -->
+<script>
+    function getSearchParam(searchParam) {
+        var email = document.getElementById('email').value;
+        var userLevel = document.getElementById('userLevel').value;
+
+        if (email !== "") {
+            searchParam += "&email=" + email;
+        }
+
+        if (userLevel !== "") {
+            searchParam += "&userLevel=" + userLevel;
+        }
+
+        return searchParam;
+    }
+
+    function goSearch(sortParam) {
+        var param = "/admin/users?";
+        param += "sort=" + sortParam;
+        param = getSearchParam(param);
+        location.replace(param);
+        // return searchParam;
+    }
+
+    function goPage(page, sortParam) {
+        var param = "/admin/users?";
+        param += "page=" + page;
+        param += "&sort=" + sortParam;
+        param = getSearchParam(param);
+
+        location.replace(param);
+    }
+</script>
+
+</body>
+
+</html>

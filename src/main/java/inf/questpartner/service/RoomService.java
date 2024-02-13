@@ -1,46 +1,42 @@
 package inf.questpartner.service;
 
 import inf.questpartner.domain.room.Room;
-import inf.questpartner.domain.room.common.tag.TagOption;
-import inf.questpartner.domain.users.user.User;
-import inf.questpartner.dto.RoomTag;
-import inf.questpartner.dto.UserWishTag;
+import inf.questpartner.domain.room.RoomHashTag;
+import inf.questpartner.domain.tag.TagOption;
+
 import inf.questpartner.dto.room.CreateRoomRequest;
+import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
 import inf.questpartner.util.exception.room.NotFoundRoomException;
-import inf.questpartner.util.exception.users.NotFoundUserException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
+
 @Transactional
 @RequiredArgsConstructor
 @Service
 public class RoomService {
-    private final RoomRepository roomRepository;
 
-    @Transactional(readOnly = true)
-    public List<Room> findAll() {
-        return roomRepository.findAll();
+    private final RoomRepository roomRepository;
+    private final RoomHashTagRepository hashTagRepository;
+
+    public Long createRoom(CreateRoomRequest req) {
+        Room room = roomRepository.save(req.toRoomEntity());
+
+        for (TagOption tag : req.getTags()) {
+            RoomHashTag hashTag = hashTagRepository.save(new RoomHashTag(room, tag));
+            room.addHashTag(hashTag);
+        }
+        return room.getId();
     }
 
     @Transactional(readOnly = true)
     public Room findById(Long id) {
-        return roomRepository.findById(id)
-                .orElseThrow(() -> new NotFoundRoomException("해당 " + id  + "번방이 존재하지 않습니다."));
+        return roomRepository.findById(id).orElseThrow(() -> new NotFoundRoomException("존재하지 않는 방입니다."));
     }
 
-    public Long createRoom(User user, CreateRoomRequest req) {
-        Room room = req.toEntity(req.getAuthor());
-        Long id = roomRepository.save(room).getId();    //방 정보를 데이터베이스에 저장
-
-        user.createRoom(room);  //사용자와 방 간의 관계를 설정하는 메서드를 호출
-        return id;
-    }
-
+    /*
     @Transactional(readOnly = true)
     public List<RoomTag> findRoomTags() {
         return roomRepository.findAll().stream()
@@ -102,6 +98,6 @@ public class RoomService {
         return (double) commonTagsCount / smallerListSize;
     }
 
-
+     */
 
 }

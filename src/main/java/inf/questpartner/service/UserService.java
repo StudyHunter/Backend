@@ -5,7 +5,6 @@ import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.users.*;
 
 import inf.questpartner.repository.users.UserRepository;
-import inf.questpartner.service.certification.EmailCertificationService;
 import inf.questpartner.service.encrytion.EncryptionService;
 import inf.questpartner.util.exception.users.*;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final EncryptionService encryptionService;
     //private final StudyTreeRepository studyTreeRepository;
-    private final EmailCertificationService emailCertificationService;
+    //private final EmailCertificationService emailCertificationService;
 
 
     @Transactional
@@ -122,21 +121,6 @@ public class UserService {
 
  */
 
-    private void validToken(String token, String email) {
-        emailCertificationService.verifyEmail(token, email);
-    }
-
-
-
-//    이메일 인증 시 userLevel을 Auth로 설정
-    @Transactional
-    public void updateEmailVerified(String token, String email) {
-        validToken(token, email);
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
-        user.updateUserLevel();
-    }
 
 
 }

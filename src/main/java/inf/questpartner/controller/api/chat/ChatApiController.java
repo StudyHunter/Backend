@@ -1,47 +1,48 @@
 package inf.questpartner.controller.api.chat;
 
-import inf.questpartner.controller.response.ChatResponse;
-import inf.questpartner.dto.chat.ChatMessageDto;
-import inf.questpartner.dto.chat.CheckRequest;
-import inf.questpartner.service.ChatConfigService;
-import inf.questpartner.service.ChattingService;
+
+import inf.questpartner.domain.chat.ChattingRoom;
+import inf.questpartner.dto.chat.ChatRoomDto;
+import inf.questpartner.service.ChatService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+@Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/chat")
-@RestController
-@Slf4j
 public class ChatApiController {
 
-    private final ChattingService chattingService;
-    private final ChatConfigService chatConfigService;
-/*
-    @PostMapping
-    public void addChat(@RequestBody ChatMessageDto chatMessageDto) {
-        log.info(chatMessageDto.getMessage() + " " + chatMessageDto.getWriter());
-        chattingService.addChat(chatMessageDto);
+    private final ChatService chatService;
+
+    @GetMapping("/chat/chatList")
+    public String chatList(Model model){
+        List<ChatRoomDto> roomList = chatService.findAllRoom();
+        model.addAttribute("roomList",roomList);
+        return "chat/chatList";
     }
 
-    @GetMapping("/{roomId}")
-    public ChatResponse listChat(@PathVariable Long roomId) {
-        log.info("roomId={}", roomId);
-        List<ChatMessageDto> list = chattingService.listChat(roomId);
-        return ChatResponse.success(list);
+    @PostMapping("/chat/createRoom")  //방을 만들었으면 해당 방으로 이동된다.
+    public String createRoom(@RequestParam("name") String name, @RequestParam(required = false, name = "username") String username, Model model) {
+        ChattingRoom room = chatService.createRoom(name);
+        model.addAttribute("room", room.toDto());
+        model.addAttribute("username", username);
+        return "chat/chatRoom";  //만든사람이 채팅방 먼저 들어간다
     }
 
-    @PostMapping("/check")
-    public ChatResponse checkSave(@RequestBody CheckRequest checkRequest) {
-        return chatConfigService.checkSave(checkRequest);
+    @GetMapping("/chat/chatRoom")
+    public String chatRoom(@RequestParam("roomId") String roomId, Model model) {
+        ChatRoomDto room = chatService.findRoomById(roomId);
+        model.addAttribute("room",room);
+        return "chat/chatRoom";
     }
 
-    @GetMapping("/check/{roomId}/{userName}")
-    public ChatResponse checkRead(@PathVariable Long roomId, @PathVariable String userNickName) {
-        return chatConfigService.checkRead(roomId, userNickName);
-    }
 
- */
+
+
+
+
 }

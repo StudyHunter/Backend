@@ -18,37 +18,26 @@ public class QChattingRoom extends EntityPathBase<ChattingRoom> {
 
     private static final long serialVersionUID = -215839864L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QChattingRoom chattingRoom = new QChattingRoom("chattingRoom");
 
-    public final QChatting chatting;
+    public final ListPath<Chatting, QChatting> chattingList = this.<Chatting, QChatting>createList("chattingList", Chatting.class, QChatting.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath roomName = createString("roomName");
+    public final StringPath name = createString("name");
 
-    public final NumberPath<Integer> roomNumber = createNumber("roomNumber", Integer.class);
+    public final StringPath roomId = createString("roomId");
 
     public QChattingRoom(String variable) {
-        this(ChattingRoom.class, forVariable(variable), INITS);
+        super(ChattingRoom.class, forVariable(variable));
     }
 
     public QChattingRoom(Path<? extends ChattingRoom> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QChattingRoom(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QChattingRoom(PathMetadata metadata, PathInits inits) {
-        this(ChattingRoom.class, metadata, inits);
-    }
-
-    public QChattingRoom(Class<? extends ChattingRoom> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.chatting = inits.isInitialized("chatting") ? new QChatting(forProperty("chatting"), inits.get("chatting")) : null;
+        super(ChattingRoom.class, metadata);
     }
 
 }

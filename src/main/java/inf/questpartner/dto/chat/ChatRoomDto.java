@@ -1,35 +1,24 @@
 package inf.questpartner.dto.chat;
 
-import inf.questpartner.domain.chat.ChattingRoom;
-import inf.questpartner.domain.users.user.User;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import org.springframework.web.socket.WebSocketSession;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Setter
 public class ChatRoomDto {
 
-    private Long roomId;
+    private String roomId;
     private String name;
-    private Long userId;
+    private Set<WebSocketSession> sessions = new HashSet<>();
 
-    /*
-    public static List<ChatRoomDto> createList(List<ChattingRoom> list) {
-        return list.stream()
-                .map(chatRoom -> ChatRoomDto.builder()
-                        .roomId(chatRoom.getId())
-                        .name(chatRoom.getName())
-                        .build())
-                .collect(Collectors.toList());
+    @Builder
+    public ChatRoomDto(String roomId, String name) {
+        this.roomId = roomId;
+        this.name = name;
     }
 
-    public ChattingRoom of(User user) {
-        return ChattingRoom.builder().name(name).user(user).build();
-    }
-     */
+
 }

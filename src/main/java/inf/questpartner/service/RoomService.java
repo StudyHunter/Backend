@@ -2,27 +2,22 @@ package inf.questpartner.service;
 
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.RoomHashTag;
+
 import inf.questpartner.domain.room.common.tag.TagOption;
-import inf.questpartner.domain.users.user.User;
-import inf.questpartner.dto.RoomTag;
-import inf.questpartner.dto.UserWishTag;
 import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
 import inf.questpartner.util.exception.room.NotFoundRoomException;
-import inf.questpartner.util.exception.users.NotFoundUserException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
 
-@Service
 @Transactional
 @RequiredArgsConstructor
+@Service
 public class RoomService {
+
     private final RoomRepository roomRepository;
     private final RoomHashTagRepository hashTagRepository;
 
@@ -41,7 +36,7 @@ public class RoomService {
         return roomRepository.findById(id).orElseThrow(() -> new NotFoundRoomException("존재하지 않는 방입니다."));
     }
 
-/*
+    /*
     @Transactional(readOnly = true)
     public List<RoomTag> findRoomTags() {
         return roomRepository.findAll().stream()
@@ -103,6 +98,6 @@ public class RoomService {
         return (double) commonTagsCount / smallerListSize;
     }
 
- */
+     */
 
 }

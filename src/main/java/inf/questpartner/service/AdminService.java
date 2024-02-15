@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@Transactional
 public class AdminService {
     private final AdminRepository adminRepository;
     private final UserRepository userRepository;
@@ -34,11 +35,9 @@ public class AdminService {
         return user.toUserDetailDto();
     }
 
-    public void updateBanUsers(UserBanRequest requestDto) {
-        Long id = requestDto.getId();
-        UserStatus userStatus = requestDto.getUserStatus();
+    public void updateBanUsers(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundUserException("존재하지 않는 회원입니다."));
-        user.updateUserStatus(UserStatus.BAN);
+        user.updateUserStatus();
         log.info("userStatus={}", user.getUserStatus());
     }
 }

@@ -45,8 +45,12 @@ public enum ErrorCode {
     NOT_ALLOWED_PARTICIPATION(HttpStatus.BAD_REQUEST,"참여인원이 가득찼습니다."),
 
     NOT_AUTHORIZED(HttpStatus.UNAUTHORIZED, "권한이 없습니다."),
-    NOT_FOUND_PARTICIPATION(HttpStatus.NOT_FOUND, "사용자가 모임에 참석해 있지 않습니다.")
-    ;
+    NOT_FOUND_PARTICIPATION(HttpStatus.NOT_FOUND, "사용자가 모임에 참석해 있지 않습니다.");
+
+
+
+
+
     private HttpStatus httpStatus;
     private String message;
 }

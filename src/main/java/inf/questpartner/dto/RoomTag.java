@@ -3,7 +3,6 @@ package inf.questpartner.dto;
 import inf.questpartner.domain.room.common.tag.TagOption;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.bind.annotation.BindParam;
 
 import java.util.List;
 import java.util.Objects;

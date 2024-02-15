@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StompChatController {
 
-   private final SimpMessagingTemplate template;
+   private final SimpMessagingTemplate simpMessagingTemplate;
     private final Map<String, Long> map = new HashMap<>();
     
     @MessageMapping(value = "/chat/enter")
@@ -25,7 +25,7 @@ public class StompChatController {
 
         updateLiveUsers(message);
         message.setStatus(0);
-        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
+        simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 
     @MessageMapping(value = "/chat/out")
@@ -34,7 +34,7 @@ public class StompChatController {
 
         removeUserAndUpdateMessage(message);
         message.setStatus(1);
-        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
+        simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 
     @MessageMapping(value = "/chat/message")
@@ -42,7 +42,7 @@ public class StompChatController {
         List<String> liveUser = getLiveUsersInRoom(message);
         message.setUserList(liveUser);
         message.setStatus(0);
-        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
+        simpMessagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 
     private List<String> getLiveUsersInRoom(ChatMessageDto message) {

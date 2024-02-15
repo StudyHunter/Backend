@@ -54,7 +54,8 @@ public class UserAPiController {
 
     /*등록된 메일 링크*/
     @GetMapping("/email-check-token")
-    public void emailCheck(String token, String email) {
+    public void emailCheck(@RequestParam(name = "token") String token,
+                           @RequestParam(name = "email") String email) {
         userService.updateEmailVerified(token, email);
     }
 

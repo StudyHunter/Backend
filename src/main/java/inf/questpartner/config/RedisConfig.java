@@ -23,6 +23,9 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
+//    redis 설치한 후 본인이 설정한 암호로 수정해서 적용해주면 됩니다.(기본 설정은 암호 X)
+    @Value("${spring.data.redis.password}")
+    private String password;
 
     /*
      * 자바에서 레디스를 사용하기 위해서 레디스 클라이언트가 필요하다.
@@ -32,8 +35,13 @@ public class RedisConfig {
      */
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(redisHost, redisPort);
+        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory();
+        lettuceConnectionFactory.setHostName(redisHost);
+        lettuceConnectionFactory.setPort(redisPort);
+        lettuceConnectionFactory.setPassword(password);
+        return lettuceConnectionFactory;
     }
+
 
     /*
      * RedisTemplate는 커넥션 위에서 레디스 커맨드를 도와준다.

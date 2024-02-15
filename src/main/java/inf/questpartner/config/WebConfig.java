@@ -21,9 +21,19 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginCheckInterceptor);
+        registry.addInterceptor(loginCheckInterceptor)
+                .excludePathPatterns(
+                        "/users/signup/**",
+                        "/users/email-check-token",
+                        "/resend-email-token",
+                        "/users/login",
+                        "/users/forget/password",
+                        "/users/find",
+                        "/favicon.ico",
+                        "/error",
+                        "/"
+                );
     }
-
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginUserArgumentResolver);

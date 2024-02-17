@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import static inf.questpartner.util.constant.ResponseConstants.CREATED;
 import static inf.questpartner.util.constant.ResponseConstants.OK;
 
-/*
- 예시
- */
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -34,12 +31,12 @@ public class UserAPiController {
 
     /*회원 가입 페이지에서 중복 이메일과 닉네임 검사*/
     @GetMapping("/signup/{email}/email-exists")
-    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String email) {
+    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable(name = "email") String email) {
         return ResponseEntity.ok(userService.checkEmailDuplicate(email));
     }
 
     @GetMapping("/signup/{nickname}/nickname-exists")
-    public ResponseEntity<Boolean> checkNicknameDuplicate(@PathVariable String nickname) {
+    public ResponseEntity<Boolean> checkNicknameDuplicate(@PathVariable(name = "nickname") String nickname) {
         return ResponseEntity.ok(userService.checkNicknameDuplicate(nickname));
     }
 
@@ -79,7 +76,7 @@ public class UserAPiController {
 
     /*해당 이메일이 등록 되어있는지 확인*/
     @GetMapping("/find/{email}")
-    public ResponseEntity<FindUserResponse> findUser(@PathVariable String email) {
+    public ResponseEntity<FindUserResponse> findUser(@PathVariable(name = "email") String email) {
         FindUserResponse findUserResponse = userService.getUserResource(email);
         return ResponseEntity.ok(findUserResponse);
     }
@@ -101,6 +98,7 @@ public class UserAPiController {
         userService.updatePasswordByForget(requestDto);
     }
 
+//    react로 Json 정보 받아서 처리하도록 설정
     @GetMapping("/my-infos")
     public ResponseEntity<UserInfoDto> myPage(@CurrentUser String email) {
         UserInfoDto loginUser = sessionLoginService.getCurrentUser(email);

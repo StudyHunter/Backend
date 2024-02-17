@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+</head>
+<body>
+<button id="logoutButton">Logout</button>
+
+<button id="myPageButton">My Page</button>
+
+<script>
+    document.getElementById("logoutButton").addEventListener("click", function() {
+        fetch("/users/logout", {
+            method: "DELETE"
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "/users/login";
+                } else {
+                    console.error("Logout failed");
+                    alert("로그아웃에 실패했습니다.");
+                }
+            })
+            .catch(error => {
+                console.error("오류 발생:", error);
+            });
+    });
+
+    document.getElementById("myPageButton").addEventListener("click", function() {
+        window.location.href = "/users/my-infos";
+    });
+</script>
+</body>
+</html>

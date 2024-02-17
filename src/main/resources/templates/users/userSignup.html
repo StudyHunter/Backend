@@ -9,66 +9,97 @@
 <h1>회원 가입</h1>
 <form id="SaveRequest">
     <label for="email">이메일:</label>
-    <input type="email" id="email" name="email" required><br>
+    <input type="email" id="email" name="email" required>
+    <button type="button" onclick="checkEmail()">이메일 중복 확인</button><br>
+
     <label for="nickname">닉네임:</label>
-    <input type="text" id="nickname" name="nickname" required><br>
-    <button type="submit">가입</button>
+    <input type="text" id="nickname" name="nickname" required>
+    <button type="button" onclick="checkNickname()">닉네임 중복 확인</button><br>
+
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" name="password" required><br>
+
+<!--    <label for="profileImg">프로필 이미지:</label>-->
+<!--    <input type="file" id="profileImg" name="profileImg"><br>-->
+
+<!--    <label for="userHashTags">사용자 원하는 해시태그 목록:</label>-->
+<!--    <input type="text" id="userHashTags" name="userHashTags"><br>-->
+
+    <label for="wishGroupSize">선호하는 파티 인원 수:</label>
+    <input type="number" id="wishGroupSize" name="wishGroupSize" required><br>
+
+    <label for="wishExpectedSchedule">선호하는 파티 평균 시간(분):</label>
+    <input type="number" id="wishExpectedSchedule" name="wishExpectedSchedule" required><br>
+
+    <button type="button" onclick="signUp()">가입</button>
 </form>
 
 <script>
-    document.getElementById("SaveRequest").addEventListener("submit", function (event) {
-        event.preventDefault(); //기본 동작 중단
-
+    // 이메일 중복 확인
+    function checkEmail() {
         var email = document.getElementById("email").value;
-        var nickname = document.getElementById("nickname").value;
-
-        // 이메일 중복 확인
         fetch("/users/signup/" + email + "/email-exists")
             .then(response => response.json())
             .then(data => {
                 if (data) {
                     alert("이미 사용 중인 이메일입니다.");
                 } else {
-                    // 닉네임 중복 확인
-                    fetch("/users/signup/" + nickname + "/nickname-exists")
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data) {
-                                alert("이미 사용 중인 닉네임입니다.");
-                            } else {
-                                // 회원 가입 요청
-                                fetch("/users/signup", {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json"
-                                    },
-                                    body: JSON.stringify({
-                                        email: email,
-                                        nickname: nickname
-                                    })
-                                })
-                                    .then(response => {
-                                        if (response.ok) {
-                                            // 회원 가입 완료 후 로그인 페이지로 이동
-                                            window.location.href = "/users/login";
-                                        } else {
-                                            alert("회원 가입에 실패했습니다.");
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error("오류 발생:", error);
-                                    });
-                            }
-                        })
-                        .catch(error => {
-                            console.error("오류 발생:", error);
-                        });
+                    alert("사용 가능한 이메일입니다.");
                 }
             })
             .catch(error => {
                 console.error("오류 발생:", error);
             });
-    });
+    }
+
+    // 닉네임 중복 확인
+    function checkNickname() {
+        var nickname = document.getElementById("nickname").value;
+        fetch("/users/signup/" + nickname + "/nickname-exists")
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    alert("이미 사용 중인 닉네임입니다.");
+                } else {
+                    alert("사용 가능한 닉네임입니다.");
+                }
+            })
+            .catch(error => {
+                console.error("오류 발생:", error);
+            });
+    }
+
+    // 회원 가입 요청
+    function signUp() {
+        var email = document.getElementById("email").value;
+        var nickname = document.getElementById("nickname").value;
+        var password = document.getElementById("password").value;
+        var wishGroupSize = document.getElementById("wishGroupSize").value;
+        var wishExpectedSchedule = document.getElementById("wishExpectedSchedule").value;
+
+
+        fetch("/users/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                nickname: nickname,
+                password: password,
+                wishGroupSize: wishGroupSize,
+                wishExpectedSchedule: wishExpectedSchedule
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "/users/login";
+                } else {
+                    alert("회원 가입에 실패했습니다.");
+                }
+            })
+            .catch(error => {
+                console.error("오류 발생:", error);
+            });
+    }
 </script>
-</body>
-</html>

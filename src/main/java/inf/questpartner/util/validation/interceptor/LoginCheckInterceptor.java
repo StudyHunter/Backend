@@ -3,7 +3,7 @@ package inf.questpartner.util.validation.interceptor;
 
 import inf.questpartner.domain.users.common.UserLevel;
 import inf.questpartner.service.SessionLoginService;
-import inf.questpartner.util.constant.SessionConst;
+import inf.questpartner.util.constant.UserConstants;
 import inf.questpartner.util.exception.users.NotAuthorizedException;
 import inf.questpartner.util.exception.users.UnauthenticatedUserException;
 import inf.questpartner.util.validation.argumentResolver.Login;
@@ -69,7 +69,8 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession();
 
-        if (session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null) {
+//        로그인 시 email을 세션에 저장하고 불러오도록 수정
+        if (session == null || session.getAttribute(UserConstants.USER_ID) == null) {
             log.info("미인증 사용자 요청");
             response.sendRedirect("/users/login");
             return false;

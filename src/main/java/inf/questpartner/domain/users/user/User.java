@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import inf.questpartner.domain.room.Room;
 
+import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.studytree.StudyTree;
 import inf.questpartner.domain.users.common.UserBase;
 import inf.questpartner.domain.users.common.UserLevel;
@@ -58,7 +59,7 @@ public class User extends UserBase {
 
     @Builder
     public User(Long id, String email, String password,
-                String nickname, UserProfileImg profileImg, int wishGroupSize, int wishExpectedSchedule, List<UserWishHashTag> userHashTags) {
+                String nickname, UserProfileImg profileImg, int wishGroupSize, int wishExpectedSchedule) {
         super(id, email, password, UserLevel.AUTH);
         this.nickname = nickname;
         this.profileImg = profileImg;
@@ -66,7 +67,6 @@ public class User extends UserBase {
         this.studyTime = 0;
         this.wishGroupSize = wishGroupSize;
         this.wishExpectedSchedule = wishExpectedSchedule;
-        this.userHashTags = userHashTags;
     }
 
     /**
@@ -94,10 +94,17 @@ public class User extends UserBase {
 
     public UserInfoDto toUserInfoDto() {
         return UserInfoDto.builder()
-                .email(this.getEmail())
-                .nickname(this.nickname)
-                .userLevel(this.userLevel)
+                .user(this)
+                .userHashTags(this.getUserTagOptions())
                 .build();
+    }
+
+    private List<TagOption> getUserTagOptions() {
+        List<TagOption> tagOptions = new ArrayList<>();
+        for (UserWishHashTag userWishHashTag : userHashTags) {
+            tagOptions.add(userWishHashTag.getTagOption());
+        }
+        return tagOptions;
     }
 
     public UserWishTag toUserWishDto() {
@@ -150,10 +157,9 @@ public class User extends UserBase {
         this.userLevel = UserLevel.AUTH;
     }
 
-    public void updateUserWishTag(int wishGroupSize, int wishExpectedSchedule, List<UserWishHashTag> userHashTags) {
+    public void updateUserWish(int wishGroupSize, int wishExpectedSchedule) {
         this.wishGroupSize = wishGroupSize;
         this.wishExpectedSchedule = wishExpectedSchedule;
-        this.userHashTags = userHashTags;
     }
 
     public boolean isBan() {

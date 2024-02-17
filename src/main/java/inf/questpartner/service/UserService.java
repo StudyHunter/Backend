@@ -1,10 +1,12 @@
 package inf.questpartner.service;
 
+import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.common.UserProfileImg;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.domain.users.user.UserWishHashTag;
 import inf.questpartner.dto.users.*;
 import inf.questpartner.repository.studytree.StudyTreeRepository;
+import inf.questpartner.repository.users.UserHashTagRepository;
 import inf.questpartner.repository.users.UserRepository;
 import inf.questpartner.service.certification.EmailCertificationService;
 import inf.questpartner.service.encrytion.EncryptionService;
@@ -23,6 +25,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserHashTagRepository userHashTagRepository;
     private final EncryptionService encryptionService;
     private final StudyTreeRepository studyTreeRepository;
     private final EmailCertificationService emailCertificationService;
@@ -38,6 +41,10 @@ public class UserService {
         }
         requestDto.passwordEncryption(encryptionService);
         User user = userRepository.save(requestDto.toEntity());
+        for (TagOption tag : requestDto.getUserHashTags()) {
+            UserWishHashTag hashTag = userHashTagRepository.save(new UserWishHashTag(user, tag));
+            user.addWishTags(hashTag);
+        }
         createRequiredInformation(user);
     }
 
@@ -102,12 +109,19 @@ public class UserService {
     public void updateUserWishTag(String email, ChangeUserWishTag requestDto) {
         int wishGroupSize = requestDto.getWishGroupSize();
         int wishExpectedSchedule = requestDto.getWishExpectedSchedule();
-        List<UserWishHashTag> userHashTags = requestDto.getUserHashTags();
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
 
-        user.updateUserWishTag(wishGroupSize, wishExpectedSchedule, userHashTags);
+
+        List<UserWishHashTag> userTags = userHashTagRepository.findByUser(user);
+        userHashTagRepository.deleteAll(userTags);
+
+        for (TagOption tag : requestDto.getUserHashTags()) {
+            UserWishHashTag hashTag = userHashTagRepository.save(new UserWishHashTag(user, tag));
+            user.addWishTags(hashTag);
+        }
+        user.updateUserWish(wishGroupSize, wishExpectedSchedule);
     }
 
     @Transactional

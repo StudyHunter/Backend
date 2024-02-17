@@ -1,8 +1,8 @@
 package inf.questpartner.dto.users;
 
+import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.common.UserProfileImg;
 import inf.questpartner.domain.users.user.User;
-import inf.questpartner.domain.users.user.UserWishHashTag;
 import inf.questpartner.service.encrytion.EncryptionService;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -31,7 +31,7 @@ public class SaveRequest {
 
     private UserProfileImg profileImg;
 
-    private List<UserWishHashTag> userHashTags;
+    private List<TagOption> userHashTags;
 
     private int wishGroupSize;
 
@@ -39,13 +39,12 @@ public class SaveRequest {
 
     @Builder
     public SaveRequest(String nickname, String email, String password, UserProfileImg profileImg,
-                       List<UserWishHashTag> userHashTags, int wishGroupSize, int wishExpectedSchedule) {
+                       int wishGroupSize, int wishExpectedSchedule) {
 
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.profileImg = profileImg;
-        this.userHashTags = userHashTags;
         this.wishGroupSize = wishGroupSize;
         this.wishExpectedSchedule = wishExpectedSchedule;
     }
@@ -60,7 +59,6 @@ public class SaveRequest {
                 .email(this.email)
                 .password(this.password)
                 .profileImg(this.profileImg)
-                .userHashTags(this.userHashTags)
                 .wishGroupSize(this.wishGroupSize)
                 .wishExpectedSchedule(this.wishExpectedSchedule)
                 .build();

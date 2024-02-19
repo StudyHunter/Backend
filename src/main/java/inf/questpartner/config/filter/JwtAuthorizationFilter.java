@@ -46,8 +46,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성한다.
         List<String> list = Arrays.asList(
-                "/user/login",  // 로그인 페이지의 URL을 추가합니다.
-                "/login",  // 로그인 페이지의 URL을 추가합니다.
+                "/users/login",  // 로그인 페이지의 URL을 추가합니다.
+                "/users/signup/**",
+                "/users/email-check-token",
+                "/resend-email-token",
+                "/users/login",
+                "/users/forget/password",
+                "/users/find",
+                "/favicon.ico",
+                "/error",
+                "/",
                 "/css/**",
                 "/js/**",
                 "/images/**"
@@ -85,12 +93,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 if (TokenUtils.isValidToken(token)) {
 
                     // [STEP.2-3] 추출한 토큰을 기반으로 사용자 아이디를 반환받는다.
-                    String loginId = TokenUtils.getUserIdFromToken(token);
-                    log.debug("[+] loginId Check: " + loginId);
+                    String loginEmail = TokenUtils.getUserIdFromToken(token);
+                    log.debug("[+] loginEmail Check: " + loginEmail);
 
                     // [STEP.2-4] 사용자 아이디가 존재하는지에 대한 여부를 체크한다.
-                    if (loginId != null && !loginId.equalsIgnoreCase("")) {
-                        UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
+                    if (loginEmail != null && !loginEmail.equalsIgnoreCase("")) {
+                        UserDetails userDetails = userDetailsService.loadUserByUsername(loginEmail);
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                         filterChain.doFilter(request, response);

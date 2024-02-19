@@ -21,7 +21,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtTokenInterceptor)
                 .addPathPatterns("/**") // 모든 URL에 대해 JWT 토큰 검사를 적용합니다.
                 .excludePathPatterns(
-                        "/login",
                         "/main/rootPage",
 
                         "/users/signup/**",
@@ -53,7 +52,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         log.debug("[+] WebConfig Start !!! ");
-        registry.addRedirectViewController("/", "/login");
+        registry.addRedirectViewController("/", "/users/login");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
     }
 

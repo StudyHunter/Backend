@@ -29,7 +29,7 @@ public class TokenUtils {
     private static final Key key = Keys.hmacShaKeyFor(jwtSecretKey.getBytes(StandardCharsets.UTF_8));
     private static final String JWT_TYPE = "JWT";
     private static final String ALGORITHM = "HS256";
-    private static final String LOGIN_ID = "loginId";
+    private static final String LOGIN_EMAIL = "loginEmail";
     private static final String USERNAME = "username";
 
 
@@ -57,7 +57,7 @@ public class TokenUtils {
             Claims claims = getClaimsFormToken(token);
 
             log.info("expireTime : " + claims.getExpiration());
-            log.info("loginId : " + claims.get(LOGIN_ID));
+            log.info("loginEmail : " + claims.get(LOGIN_EMAIL));
             log.info("username : " + claims.get(USERNAME));
 
             return true;
@@ -105,10 +105,10 @@ public class TokenUtils {
         // 공개 클래임에 사용자의 이름과 이메일을 설정해서 정보를 조회할 수 있다.
         Map<String, Object> claims = new HashMap<>();
 
-        log.info("loginId : " + userDto.email());
+        log.info("loginEmail : " + userDto.email());
         log.info("username : " + userDto.username());
 
-        claims.put(LOGIN_ID, userDto.email());
+        claims.put(LOGIN_EMAIL, userDto.email());
         claims.put(USERNAME, userDto.username());
         return claims;
     }
@@ -128,7 +128,7 @@ public class TokenUtils {
      */
     public static String getUserIdFromToken(String token) {
         Claims claims = getClaimsFormToken(token);
-        return claims.get(LOGIN_ID).toString();
+        return claims.get(LOGIN_EMAIL).toString();
     }
 
 }

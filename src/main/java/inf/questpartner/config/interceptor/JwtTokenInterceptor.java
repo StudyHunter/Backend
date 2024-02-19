@@ -50,8 +50,8 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
 
         if (token != null) {
             if (TokenUtils.isValidToken(token)) {
-                String userId = TokenUtils.getUserIdFromToken(token);
-                if (userId == null) {
+                String userEmail = TokenUtils.getUserIdFromToken(token);
+                if (userEmail == null) {
                     log.debug("token isn't userId");
                     throw new ApplicationException(ErrorCodeV2.AUTH_TOKEN_NOT_MATCH);
                 }

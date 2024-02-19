@@ -73,7 +73,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
 
             UserDto user = objectMapper.readValue(request.getInputStream(), UserDto.class);
-            log.debug("1.CustomAuthenticationFilter :: loginId: " + user.email() + "userPw: " + user.password());
+            log.debug("1.CustomAuthenticationFilter :: loginEmail: " + user.email() + "userPw: " + user.password());
 
             /**
              * ID, PW를 기반으로 UsernamePasswordAuthenticationToken 토큰을 발급한다.

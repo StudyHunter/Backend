@@ -46,11 +46,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
 
         // AuthenticationFilter에서 생성된 토큰으로부터 ID, PW를 조회
-        String loginId = token.getName();
+        String loginEmail = token.getName();
         String userPassword = (String) token.getCredentials();
 
         // Spring security - UserDetailsService를 통해 DB에서 username으로 사용자 조회
-        SecurityUserDetailsDto securityUserDetailsDto = (SecurityUserDetailsDto) userDetailsService.loadUserByUsername(loginId);
+        SecurityUserDetailsDto securityUserDetailsDto = (SecurityUserDetailsDto) userDetailsService.loadUserByUsername(loginEmail);
 
         // 대소문자를 구분하는 matches() 메서드로 db와 사용자가 제출한 비밀번호를 비교
         if (!bCryptPasswordEncoder().matches(userPassword, securityUserDetailsDto.getUserDto().password())) {

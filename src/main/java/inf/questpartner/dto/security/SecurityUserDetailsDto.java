@@ -1,0 +1,64 @@
+package inf.questpartner.dto.security;
+
+
+import inf.questpartner.dto.users.UserDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.experimental.Delegate;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
+
+@Slf4j
+@Getter
+@AllArgsConstructor
+public class SecurityUserDetailsDto implements UserDetails {
+
+    @Delegate
+    private UserDto userDto;
+    private Collection<? extends GrantedAuthority> authorities;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(userDto.roleType().toString()));
+    }
+
+    public static SecurityUserDetailsDto of(UserDto userDto, Collection<? extends GrantedAuthority> authorities) {
+        return new SecurityUserDetailsDto(userDto, authorities);
+    }
+
+    @Override
+    public String getPassword() {
+        return userDto.password();
+    }
+
+    @Override
+    public String getUsername() {
+        return userDto.email();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+
+<body>
+
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div class="py-5 text-center">
+        <h2>방 정보</h2>
+    </div>
+
+    <div>
+        <label>방장명</label>
+        <input type="text" id="author" class="form-control" th:value="${room.author}" readonly>
+    </div>
+
+    <br>
+
+    <div>
+        <label>방제목</label>
+        <input type="text" id="title" class="form-control" th:value="${room.title}" readonly>
+    </div>
+
+    <br>
+
+    <div>
+        <label>스터디 유형</label>
+        <input type="text" id="roomType" class="form-control" th:value="${room.roomType.name()}" readonly>
+    </div>
+
+    <br>
+
+    <div>
+        <label>방 섬네일</label>
+        <div>
+            <img class="resized-image" th:src="|${room.thumbnail.imgPath}|">
+        </div>
+    </div>
+
+    <br>
+
+    <div>
+        <label>방 태그들</label>
+        <div>
+            <li th:each="tag : ${hashTags}" class="tag-box" th:text="${tag.tagOption.name}"></li>
+        </div>
+
+    </div>
+
+
+    <br/>
+    <div th:replace="fragments/footer :: footer" />
+
+</div> <!-- /container -->
+
+
+</body>
+</html>

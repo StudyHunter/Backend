@@ -4,11 +4,9 @@ import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.common.RoomThumbnail;
 import inf.questpartner.domain.room.common.RoomType;
 import inf.questpartner.domain.room.common.tag.TagOption;
-
 import lombok.Data;
-
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Data
 public class CreateRoomRequest {
@@ -29,5 +27,4 @@ public class CreateRoomRequest {
                 .thumbnail(thumbnail)
                 .build();
     }
-
 }

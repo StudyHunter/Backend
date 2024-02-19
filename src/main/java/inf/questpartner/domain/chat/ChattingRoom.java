@@ -1,10 +1,20 @@
 package inf.questpartner.domain.chat;
 
 
+import inf.questpartner.dto.chat.ChatRoomDto;
 import jakarta.persistence.*;
+import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static jakarta.persistence.GenerationType.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -12,16 +22,27 @@ import lombok.NoArgsConstructor;
 public class ChattingRoom {
 
     @Id
-    @GeneratedValue
-    @Column(name = "CHATTING_ROOM_ID")
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "chatting_room_id")
     private Long id;
 
-    private int roomNumber; // 방 번호
-    private String roomName; // 방 번호
+    private String name;
+    private String roomId;
+
+    @OneToMany(mappedBy = "chattingRoom", cascade = CascadeType.ALL)
+    private List<Chatting> chattingList = new ArrayList<>();
+
+    @Builder
+    public ChattingRoom(String name, String roomId) {
+        this.name = name;
+        this.roomId = roomId;
+    }
 
 
-    // 1:1 단방향
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "CHATTING_ID")
-    private Chatting chatting;
+    public ChatRoomDto toDto() {
+        return ChatRoomDto.builder()
+                .roomId(this.roomId)
+                .name(this.name)
+                .build();
+    }
 }

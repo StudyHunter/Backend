@@ -24,7 +24,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "room")
 public class Room {
 
-
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "room_id")

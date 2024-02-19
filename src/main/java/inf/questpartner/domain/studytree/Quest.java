@@ -35,10 +35,10 @@ public class Quest {
     @JoinColumn(name = "STUDY_TREE_ID")
     private StudyTree studyTree;
 
-    @OneToMany(mappedBy = "quest", orphanRemoval = true)
-    private List<QuestReward> rewardList = new ArrayList<>();
-
-    public void addRewardItem(QuestReward reward) {
-        rewardList.add(reward);
-    }
+//    @OneToMany(mappedBy = "quest", orphanRemoval = true)
+//    private List<QuestReward> rewardList = new ArrayList<>();
+//
+//    public void addRewardItem(QuestReward reward) {
+//        rewardList.add(reward);
+//    }
 }

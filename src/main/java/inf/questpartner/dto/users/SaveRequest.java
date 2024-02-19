@@ -31,7 +31,7 @@ public class SaveRequest {
 
     private UserProfileImg profileImg;
 
-    private List<TagOption> userHashTags;
+    private List<TagOption> tags;
 
     private int wishGroupSize;
 

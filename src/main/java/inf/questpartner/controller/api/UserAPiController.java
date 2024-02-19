@@ -4,7 +4,7 @@ package inf.questpartner.controller.api;
 import inf.questpartner.dto.users.*;
 import inf.questpartner.service.SessionLoginService;
 import inf.questpartner.service.UserService;
-import inf.questpartner.service.certification.EmailCertificationService;
+
 import inf.questpartner.util.validation.argumentResolver.CurrentUser;
 import inf.questpartner.util.validation.argumentResolver.LoginCheck;
 import jakarta.validation.Valid;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static inf.questpartner.util.constant.ResponseConstants.CREATED;
 import static inf.questpartner.util.constant.ResponseConstants.OK;
 
 @Slf4j
@@ -27,7 +26,6 @@ public class UserAPiController {
 
     private final SessionLoginService sessionLoginService;
 
-    private final EmailCertificationService emailCertificationService;
 
     /*회원 가입 페이지에서 중복 이메일과 닉네임 검사*/
     @GetMapping("/signup/{email}/email-exists")
@@ -38,28 +36,6 @@ public class UserAPiController {
     @GetMapping("/signup/{nickname}/nickname-exists")
     public ResponseEntity<Boolean> checkNicknameDuplicate(@PathVariable(name = "nickname") String nickname) {
         return ResponseEntity.ok(userService.checkNicknameDuplicate(nickname));
-    }
-
-    /*회원 가입 시 등록된 메일로 토큰 인증 메일 전송*/
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@Valid @RequestBody SaveRequest requestDto) {
-        userService.save(requestDto);
-        emailCertificationService.sendEmailForEmailCheck(requestDto.getEmail());
-        return CREATED;
-    }
-
-    /*등록된 메일 링크*/
-    @GetMapping("/email-check-token")
-    public void emailCheck(@RequestParam(name = "token") String token,
-                           @RequestParam(name = "email") String email) {
-        userService.updateEmailVerified(token, email);
-    }
-
-    /*마이페이지에서 이메일 인증 재전송 버튼*/
-    @PostMapping("/resend-email-token")
-    public void resendEmailCheck(@CurrentUser String email) {
-        emailCertificationService.sendEmailForEmailCheck(email);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -81,24 +57,14 @@ public class UserAPiController {
         return ResponseEntity.ok(findUserResponse);
     }
 
-    /*비밀번호 찾기 : 이메일 인증 후 비밀번호 변경 페이지로 이동*/
-    @PostMapping("/email-certification/sends")
-    public ResponseEntity sendEmail(@RequestBody EmailCertificationRequest requestDto) {
-        emailCertificationService.sendEmailForCertification(requestDto.getEmail());
-        return CREATED;
-    }
 
-    @PostMapping("/email-certification/confirms")
-    public void emailVerification(@RequestBody EmailCertificationRequest requestDto) {
-        emailCertificationService.verifyEmail(requestDto);
-    }
+
 
     @PatchMapping("/forget/password")
     public void changePasswordByForget(@Valid @RequestBody ChangePasswordRequest requestDto) {
         userService.updatePasswordByForget(requestDto);
     }
 
-//    react로 Json 정보 받아서 처리하도록 설정
     @GetMapping("/my-infos")
     public ResponseEntity<UserInfoDto> myPage(@CurrentUser String email) {
         UserInfoDto loginUser = sessionLoginService.getCurrentUser(email);

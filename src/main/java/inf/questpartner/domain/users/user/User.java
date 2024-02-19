@@ -71,13 +71,12 @@ public class User extends UserBase {
 
     /**
      * 1 : 1 단방향
-     * USER는 하나의 트리만 가질 수 있다.
-     * 트리 또한 여러명의 유저가 함께 사용할 수 없다. 따라서 일대일 매핑으로 처리한다.
+     *  USER는 하나의 트리만 가질 수 있다.
+     *  트리 또한 여러명의 유저가 함께 사용할 수 없다. 따라서 일대일 매핑으로 처리한다.
      */
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "STUDY_TREE_ID")
     private StudyTree studyTree;
-
 
     // user 관련 테스트용으로 만든 것 (임시로 둔 것)
     public UserDetailResponse toUserDetailDto() {
@@ -95,7 +94,7 @@ public class User extends UserBase {
     public UserInfoDto toUserInfoDto() {
         return UserInfoDto.builder()
                 .user(this)
-                .userHashTags(this.getUserTagOptions())
+                .tags(this.getUserTagOptions())
                 .build();
     }
 
@@ -116,8 +115,8 @@ public class User extends UserBase {
     }
 
     // 관리자 권한으로 회원 BAN 처리하기 위한 로직
-    public void updateUserStatus(UserStatus userStatus) {
-        this.userStatus = userStatus;
+    public void updateUserStatus() {
+        this.userStatus = UserStatus.BAN;
     }
 
     // 태그 알고리즘 로직들-- (수정중)
@@ -165,6 +164,4 @@ public class User extends UserBase {
     public boolean isBan() {
         return this.userStatus == UserStatus.BAN;
     }
-
-
 }

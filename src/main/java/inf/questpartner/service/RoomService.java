@@ -1,85 +1,60 @@
 package inf.questpartner.service;
 
-import inf.questpartner.domain.users.user.User;
-import inf.questpartner.util.exception.room.NotFoundRoomException;
 import inf.questpartner.domain.room.Room;
+import inf.questpartner.domain.room.RoomHashTag;
+
+import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.dto.room.CreateRoomRequest;
+import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
-import inf.questpartner.util.exception.users.NotFoundUserException;
+import inf.questpartner.util.exception.room.NotFoundRoomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import inf.questpartner.domain.room.common.tag.TagOption;
-
-import inf.questpartner.dto.RoomTag;
-import inf.questpartner.dto.UserWishTag;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.*;
 
 @Transactional
 @RequiredArgsConstructor
 @Service
 public class RoomService {
-    private final RoomRepository roomRepository;    //@RequiredArgsConstructor 어노테이션으로 생성자 주입
 
-    @Transactional(readOnly = true)
-    public List<Room> findAll() {
-        return roomRepository.findAll();
+    private final RoomRepository roomRepository;
+    private final RoomHashTagRepository hashTagRepository;
+
+    public Long createRoom(CreateRoomRequest req) {
+        Room room = roomRepository.save(req.toRoomEntity());
+
+        for (TagOption tag : req.getTags()) {
+            RoomHashTag hashTag = hashTagRepository.save(new RoomHashTag(room, tag));
+            room.addHashTag(hashTag);
+        }
+        return room.getId();
     }
 
     @Transactional(readOnly = true)
     public Room findById(Long id) {
-        return roomRepository.findById(id)
-                .orElseThrow(() -> new NotFoundRoomException("해당" + id + "번 방이 존재하지 않습니다."));
+        return roomRepository.findById(id).orElseThrow(() -> new NotFoundRoomException("존재하지 않는 방입니다."));
     }
 
-    public Long createRoom(User user, CreateRoomRequest request) {
-        //요청 데이터를 받아 Room Entity를 만들어준다.
-        //roomRepository.save(room)으로 Room을 저장한다.
-        //User Entity에도 List 필드 값에 생성한 Room을 추가해준다.
-        //Room ID를 반환해준다.
-
-        Room room = request.toRoomEntity();
-        Long id = roomRepository.save(room).getId();
-
-        user.createRoom(room);
-        return id;
+    /*
+    @Transactional(readOnly = true)
+    public List<RoomTag> findRoomTags() {
+        return roomRepository.findAll().stream()
+                .map(Room::toRoomTagDto)
+                .collect(Collectors.toList());
     }
 
-    public void startRoom(Long roomId) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new NotFoundRoomException("존재하지 않는 room 입니다."));
-        room.startRoomTime(LocalDateTime.now());
+    // 태그로 방 탐색
+    @Transactional(readOnly = true)
+    public Set<Room> findRoomsByTag(List<TagOption> tags, List<Room> roomList) {
+        return roomList.stream()
+                .filter(room -> room.getTags().stream()
+                        .map(TagOption::getViewName)
+                        .anyMatch(tagViewName -> tags.stream()
+                                .anyMatch(tagOption -> tagOption.getViewName().equals(tagViewName))))
+                .collect(Collectors.toSet());
     }
 
-    public void updateRoomTime(Long roomId, LocalDateTime currentTime) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new NotFoundRoomException("존재하지 않는 room 입니다."));
-
-        long durationInMinutes = Duration.between(room.getStartTime(), currentTime).toMinutes();
-        room.updateRoomTime(durationInMinutes);
-    }
-
-//    @Transactional(readOnly = true)
-//    public List<RoomTag> findRoomTags() {
-//        return roomRepository.findAll().stream()
-//                .map(Room::toRoomTagDto)
-//                .collect(Collectors.toList());
-//    }
-//
-//    // 태그로 방 탐색
-//    @Transactional(readOnly = true)
-//    public Set<Room> findRoomsByTag(List<TagOption> tags, List<Room> roomList) {
-//        return roomList.stream()
-//                .filter(room -> room.getTags().stream()
-//                        .map(TagOption::getViewName)
-//                        .anyMatch(tagViewName -> tags.stream()
-//                                .anyMatch(tagOption -> tagOption.getViewName().equals(tagViewName))))
-//                .collect(Collectors.toSet());
-//    }
 
     // 취향 방 추천
     @Transactional(readOnly = true)
@@ -122,4 +97,7 @@ public class RoomService {
         int smallerListSize = Math.min(userTags.size(), roomTags.size());
         return (double) commonTagsCount / smallerListSize;
     }
+
+     */
+
 }

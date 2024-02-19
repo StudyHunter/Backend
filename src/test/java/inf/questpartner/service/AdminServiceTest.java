@@ -1,3 +1,4 @@
+
 package inf.questpartner.service;
 
 import inf.questpartner.domain.users.common.UserLevel;
@@ -125,7 +126,6 @@ class AdminServiceTest {
         for (UserListResponse dto : userListResponses.getContent()) {
             System.out.println(dto.getEmail());
         }
-
     }
 
     @DisplayName("요청한 ID에 해당하는 사용자를 BAN 처리한다.")
@@ -142,7 +142,7 @@ class AdminServiceTest {
                 .userStatus(UserStatus.BAN)
                 .build();
 
-        adminService.updateBanUsers(userBanRequest);
+        adminService.updateBanUsers(userBanRequest.getId());
 
         assertThat(user.getUserStatus()).isEqualTo(UserStatus.BAN);
     }

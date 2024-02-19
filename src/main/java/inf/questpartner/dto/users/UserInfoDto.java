@@ -18,12 +18,12 @@ public class UserInfoDto {
 
     private int studyTime;
     private StudyTree studyTree;
-    private List<TagOption> userHashTags;
+    private List<TagOption> tags;
     private int wishGroupSize;
     private int wishExpectedSchedule;
 
     @Builder
-    public UserInfoDto(User user, List<TagOption> userHashTags) {
+    public UserInfoDto(User user, List<TagOption> tags) {
 
         this.email = user.getEmail();
         this.nickname = user.getNickname();
@@ -32,6 +32,6 @@ public class UserInfoDto {
         this.studyTree = user.getStudyTree();
         this.wishGroupSize = user.getWishGroupSize();
         this.wishExpectedSchedule = user.getWishExpectedSchedule();
-        this.userHashTags = userHashTags;
+        this.tags = tags;
     }
 }

@@ -5,10 +5,10 @@ import inf.questpartner.domain.users.common.UserProfileImg;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.domain.users.user.UserWishHashTag;
 import inf.questpartner.dto.users.*;
+
 import inf.questpartner.repository.studytree.StudyTreeRepository;
 import inf.questpartner.repository.users.UserHashTagRepository;
 import inf.questpartner.repository.users.UserRepository;
-import inf.questpartner.service.certification.EmailCertificationService;
 import inf.questpartner.service.encrytion.EncryptionService;
 import inf.questpartner.util.exception.users.*;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +27,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserHashTagRepository userHashTagRepository;
     private final EncryptionService encryptionService;
-    private final StudyTreeRepository studyTreeRepository;
-    private final EmailCertificationService emailCertificationService;
+    //private final StudyTreeRepository studyTreeRepository;
+    //private final EmailCertificationService emailCertificationService;
 
 
     @Transactional
@@ -41,7 +41,7 @@ public class UserService {
         }
         requestDto.passwordEncryption(encryptionService);
         User user = userRepository.save(requestDto.toEntity());
-        for (TagOption tag : requestDto.getUserHashTags()) {
+        for (TagOption tag : requestDto.getTags()) {
             UserWishHashTag hashTag = userHashTagRepository.save(new UserWishHashTag(user, tag));
             user.addWishTags(hashTag);
         }
@@ -76,7 +76,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public FindUserResponse getUserResource(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 email 입니다.")).toFindUserDto();
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 email 입니다.")).toFindUserDto();
     }
 
     @Transactional
@@ -85,7 +85,7 @@ public class UserService {
         requestDto.passwordEncryption(encryptionService);
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
 
         user.updatePassword(requestDto.getPasswordAfter());
     }
@@ -100,7 +100,7 @@ public class UserService {
         }
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
 
         user.updatePassword(passwordAfter);
     }
@@ -111,8 +111,7 @@ public class UserService {
         int wishExpectedSchedule = requestDto.getWishExpectedSchedule();
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
-
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
 
         List<UserWishHashTag> userTags = userHashTagRepository.findByUser(user);
         userHashTagRepository.deleteAll(userTags);
@@ -128,7 +127,7 @@ public class UserService {
     public void updateProfileImg(String email, ChangeProfileImgRequest requestDto) {
         UserProfileImg profileImg = requestDto.getProfileImg();
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
 
         user.updateProfileImg(profileImg);
     }
@@ -136,7 +135,7 @@ public class UserService {
     @Transactional
     public void delete(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
 
         if (!userRepository.existsByEmailAndPassword(email, encryptionService.encrypt(password))) {
             throw new WrongPasswordException();
@@ -144,17 +143,4 @@ public class UserService {
         userRepository.deleteByEmail(email);
     }
 
-    private void validToken(String token, String email) {
-        emailCertificationService.verifyEmail(token, email);
-    }
-
-    //    이메일 인증 시 userLevel을 Auth로 설정
-    @Transactional
-    public void updateEmailVerified(String token, String email) {
-        validToken(token, email);
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundUserException("존재하지 않는 사용자 입니다."));
-        user.updateUserLevel();
-    }
 }

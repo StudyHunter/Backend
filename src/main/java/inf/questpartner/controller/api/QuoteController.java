@@ -1,4 +1,4 @@
-package inf.questpartner.controller;
+package inf.questpartner.controller.api;
 
 import lombok.Getter;
 import lombok.Setter;

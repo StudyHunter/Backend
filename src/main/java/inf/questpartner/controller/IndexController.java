@@ -25,8 +25,4 @@ public class IndexController {
         return "myprofile";
     }
 
-    @GetMapping("/userInfo")
-    public String userInfo() {
-        return "userInfo";
-    }
 }

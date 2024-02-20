@@ -3,14 +3,11 @@ package inf.questpartner.domain.users.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import inf.questpartner.domain.room.Room;
-
-import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.studytree.StudyTree;
 import inf.questpartner.domain.users.common.UserBase;
 import inf.questpartner.domain.users.common.UserLevel;
 import inf.questpartner.domain.users.common.UserProfileImg;
 import inf.questpartner.domain.users.common.UserStatus;
-import inf.questpartner.dto.UserWishTag;
 import inf.questpartner.dto.users.FindUserResponse;
 import inf.questpartner.dto.users.UserDetailResponse;
 import inf.questpartner.dto.users.UserInfoDto;
@@ -22,6 +19,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Table(name = "users")
@@ -104,6 +103,24 @@ public class User extends UserBase {
     public void updateUserStatus() {
         this.userStatus = UserStatus.BAN;
     }
+
+    private String roles;
+
+    public List<String> getRoleList() {
+        if (this.roles == null) {
+            return Collections.emptyList(); // 빈 목록 반환 또는 다른 처리 수행
+        }
+        return Arrays.asList(this.roles.split(","));
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void settingRoles(String role) {
+        this.roles = role;
+    }
+
 
     // 태그 알고리즘 로직들-- (수정중)
 

@@ -1,8 +1,8 @@
 package inf.questpartner.config.auth;
 
 
-import com.example.chat.model.users.User;
-import com.example.chat.repository.UserRepository;
+import inf.questpartner.domain.users.user.User;
+import inf.questpartner.repository.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

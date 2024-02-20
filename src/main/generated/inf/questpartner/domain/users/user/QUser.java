@@ -43,6 +43,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final EnumPath<inf.questpartner.domain.users.common.UserProfileImg> profileImg = createEnum("profileImg", inf.questpartner.domain.users.common.UserProfileImg.class);
 
+    public final StringPath roles = createString("roles");
+
     public final inf.questpartner.domain.room.QRoom room;
 
     public final NumberPath<Integer> studyTime = createNumber("studyTime", Integer.class);

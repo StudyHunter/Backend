@@ -3,6 +3,7 @@ package inf.questpartner.dto.users;
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.service.encrytion.EncryptionService;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

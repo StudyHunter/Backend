@@ -2,12 +2,11 @@
 목차는 다음과 같다.
 
 + JWT(JSON Web Token) 소개
-+ 라이브러리 추가
++ build.gradle 라이브러리 추가
 + spring security, JWT 구현
 + Spring Boot 3.x 이상의 Security Config 코드 변경 사항
 + REST API 구현
 + 브라우저 확인 및 로그 확인
-+ ajax를 사용하여 로그인 정보 불러오기
 + 참고자료
 
 
@@ -24,7 +23,7 @@
 >즉, 서버는 요청을 받으면 클라이언트에 HTML과 JS를 보내주고, 클라이언트는 그것을 받아 렌더링을 시작한다. <br>
 > 쉽게 말하자면, HTML 파일 안에는 아무런 내용이 없다는 것이다. <br> 그 내용은 JS 파일을 받아 실행을 시켜야 그제서야 만들어진다. 
 
-# 라이브러리 추가
+#  build.gradle 라이브러리 추가
 참고한 자료는 "'org.springframework.boot' version '2.7.4'" 스프링부트 2.7 버전에서 구현했다.  <br> 우리는 최신버전 3.x 버전 이상에 맞추어 수정해야 한다. <br>
 ![image](https://github.com/StudyHunter/Backend/assets/57389368/5e66b2ce-222d-4257-9810-6b899c7e494f)
 > 전체 코드는 [여기](https://github.com/StudyHunter/Backend/blob/master/%EC%8A%A4%ED%84%B0%EB%94%94/%EC%BD%94%EB%93%9C/%5BSpring%20Boot%5D%20Spring%20Security%EB%A5%BC%20%EC%82%AC%EC%9A%A9%ED%95%9C%20Jwt%20Token%20%EB%A1%9C%EA%B7%B8%EC%9D%B8%20%EA%B5%AC%ED%98%84/build.gradle%20%EC%BD%94%EB%93%9C.md)에서 확인가능하다.
@@ -40,8 +39,6 @@
 + private String roles;: <br> 문자열 형식의 역할을 저장하는 멤버 변수.
 + public List<String> getRoleList() { ... }:  <br> 역할을 구분자(여기서는 쉼표)로 분할하여 역할 목록을 반환하는 메서드이다. <br> 만약 roles 변수가 null이면, 빈 목록(Collections.emptyList())을 반환한다. <br> 그렇지 않으면, roles를 쉼표로 분할하여 배열로 만든 후, 그 배열을 리스트로 변환하여 반환한다.
 + public void settingRoles(String role) { ... }: <br> 역할을 설정하는 메서드로, 주어진 문자열을 roles 변수에 할당한다.
-
-
 
 
 ## PrincipalDetails 
@@ -79,16 +76,27 @@ loadUserByUsername() 메서드는 사용자의 닉네임을 매개변수로 받�
 ## JwtAuthenticationFilter 
 `WT(JSON Web Token)`를 사용하여 사용자의 인증을 처리한다. <br> 이 필터는 사용자가 로그인하면 JWT 토큰을 생성하고, 이를 응답 헤더에 담아 클라이언트에게 반환한다. <br><br>
 사용자의 인증이 성공하면 클라이언트는 JWT 토큰을 받게 되고, 이 토큰을 사용하여 인증된 요청을 서버에 보낼 수 있다. <br><br>
+
 ### ✅ UsernamePasswordAuthenticationFilter를 상속한다. 
 이는 Spring Security에서 제공하는 기본 로그인 인증 필터 중 하나이다.
 
-### ✅ authenticationManager 필드는 Spring Security에서 인증을 관리하는 데 사용되는 AuthenticationManager 객체를 주입받는다.
+### ✅ attemptAuthentication()
 ![jwt filter](https://github.com/StudyHunter/Backend/assets/57389368/5ba1a1b4-138d-4204-8723-3120492b02be) <br>
+authenticationManager 필드는 Spring Security에서 인증을 관리하는 데 사용되는 AuthenticationManager 객체를 주입받는다.
 + attemptAuthentication() 메서드는 사용자의 로그인 시도를 처리한다. 
-+ 클라이언트가 전송한 로그인 요청에서 username과 password를 추출하여 LoginRequestDto 객체로 변환한 후, <br> `UsernamePasswordAuthenticationToken 객체`를 생성하여 인증 매니저를 통해 인증을 시도한다.
++ 클라이언트가 전송한 로그인 요청에서 username과 password를 추출하여 LoginRequestDto 객체로 변환한 후, <br> UsernamePasswordAuthenticationToken를 만들어서 Token을 생성해준다.
++ 이제 인증을 시도한다. `JWT 방식에선 loadUserByUsername를 수동으로 호출해야 하기 때문에 authenticate 메소드를 실행한다.` <br> 이때 AuthenticationManager의 authenticate()를 실행한다.
++ Authentication Manger를 이용하면, Authenticaton Provider를 직접 구현해서 값을 전달하지 않아도 Authentication 객체가 만들어진다는게 특징이다.
+
+#### ⭐️ 로그인이 되는 원리
++ authenticate() 함수가 호출 되면, Authentication Provider가 UserDetailsService의 loadUserByUsername를 호출한다. 
++ 그리고 UserDetails를 리턴해주면, 미리 만들었던 UsernamePasswordAuthenticationToken의 두번째 파라미터(Credential Password)와 UserDetails(DB에서 가져온 값)의 getPassword() 함수로 비교해서 동일하면 Authentication 객체를 만들어서 로그인이 되는 원리다.
+
+<br>
 
 ### ✅ 성공적으로 인증되면 successfulAuthentication() 메서드가 호출된다. 
 ![image](https://github.com/StudyHunter/Backend/assets/57389368/377b3e7f-3e79-48c7-8393-6a9878cc9c79) <br>
+Authentication 객체가 성공적으로 만들어 졌다면, 아래의 Success 메소드가 수행되고 응답 값에 JWT 토큰을 만들어주고 사용자에게 전달해준다. <br>
 + 이 메서드에서는 사용자의 정보를 기반으로 JWT 토큰을 생성하고, 응답 헤더에 추가하여 클라이언트에게 반환한다. 
 + JWT 토큰에는 사용자의 ID와 닉네임이 포함된다. <br> JWT 토큰은 com.auth0.jwt.JWT 클래스를 사용하여 생성된다. 
 + 토큰에는 사용자명(subject), 만료 시간(expiration time), 사용자의 ID 및 닉네임과 같은 클레임(claim)이 추가됩니다.
@@ -117,7 +125,10 @@ AuthenticationManager는 인증 매니저를, UserRepository는 사용자 정보
 
 #### ✔️ 사용자 정보 조회
 ![image](https://github.com/StudyHunter/Backend/assets/57389368/e9e8d0f8-44e1-4896-ad7d-0140becafd97) <br>
+JWT에서는 클라이언트에서 API를 요청할 때마다 JWT 토큰 값을 매번 확인해야 한다.  <br> BasicAuthenticationFilter를 구현해서 매 페이지 요청마다 위처럼 토큰을 확인해줘야 한다. <br><br>
 JWT 토큰에서 추출한 닉네임을 사용하여 데이터베이스에서 해당 사용자를 조회한다. <br> 이를 통해 사용자 정보를 가져온다.
+
+<br><br>
 
 #### ✔️ 사용자 정보 인증 및 권한 설정 프로세스
 ![image](https://github.com/StudyHunter/Backend/assets/57389368/a208bd40-ad70-4076-8517-ee1f39244678) <br>
@@ -130,17 +141,19 @@ JWT(JSON Web Token) 관련 속성을 정의하는 JwtProperties 인터페이스�
 이러한 속성들은 JWT 토큰의 생성, 검증 및 사용 시에 참조되어야 하는 중요한 정보를 제공한다. <br>  따라서 안전한 값으로 설정되어야 하며, 보안에 주의하여야 한다. <br> 
 ![image](https://github.com/StudyHunter/Backend/assets/57389368/8c905f08-8c56-4cc2-a976-63c58dd7b7a0) <br><br>
 
-### ✔️  SECRET 
+#### ✔️  SECRET 
 JWT 토큰을 생성할 때 사용되는 비밀 키다. 이 키는 서버만 알고 있어야 한다.  <br>  보안상 중요한 값이므로 보안을 위해 안전한 곳에 보관되어야 한다.
 
-### ✔️ EXPIRATION_TIME
+#### ✔️ EXPIRATION_TIME
 JWT 토큰의 만료 시간을 설정한다. 이 시간이 지나면 해당 토큰은 더 이상 유효하지 않게 된다.
 
-### ✔️ TOKEN_PREFIX 
+#### ✔️ TOKEN_PREFIX 
 bearer를 사전에 검사함으로서 JWT 토큰인지 아님을 빠르게 식별할 수 있게된다.
  
-### ✔️ HEADER_STRING 
+#### ✔️ HEADER_STRING 
 JWT 토큰이 HTTP 요청의 어떤 헤더에 있는지를 나타내는 문자열이다. <br>  일반적으로는 "Authorization" 헤더에 JWT 토큰이 포함되어 있다.
+
+<br><br>
 
 ## SecurityConfig
 `웹 보안 구성`을 정의하고 `JWT(JSON Web Token) 인증 및 권한 부여`를 구현한다. <br>
@@ -159,23 +172,62 @@ authenticationManager() 메서드는 인증 매니저 빈을 생성한다. <br>
 <br>
 
 ### ✔️ filterChain() 메서드
-![image](https://github.com/StudyHunter/Backend/assets/57389368/22304229-02a5-4f48-b18c-41e583509a00) <br>
+![security config](https://github.com/StudyHunter/Backend/assets/57389368/b5cb9aa3-446e-40df-bfc6-ce05c57eea62) <br>
 
-#### REST API 설정은 다음과 같다.
+#### ⭐️ REST API 설정은 다음과 같다.
 ```
 .csrf(AbstractHttpConfigurer::disable)
 ```
 REST API에서는 CSRF 방어가 필요가 없고, CSRF 토큰을 주고 받을 필요가 없기 때문에 CSRF 설정을 해제한다. <br>
 > CSRF를 켜두면 서버는 클라이언트 영역에 CSRF 토큰을 보낼 수 있다. <br>
 
-<br>
+<br> <br>
 
 ```
 .addFilter(corsConfig.corsFilter())
 ```
-REST API에서는 여러 서버를 운영하는 환경이다보니 SOP 뿐만아니라 CORS도 허용을 해야 여러 곳에서 접근이 가능하므로 CORS를 허용해줘야 한다. <br>
-filterChain() 메서드는 HTTP 보안 구성을 정의한다. http 객체를 매개변수로 받아 필터 체인을 구성한다. <br>
-여기서는 CSRF 보호를 비활성화하고, 세션 관리 정책을 STATELESS로 설정하여 세션을 사용하지 않도록 한다. <br>
+REST API에서는 여러 서버를 운영하는 환경이다, <br>
+SOP 뿐만아니라 CORS도 허용을 해야 여러 곳에서 접근이 가능하므로 CORS를 허용해줘야 한다. <br>
+
+<br> <br>
+
+```
+.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+```
+서버를 Stateless하게 유지한다. 이걸 설정하면 Spring Security에서 세션을 만들지 않는다. <br>
+>상태유지를 끈 상태에서도 JWT를 사용하면, 클라이언트가 `토큰`을 서버로 전달하면 된다. <br>
+>클라이언트가 서버로 요청을 보낼 때마다, 헤더 또는 요청의 일부로 JWT를 포함시켜야 한다. 서버는 이 토큰을 검증하여 사용자를 인증하고 요청을 처리한다.
+
+> 설정을 통해 서버를 상태유지(Stateless)로 유지한다는 것은 서버가 클라이언트의 상태를 저장하지 않는 것을 의미한다. <br>
+> 일반적으로, Spring Security에서 이 설정을 사용하면 세션을 생성하지 않는다. 이것은 JWT (JSON Web Token) 인증 방식과 관련이 있다.
+
+> 만약에 켜둔다면 "JWT Token으로 로그인하더라도" "클라이언트에서 Token값을 서버에 전달하지 않더라도" 세션 값으로 로그인이 된다.  <br>
+
+<br> <br>
+
+```
+.addFilter(new JwtAuthenticationFilter(authenticationManager()))
+```
+해당 요청이 들어오면, UsernamePasswordAuthenticationFilter를 상속한 JwtAuthenticationFilter 클래스가 실행된다.  <br>
+JwtAuthenticationFilter 는 SecurityConfig의 filterChain 설정부분에 addFilter()를 통해 넣어줬다. <br>
+그리고 그 안에서 JWT 토큰을 만들고 로그인 과정을 거친다. <br><br>
+
+JWT 설정을 위해서는 formLogin 기능을 빼고, 위와 같이 사용자가 직접 필터 클래스를 만들어줘야 한다. <br>
+JWT에서는 로그인 흐름에 `JWT 토큰을 발급하는 것`을 추가해야 되기 때문에, 필터 클래스를 수동으로 개발하는 과정이 필요하다.
+>  참고로, 세션 로그인 방식에서는 formLogin 기능에 loginProcessingUrl("/login_proc") 을 설정하면 자동으로 로그인 기능을 구현할 수 있었다.
+
+<br>
+
+AuthenticationFilter(여기서는 UsernamePasswordAuthenticationFilter를 상속한 JwtAuthenticationFilter를 말한다.)를 들어온 첫번째 필터 과정이다. 
+그리고 해당 필터 클래스 안에서 2번인 UsernamePasswordAuthenticationToken을 발급 받아야 한다. <br> <br>
+
+```
+.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
+```
+AuthorizationFilter는 로그인이 아닌 사용자가 페이지로 이동할 때 인가 처리를 받기 위한 필터이다. <br>
+> 참고로 쿠키 세션 처리 방식으로 로그인을 구현하면, 쿠키가 항상 서버로 전달된다는 특징 때문에 자동 로그인 처리가 가능하다.
+
+<br>
 
 #### `JwtAuthenticationFilter와 JwtAuthorizationFilter를 추가하여 JWT 기반의 인증 및 권한 부여를 수행한다.`
 + JwtAuthenticationFilter는 사용자의 로그인 요청을 처리하고 JWT 토큰을 생성한다.
@@ -187,6 +239,8 @@ filterChain() 메서드는 HTTP 보안 구성을 정의한다. http 객체를 �
 + "/api/v1/admin/" 경로에 대해서는 모든 사용자에게 접근을 허용합니다.
 
 이렇게 함으로써 Spring Security를 사용하여 웹 애플리케이션의 보안을 구성하고, JWT를 활용하여 인증 및 권한 부여를 처리한다.
+
+<br>
 
 ## CorsConfig
 이 코드는 Cross-Origin Resource Sharing (CORS)를 구성하기 위한 CorsConfig 클래스이다.  <br>
@@ -246,7 +300,15 @@ Spring Security와 JWT(JSON Web Token)을 사용하여 보안을 구현하는 RE
 이 컨트롤러는 사용자의 인증 및 권한을 확인하고, 사용자 정보에 접근하여 처리한다.
 
 ### ✅ "/login" 매핑이 없는 이유
+![image](https://github.com/StudyHunter/Backend/assets/57389368/45889f6a-5294-42d8-bf3e-434c0d1561d7) <br>
+로그인 요청을 하는 ajax이다. <br>
+"/login"이 `컨트롤러에 매핑되는게 없는데 작동하는 이유는 스프링 Security가 해당 URI를 로그인 URI로 쓰고 있기 때문`이다. <br>
+"/login"에는 username과 password 값을 담아서 요청한다.  <br><br>
+그리고 해당 요청이 들어오면, UsernamePasswordAuthenticationFilter를 상속한 JwtAuthenticationFilter 클래스가 실행된다.  <br>
+JwtAuthenticationFilter는 security config 설정에 addFilter를 통해 넣어줬다. <br>
+그리고 그 안에서 JWT 토큰을 만들고 로그인 과정을 거친다. <br>
 
+<br><br>
 
 #### ✔️ userRepository 주입
 사용자 정보를 데이터베이스에서 조회하고 저장하기 위한 UserRepository를 주입한다.
@@ -307,4 +369,5 @@ Spring Security와 JWT(JSON Web Token)을 사용하여 보안을 구현하는 RE
 # 참고자료
 + [SSR-vs-CSR-차이](https://velog.io/@hanei100/TIL-SSR-vs-CSR-%EC%B0%A8%EC%9D%B4)
 + [jwt 로그인 구현](https://stir.tistory.com/275)
++ [작성한 모든 코드](https://github.com/StudyHunter/Backend/tree/master/%EC%8A%A4%ED%84%B0%EB%94%94/%EC%BD%94%EB%93%9C/%5BSpring%20Boot%5D%20Spring%20Security%EB%A5%BC%20%EC%82%AC%EC%9A%A9%ED%95%9C%20Jwt%20Token%20%EB%A1%9C%EA%B7%B8%EC%9D%B8%20%EA%B5%AC%ED%98%84)
   

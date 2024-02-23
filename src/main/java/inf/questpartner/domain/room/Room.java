@@ -29,7 +29,7 @@ public class Room {
     @Column(name = "room_id")
     private Long id;
 
-    private String author; // 방장 닉네임
+    private String hostEmail; // 방장 닉네임
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
 
@@ -55,8 +55,8 @@ public class Room {
     private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
 
     @Builder(builderMethodName = "createRoom")
-    public Room(String author, String title, int expectedUsers, RoomThumbnail thumbnail) {
-        this.author = author;
+    public Room(String hostEmail, String title, int expectedUsers, RoomThumbnail thumbnail) {
+        this.hostEmail = hostEmail;
         this.title = title;
         this.expectedUsers = expectedUsers;
         this.roomStatus = RoomStatus.OPEN;
@@ -88,7 +88,7 @@ public class Room {
 
     @Override
     public String toString() {
-        return "[Room Info] ->" + "방장명 = " + author +
+        return "[Room Info] ->" + "방장 이메일 = " + hostEmail +
                 " 방제목 = " + title +
                 ", 방 태그들 = " + roomHashTags.stream().map(RoomHashTag::getTagOption).collect(Collectors.toList()) +
                 ", 방 썸네일 = " + thumbnail.getTypeInfo() +

@@ -1,6 +1,7 @@
 package inf.questpartner.controller.api.room;
 
 import inf.questpartner.controller.PageDto;
+import inf.questpartner.controller.dto.CurrentUser;
 import inf.questpartner.controller.dto.RoomSearchCondition;
 import inf.questpartner.controller.response.CreateRoomResponse;
 import inf.questpartner.domain.room.Room;
@@ -22,6 +23,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -37,13 +39,15 @@ import java.util.List;
 public class RoomApiController {
 
     private final RoomService roomService;
+    private final UserService userService;
 
     // 방 생성
     @PostMapping("/new")
-    public ResponseEntity<Room> createRoom(@RequestBody CreateRoomRequest form, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Room> createRoom(@RequestBody CreateRoomRequest form,  UserDetails userDetails) {
         Thread currentThread = Thread.currentThread();
         log.info("현재 실행 중인 스레드={}", currentThread);
-        Room room = roomService.createRoom(form, user);
+
+        Room room = roomService.createRoom(form, userDetails.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED).body(room);
     }
 
@@ -57,16 +61,23 @@ public class RoomApiController {
 
     // username 회원이 roomId 방에 입장
     @PostMapping("/{roomId}/enter")
-    public ResponseEntity<Room> enterRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Room> enterRoom(@PathVariable(value = "roomId") Long id,  @AuthenticationPrincipal User user) {
         Room room = roomService.findById(id);
         room.addParticipant(user);
+
+        for (User participant : room.getParticipants()) {
+            log.info("participant nickname = {}", participant.getNickname());
+        }
         return ResponseEntity.status(HttpStatus.OK).body(room);
     }
 
     // username 회원이 roomId 방에서 나가기
     @PostMapping("/{roomId}/exit/{username}")
-    public ResponseEntity<Long> exitRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Long> exitRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal UserDetails userDetails) {
         Room room = roomService.findById(id);
+
+        String email = userDetails.getUsername();
+        User user = userService.findByEmail(email);
         room.removeParticipant(user);
 
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -78,7 +89,7 @@ public class RoomApiController {
     }
 
     @DeleteMapping("/{roomId}")
-    public ResponseEntity<Long> deleteRoom(@PathVariable("roomId") Long id) {
+    public ResponseEntity<Long> deleteRoom(@PathVariable("roomId") Long id, @AuthenticationPrincipal UserDetails userDetails) {
         roomService.deleteRoom(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

@@ -89,6 +89,10 @@ public class UserService {
         return userRepository.findByNickname(nickname);
     }
 
+    @Transactional(readOnly = true)
+    public User findByEmail(String email) {
+        return userRepository.findFirstByEmail(email);
+    }
 
     /**
      * 사용자 인증
@@ -127,6 +131,7 @@ public class UserService {
             throw new UserException("패스워드 불일치", HttpStatus.BAD_REQUEST);
         }
     }
+
 
 
     /**

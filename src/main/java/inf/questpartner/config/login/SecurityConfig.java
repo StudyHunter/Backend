@@ -24,6 +24,12 @@ public class SecurityConfig {
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final CorsConfigurationSource corsConfigurationSource;
 
+	private static final String[] AUTH_WHITELIST = {
+			"/api/**", "/graphiql", "/graphql", "/swagger/index.html",
+			"/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
+			"/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html"
+	};
+
 	@Bean
 	public AuthenticationManager authenticationManager(
 			AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -39,19 +45,24 @@ public class SecurityConfig {
 
 				.authorizeHttpRequests(authorize
 						-> authorize
-						.requestMatchers("/board/list",
-								"/board/{boardId}",
-								"/board/search",
+
+						.requestMatchers(
 								"/user/checkId",
 								"/user/register",
-								"/user/login",
-								"/board/{boardId}/comment/list/**",
-								"/board/{boardId}/file/download/**").permitAll()
+								"/user/login").permitAll()
 
 						.requestMatchers("/user/**").hasRole("USER")
-						.requestMatchers("/board/**").hasRole("USER")
-						.requestMatchers("/board/{boardId}/comment/**").hasRole("USER")
-						.requestMatchers("/board/{boardId}/file/**").hasRole("USER"))
+						.requestMatchers("/rooms/**").hasRole("USER")
+						.requestMatchers("/rooms/{roomId}/**").hasRole("USER"))
+
+				// 추가 구성 시작
+				.authorizeHttpRequests(
+						authorize -> authorize
+								.requestMatchers(AUTH_WHITELIST)
+								.permitAll()
+								.anyRequest()
+								.authenticated()
+				)
 
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.exceptionHandling(excep -> excep.authenticationEntryPoint(jwtAuthenticationEntryPoint))

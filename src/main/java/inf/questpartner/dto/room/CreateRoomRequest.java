@@ -18,9 +18,9 @@ public class CreateRoomRequest {
     private RoomThumbnail thumbnail; // 방 섬네일
     private List<TagOption> tags; // 방 태그표시들
 
-    public Room toRoomEntity(User user) {
+    public Room toRoomEntity(String hostEmail) {
         return Room.createRoom()
-                .author(user.getNickname())
+                .hostEmail(hostEmail)
                 .title(title)
                 .expectedUsers(expectedUsers)
                 .thumbnail(thumbnail)

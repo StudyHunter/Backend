@@ -36,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Value("${jwt.header}") private String HEADER_STRING;
 	@Value("${jwt.prefix}") private String TOKEN_PREFIX;
 
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {

@@ -27,8 +27,8 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomHashTagRepository hashTagRepository;
 
-    public Room createRoom(CreateRoomRequest req, User user) {
-        Room room = roomRepository.save(req.toRoomEntity(user));
+    public Room createRoom(CreateRoomRequest req, String hostEmail) {
+        Room room = roomRepository.save(req.toRoomEntity(hostEmail));
 
         for (TagOption tag : req.getTags()) {
             RoomHashTag hashTag = hashTagRepository.save(new RoomHashTag(room, tag));

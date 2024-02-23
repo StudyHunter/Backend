@@ -5,12 +5,15 @@ import inf.questpartner.domain.room.RoomHashTag;
 import inf.questpartner.domain.tag.TagOption;
 
 import inf.questpartner.dto.room.CreateRoomRequest;
+import inf.questpartner.dto.room.UpdateRoomRequest;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
 import inf.questpartner.util.exception.room.NotFoundRoomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Transactional
@@ -21,6 +24,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomHashTagRepository hashTagRepository;
 
+    //생성
     public Long createRoom(CreateRoomRequest req) {
         Room room = roomRepository.save(req.toRoomEntity());
 
@@ -31,10 +35,44 @@ public class RoomService {
         return room.getId();
     }
 
+    //방 목록 조회
+    @Transactional(readOnly = true)
+    public List<Room> findByAll(){
+        return roomRepository.findAll();
+    }
+    //조회
     @Transactional(readOnly = true)
     public Room findById(Long id) {
         return roomRepository.findById(id).orElseThrow(() -> new NotFoundRoomException("존재하지 않는 방입니다."));
     }
+
+    //수정
+    @Transactional
+    public Room updateRoom(Long roomId, UpdateRoomRequest req) {
+        //DTO -> 엔티티로 변환
+        Room room = req.toRoomEntity();
+        // 방 ID를 사용하여 해당 방을 데이터베이스에서 조회
+        Room target = roomRepository.findById(roomId)
+                .orElseThrow(() -> new NotFoundRoomException("존재하지 않는 방입니다."));
+        // 요청으로부터 받은 정보로 방 정보 업데이트
+        target.patch(room);
+        // 업데이트된 방 정보를 저장하고 반환
+        return target;
+    }
+    //삭제
+    @Transactional
+    public Room deleteRoom(Long roomId) {
+        //대상 방 찾기
+        Room target = roomRepository.findById(roomId).orElse(null);
+        //잘못된 요청 처리하기
+        if (target == null){
+            return null;
+        }
+        //대상 삭제하기
+        roomRepository.delete(target);
+        return target;
+    }
+
 
     /*
     @Transactional(readOnly = true)

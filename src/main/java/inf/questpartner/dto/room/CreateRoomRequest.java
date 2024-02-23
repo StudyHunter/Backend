@@ -26,8 +26,4 @@ public class CreateRoomRequest {
                 .thumbnail(thumbnail)
                 .build();
     }
-
-
-
-
 }

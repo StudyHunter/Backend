@@ -5,12 +5,17 @@ import inf.questpartner.domain.room.common.RoomThumbnail;
 import inf.questpartner.domain.room.common.RoomType;
 import inf.questpartner.domain.tag.TagOption;
 import inf.questpartner.dto.room.CreateRoomRequest;
+import inf.questpartner.dto.room.UpdateRoomRequest;
 import inf.questpartner.service.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/rooms")
@@ -40,6 +45,15 @@ public class RoomApiController {
         return "redirect:/rooms/{roomId}";
     }
 
+    //방 목록 조회
+    @GetMapping("/list")
+    public List<Room> roomList(){
+        /*List<Room> roomList = roomService.findByAll();
+        return "room/roomList";*/
+        return roomService.findByAll();
+    }
+
+    //방 상세 페이지 조회
     @GetMapping("/{roomId}")
     public String roomDetail(@PathVariable("roomId") Long roomId, Model model) {
         Room room = roomService.findById(roomId);
@@ -49,6 +63,30 @@ public class RoomApiController {
         return "room/roomDetail";
     }
 
+    //방 수정 폼
+    @PatchMapping("/{roomId}/edit")
+    public Room updateForm(@PathVariable("roomId") Long roomId, @ModelAttribute UpdateRoomRequest form){
+        //서비스를 통해 방 정보 수정
+        Room updated = roomService.updateRoom(roomId, form);
+        //수정 후 해당 방 상세 페이지로 이동
+        return updated;
+        //return "redirect:/rooms/{roomId}";
+    }
+
+    //방 삭제
+    @DeleteMapping("/{roomId}/delete")
+    public ResponseEntity delete(@PathVariable("roomId") Long roomId){
+        //서비스를 통해 방 삭제
+        Room deleted = roomService.deleteRoom(roomId);
+        //삭제 후 방 목록으로 리다이렉트
+        return new ResponseEntity(HttpStatus.OK);
+        /*
+         *return (delete  != null) ?
+            엔티티.status(HttpStatus.NO_CONTENT).build() :
+            엔티티.status(HttpStatus.BAD_REQUEST).build();
+         */
+
+    }
 
 
     /*

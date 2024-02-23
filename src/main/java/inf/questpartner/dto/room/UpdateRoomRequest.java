@@ -1,6 +1,7 @@
 package inf.questpartner.dto.room;
 
 
+import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.common.RoomThumbnail;
 import inf.questpartner.domain.room.common.RoomType;
 import inf.questpartner.domain.tag.TagOption;
@@ -11,8 +12,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-public class UpdatePostRequest {
+public class UpdateRoomRequest {
     private String author; // 방장 닉네임
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
@@ -20,13 +20,13 @@ public class UpdatePostRequest {
     private RoomThumbnail thumbnail; // 방 섬네일
     private List<TagOption> tags; // 방 태그표시들
 
-    @Builder
-    public UpdatePostRequest(String author, String title, int expectedUsers, RoomType roomType, RoomThumbnail thumbnail, List<TagOption> tags) {
-        this.author = author;
-        this.title = title;
-        this.expectedUsers = expectedUsers;
-        this.roomType = roomType;
-        this.thumbnail = thumbnail;
-        this.tags = tags;
+    public Room toRoomEntity() {
+        return Room.updateRoom()
+                .title(title)
+                .roomType(roomType)
+                .thumbnail(thumbnail)
+                .build();
     }
+
+
 }

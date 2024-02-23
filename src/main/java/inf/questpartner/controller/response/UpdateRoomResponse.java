@@ -1,2 +1,10 @@
-package inf.questpartner.controller.response;public class UpdateRoomResponse {
+package inf.questpartner.controller.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class UpdateRoomResponse {
+    private Long id;
 }

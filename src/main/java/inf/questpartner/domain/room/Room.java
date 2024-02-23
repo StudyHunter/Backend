@@ -31,6 +31,9 @@ public class Room {
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
 
+    private Integer heartCount=0;   //초기 숫자를 넣어주자 안그럼 숫자 인식을 못한다.
+
+
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomHashTag> roomHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
@@ -54,6 +57,33 @@ public class Room {
         this.roomStatus = RoomStatus.OPEN;
         this.roomType = roomType;
         this.thumbnail = thumbnail;
+    }
+
+    @Builder(builderMethodName = "updateRoom")
+    public Room(String title, RoomType roomType, RoomThumbnail thumbnail) {
+        this.title = title;
+        this.roomType = roomType;
+        this.thumbnail = thumbnail;
+    }
+
+    //하트 수 증가 메소드
+    public void increaseHeartCount() {
+        this.heartCount++;
+    }
+
+    //하트 수 감소 메소드
+    public void decreaseHeartCount() {
+        this.heartCount--;
+    }
+
+    //수정
+    public void patch(Room room){
+        if (room.title !=  null)
+            this.title = room.title;
+        if (room.roomType != null)
+            this.roomType = room.roomType;
+        if (room.thumbnail != null)
+            this.thumbnail = room.thumbnail;
     }
 
     // 스터디룸에 남은 자리가 있는지 확인하는 로직

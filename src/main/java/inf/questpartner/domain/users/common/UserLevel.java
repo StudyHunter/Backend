@@ -9,8 +9,9 @@ import lombok.Getter;
 public enum UserLevel {
 
     UNAUTH("UNAUTH", "미인증 회원"),
-    AUTH("AUTH", "가입된 회원"),
+    USER("USER", "가입된 회원"),
     ADMIN("ADMIN", "관리자");
+
 
     private String code;
     private String levelInfo;

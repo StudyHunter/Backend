@@ -1,16 +1,22 @@
 package inf.questpartner.service;
 
+import inf.questpartner.controller.dto.RoomSearchCondition;
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.RoomHashTag;
 
 import inf.questpartner.domain.room.common.tag.TagOption;
+import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
 import inf.questpartner.util.exception.room.NotFoundRoomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Transactional
@@ -21,14 +27,14 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomHashTagRepository hashTagRepository;
 
-    public Long createRoom(CreateRoomRequest req) {
-        Room room = roomRepository.save(req.toRoomEntity());
+    public Room createRoom(CreateRoomRequest req, User user) {
+        Room room = roomRepository.save(req.toRoomEntity(user));
 
         for (TagOption tag : req.getTags()) {
             RoomHashTag hashTag = hashTagRepository.save(new RoomHashTag(room, tag));
             room.addHashTag(hashTag);
         }
-        return room.getId();
+        return room;
     }
 
     @Transactional(readOnly = true)
@@ -36,26 +42,24 @@ public class RoomService {
         return roomRepository.findById(id).orElseThrow(() -> new NotFoundRoomException("존재하지 않는 방입니다."));
     }
 
+    public void deleteRoom(Long id) {
+        Room room = findById(id);
+        roomRepository.delete(room);
+    }
+
+    public void endStudy(Long id, int time) {
+        Room room = findById(id);
+        room.studyEnd(time);
+        room.getParticipants().forEach(participant -> participant.updateTotalTime(time));
+
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Room> sort(RoomSearchCondition condition, Pageable pageable) {
+        return roomRepository.searchPageSort(condition, pageable);
+    }
+
     /*
-    @Transactional(readOnly = true)
-    public List<RoomTag> findRoomTags() {
-        return roomRepository.findAll().stream()
-                .map(Room::toRoomTagDto)
-                .collect(Collectors.toList());
-    }
-
-    // 태그로 방 탐색
-    @Transactional(readOnly = true)
-    public Set<Room> findRoomsByTag(List<TagOption> tags, List<Room> roomList) {
-        return roomList.stream()
-                .filter(room -> room.getTags().stream()
-                        .map(TagOption::getViewName)
-                        .anyMatch(tagViewName -> tags.stream()
-                                .anyMatch(tagOption -> tagOption.getViewName().equals(tagViewName))))
-                .collect(Collectors.toSet());
-    }
-
-
     // 취향 방 추천
     @Transactional(readOnly = true)
     public List<RoomTag> recommendLogic(UserWishTag user, List<RoomTag> roomTags) {

@@ -23,9 +23,7 @@ public class Chatting {
 
     private String content; // 메시지 내용
     private String sender; // 메시지 보내는 사람
-
-
-    private String chatRoomId; // 방번호
+    private String roomId; // 방번호
 
     @Enumerated(EnumType.STRING)
     private MessageType type;

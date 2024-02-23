@@ -7,10 +7,6 @@ import lombok.Getter;
  */
 @Getter
 public enum TagOption {
-    /**
-     * 관심 분야
-     */
-
     AI("인공지능"),
     DEEPLEARNING("딥러닝"),
     CODINGTEST("코딩테스트"),
@@ -19,6 +15,11 @@ public enum TagOption {
     INTERVIEW("면접준비"),
     STARTUP("창업"),
     DATA("데이터과학"),
+    FRONTEND("프론트엔드"),
+    BACKEND("백엔드"),
+    PORTFOLIO("포트폴리오"),
+    STUDY("스터디"),
+
 
     /**
      * 기술 스택
@@ -43,7 +44,4 @@ public enum TagOption {
         this.viewName = viewName;
     }
 
-    public String getViewName() {
-        return viewName;
-    }
 }

@@ -8,27 +8,25 @@ import inf.questpartner.domain.users.common.UserBase;
 import inf.questpartner.domain.users.common.UserLevel;
 import inf.questpartner.domain.users.common.UserProfileImg;
 import inf.questpartner.domain.users.common.UserStatus;
-import inf.questpartner.dto.users.FindUserResponse;
-import inf.questpartner.dto.users.UserDetailResponse;
-import inf.questpartner.dto.users.UserInfoDto;
+import inf.questpartner.dto.users.res.UserDetailResponse;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("USER")
 @Entity
-public class User extends UserBase {
+public class User extends UserBase implements UserDetails {
 
     private String nickname; // 닉네임
 
@@ -40,9 +38,8 @@ public class User extends UserBase {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserWishHashTag> userHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
-    private int wishGroupSize; // 스터디방 원하는 조건 : 인원 / 기간
-
-    private int wishExpectedSchedule;
+   // private int wishGroupSize; // 스터디방 원하는 조건 : 인원 / 기간
+    // private int wishExpectedSchedule;
 
     @Enumerated(EnumType.STRING)
     private UserProfileImg profileImg; // 회원 프로필 사진
@@ -53,17 +50,14 @@ public class User extends UserBase {
     private Room room;
 
 
+
     @Builder
-    public User(Long id, String email, String password,
-                String nickname, UserProfileImg profileImg, int wishGroupSize, int wishExpectedSchedule, List<UserWishHashTag> tags) {
-        super(id, email, password, UserLevel.AUTH);
+    public User(Long id, String email, String password, String nickname) {
+        super(id, email, password, UserLevel.USER);
         this.nickname = nickname;
-        this.profileImg = profileImg;
         this.userStatus = UserStatus.NORMAL;
+        this.profileImg = UserProfileImg.IMG_FINN;
         this.studyTime = 0;
-        this.wishGroupSize = wishGroupSize;
-        this.wishExpectedSchedule = wishExpectedSchedule;
-        this.userHashTags = tags;
     }
 
     /**
@@ -83,19 +77,18 @@ public class User extends UserBase {
                 .id(this.getId())
                 .email(this.email)
                 .nickname(this.nickname)
-                .createdDate(this.getCreatedDate())
-                .modifiedDate(this.getModifiedDate())
                 .userLevel(this.userLevel)
                 .userStatus(this.userStatus)
                 .build();
     }
 
-    public UserInfoDto toUserInfoDto() {
-        return UserInfoDto.builder()
-                .email(this.getEmail())
-                .nickname(this.nickname)
-                .userLevel(this.userLevel)
-                .build();
+    public void addHashTag(UserWishHashTag tag) {
+        this.userHashTags.add(tag);
+    }
+
+    public void update(String password, String nickname) {
+        this.password = password;
+        this.nickname = nickname;
     }
 
 
@@ -117,10 +110,13 @@ public class User extends UserBase {
         this.nickname = nickname;
     }
 
-    public void settingRoles(String role) {
-        this.roles = role;
+    public void settingRoles() {
+        this.roles = UserLevel.USER.getCode();
     }
 
+    public void updateTotalTime(int time) {
+        this.studyTime += time;
+    }
 
     // 태그 알고리즘 로직들-- (수정중)
 
@@ -128,25 +124,11 @@ public class User extends UserBase {
         return this.userStatus == UserStatus.BAN;
     }
 
-    public void checkWishGroupSize(int size) {
-        this.wishGroupSize = size;
-    }
-
-    public void checkWishSchedule(int day) {
-        this.wishExpectedSchedule = day;
-    }
-
 
     public void addWishTags(UserWishHashTag tag) {
         this.userHashTags.add(tag);
     }
 
-
-    public FindUserResponse toFindUserDto() {
-        return FindUserResponse.builder()
-                .email(this.getEmail())
-                .build();
-    }
 
     public void updatePassword(String password) {
         this.password = password;
@@ -156,8 +138,42 @@ public class User extends UserBase {
         return this.userStatus == UserStatus.BAN;
     }
 
-    public void updateUserLevel() {
-        this.userLevel = UserLevel.AUTH;
+
+    //========== UserDetails implements ==========//
+    /**
+     * Token을 고유한 Email 값으로 생성합니다
+     * @return email;
+     */
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add( new SimpleGrantedAuthority("ROLE_" + this.userLevel.name()));
+        return authorities;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
 }

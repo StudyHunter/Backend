@@ -2,6 +2,8 @@ package inf.questpartner.controller;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +29,10 @@ public class QuoteController {
     }
 
     @GetMapping("/randomQuote")
-    public String randomQuote(Model model) {
+    public ResponseEntity<String> randomQuote(Model model) {
         int randInt = new Random().nextInt(Quote.values().length);
-        model.addAttribute("randomQuote", Quote.values()[randInt].getQuote());
-        return "randomQuote";
+        String quote = Quote.values()[randInt].getQuote();
+
+        return ResponseEntity.status(HttpStatus.OK).body(quote);
     }
 }

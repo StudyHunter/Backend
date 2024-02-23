@@ -32,9 +32,11 @@ public class QRoom extends EntityPathBase<Room> {
 
     public final EnumPath<inf.questpartner.domain.room.common.RoomStatus> roomStatus = createEnum("roomStatus", inf.questpartner.domain.room.common.RoomStatus.class);
 
-    public final EnumPath<inf.questpartner.domain.room.common.RoomType> roomType = createEnum("roomType", inf.questpartner.domain.room.common.RoomType.class);
+    public final NumberPath<Integer> studyTimer = createNumber("studyTimer", Integer.class);
 
     public final EnumPath<inf.questpartner.domain.room.common.RoomThumbnail> thumbnail = createEnum("thumbnail", inf.questpartner.domain.room.common.RoomThumbnail.class);
+
+    public final EnumPath<inf.questpartner.domain.room.common.tag.TimerStatus> timerStatus = createEnum("timerStatus", inf.questpartner.domain.room.common.tag.TimerStatus.class);
 
     public final StringPath title = createString("title");
 

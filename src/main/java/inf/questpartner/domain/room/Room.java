@@ -4,6 +4,7 @@ import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
 import inf.questpartner.domain.room.common.RoomType;
 
+import inf.questpartner.domain.room.common.tag.TimerStatus;
 import inf.questpartner.domain.users.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -32,11 +33,17 @@ public class Room {
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
 
+    private int studyTimer; // 스터디 타이머
+
+    @Enumerated(EnumType.STRING)
+    private TimerStatus timerStatus;
+
+
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomHashTag> roomHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
-    @Enumerated(EnumType.STRING)
-    private RoomType roomType; // 방 유형 -> STUDY(스터디), PROJECT(팀 프로젝트)
+   // @Enumerated(EnumType.STRING)
+   // private RoomType roomType; // 방 유형 -> STUDY(스터디), PROJECT(팀 프로젝트)
 
     @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus; // 모집 상태 (자리 남았는지? OPEN /CLOSED)
@@ -48,13 +55,13 @@ public class Room {
     private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
 
     @Builder(builderMethodName = "createRoom")
-    public Room(String author, String title, int expectedUsers, RoomType roomType, RoomThumbnail thumbnail) {
+    public Room(String author, String title, int expectedUsers, RoomThumbnail thumbnail) {
         this.author = author;
         this.title = title;
         this.expectedUsers = expectedUsers;
         this.roomStatus = RoomStatus.OPEN;
-        this.roomType = roomType;
         this.thumbnail = thumbnail;
+        this.studyTimer = 0;
     }
 
     // 스터디룸에 남은 자리가 있는지 확인하는 로직
@@ -67,6 +74,14 @@ public class Room {
         this.participants.add(user);
     }
 
+   public void removeParticipant(User user) {
+        this.participants.remove(user);
+    }
+
+    public void studyEnd(int time) {
+        this.studyTimer = time;
+    }
+
     public void addHashTag(RoomHashTag tag) {
         this.roomHashTags.add(tag);
     }
@@ -76,7 +91,6 @@ public class Room {
         return "[Room Info] ->" + "방장명 = " + author +
                 " 방제목 = " + title +
                 ", 방 태그들 = " + roomHashTags.stream().map(RoomHashTag::getTagOption).collect(Collectors.toList()) +
-                ", 방 유형 = " + roomType +
                 ", 방 썸네일 = " + thumbnail.getTypeInfo() +
                 ", 방 제한된 인원수 = " + expectedUsers +
                 ", 현재 모집상태 = " + roomStatus +

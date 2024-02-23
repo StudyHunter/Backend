@@ -22,14 +22,14 @@ public class QUserBase extends EntityPathBase<UserBase> {
     public final inf.questpartner.domain.QBaseTimeEntity _super = new inf.questpartner.domain.QBaseTimeEntity(this);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
+    public final StringPath createdDate = _super.createdDate;
 
     public final StringPath email = createString("email");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+    public final StringPath modifiedDate = _super.modifiedDate;
 
     public final StringPath password = createString("password");
 

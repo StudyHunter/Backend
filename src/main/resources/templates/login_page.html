@@ -36,7 +36,6 @@
 
                         <div class="form-group form-button">
                             <input type="button" name="signup" id="signup" class="form-submit" onclick="login()" value="로그인"/>
-
                         </div>
                     </form>
                 </div>
@@ -67,7 +66,7 @@
         }).done(function(data,status,xhr){
             let jwtToken = xhr.getResponseHeader('Authorization');
             localStorage.setItem("Authorization", jwtToken);
-            location.href = "/home";
+            location.href = "/chat/chatList";
         }).fail(function (error) {
             alert("존재하지 않는 회원입니다.");
         });

@@ -22,13 +22,13 @@ public class QChatting extends EntityPathBase<Chatting> {
 
     public static final QChatting chatting = new QChatting("chatting");
 
-    public final StringPath chatRoomId = createString("chatRoomId");
-
     public final QChattingRoom chattingRoom;
 
     public final StringPath content = createString("content");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath roomId = createString("roomId");
 
     public final StringPath sender = createString("sender");
 

@@ -8,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.socket.WebSocketSession;
+
 
 import java.util.ArrayList;
 import java.util.HashSet;

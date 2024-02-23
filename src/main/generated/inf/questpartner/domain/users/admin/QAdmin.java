@@ -22,7 +22,7 @@ public class QAdmin extends EntityPathBase<Admin> {
     public final inf.questpartner.domain.users.common.QUserBase _super = new inf.questpartner.domain.users.common.QUserBase(this);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
+    public final StringPath createdDate = _super.createdDate;
 
     //inherited
     public final StringPath email = _super.email;
@@ -31,7 +31,7 @@ public class QAdmin extends EntityPathBase<Admin> {
     public final NumberPath<Long> id = _super.id;
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+    public final StringPath modifiedDate = _super.modifiedDate;
 
     //inherited
     public final StringPath password = _super.password;

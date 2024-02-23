@@ -25,7 +25,7 @@ public class QUser extends EntityPathBase<User> {
     public final inf.questpartner.domain.users.common.QUserBase _super = new inf.questpartner.domain.users.common.QUserBase(this);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
+    public final StringPath createdDate = _super.createdDate;
 
     //inherited
     public final StringPath email = _super.email;
@@ -34,7 +34,7 @@ public class QUser extends EntityPathBase<User> {
     public final NumberPath<Long> id = _super.id;
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+    public final StringPath modifiedDate = _super.modifiedDate;
 
     public final StringPath nickname = createString("nickname");
 
@@ -57,10 +57,6 @@ public class QUser extends EntityPathBase<User> {
     public final EnumPath<inf.questpartner.domain.users.common.UserLevel> userLevel = _super.userLevel;
 
     public final EnumPath<inf.questpartner.domain.users.common.UserStatus> userStatus = createEnum("userStatus", inf.questpartner.domain.users.common.UserStatus.class);
-
-    public final NumberPath<Integer> wishExpectedSchedule = createNumber("wishExpectedSchedule", Integer.class);
-
-    public final NumberPath<Integer> wishGroupSize = createNumber("wishGroupSize", Integer.class);
 
     public QUser(String variable) {
         this(User.class, forVariable(variable), INITS);

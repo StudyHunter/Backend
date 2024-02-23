@@ -48,8 +48,24 @@
         </div>
 
     </div>
+    <!--
+        <div class="my-3">
+            <a th:href="@{|/rooms/${room.roomId}|}" class="btn btn-sm btn-outline-secondary"
+               sec:authorize="isAuthenticated()"
+               th:if="${room.title != null and room.roomType != null and room.thumbnail != null}"
+               th:text="수정"></a>
+        </div>
 
-
+        <a href="javascript:void(0);" th:data-uri="@{|/rooms/${room.roomId}|}"
+           class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+           th:if="${room.author != null and #authentication.getPrincipal().getNickname() == answer.author.nickname}"
+           th:text="삭제"></a>
+        <div class="my-3">
+            <a th:href="@{|/rooms|}" class="btn btn-sm btn-outline-secondary"
+               sec:authorize="isAuthenticated()"
+               th:text="목록"></a>
+        </div>
+        -->
     <br/>
     <div th:replace="fragments/footer :: footer" />
 

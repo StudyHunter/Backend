@@ -3,7 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.2.1'
 	id 'io.spring.dependency-management' version '1.1.4'
 	// querydsl관련 명령어를 gradle탭에 생성해준다. (권장사항)
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	//id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'inf'
@@ -46,8 +46,8 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	// Security
-	//implementation 'org.springframework.boot:spring-boot-starter-security'
-	//implementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-test'
 
 	// mustache
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
@@ -61,37 +61,28 @@ dependencies {
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
-// Querydsl 설정부
+/**
+ * QueryDSL Build Options
 
-def generated = 'src/main/generated'
+def querydslDir = "src/main/generated"
 
-querydsl {
-	jpa = true
-	querydslSourcesDir = generated
-}
 sourceSets {
-	main.java.srcDir generated
+	main.java.srcDirs += [ querydslDir ]
 }
 
-compileQuerydsl{
-	options.annotationProcessorPath = configurations.querydsl
+tasks.withType(JavaCompile) {
+	options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
 }
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	querydsl.extendsFrom compileClasspath
+clean.doLast {
+	file(querydslDir).deleteDir()
 }
-
-
 tasks.named('test') {
 	useJUnitPlatform()
-}
+}*/
 /*
 tasks.withType(JavaCompile) {
-	options.compilerArgs << "-parameters"
+   options.compilerArgs << "-parameters"
 }
 
  */
-

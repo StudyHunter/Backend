@@ -8,6 +8,8 @@ import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.dto.room.ResRoomEnter;
+import inf.questpartner.dto.room.StartTimeDto;
+import inf.questpartner.dto.room.StudyTokenDto;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
 import inf.questpartner.repository.users.UserRepository;
@@ -20,7 +22,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
+
 @Slf4j
 
 @Transactional
@@ -31,6 +36,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomHashTagRepository hashTagRepository;
     private final UserRepository userRepository;
+
     public Room createRoom(CreateRoomRequest req, String hostEmail) {
         Room room = roomRepository.save(req.toRoomEntity(hostEmail));
 
@@ -65,17 +71,40 @@ public class RoomService {
         roomRepository.delete(room);
     }
 
-    public void endStudy(Long id, int time) {
+    //
+    public StartTimeDto startStudy(Long id) {
         Room room = findById(id);
-        room.studyEnd(time);
-        room.getParticipants().forEach(participant -> participant.updateTotalTime(time));
+        LocalDateTime startTime = LocalDateTime.now();
+        room.startRoomTime(startTime);
+        return new StartTimeDto(startTime);
+    }
 
+    //    종료 시 시간과 방의 시작 시간을 계산하여 유저마다 적용
+    public StudyTokenDto endStudy(Long id) {
+        Room room = findById(id);
+        LocalDateTime endTime = LocalDateTime.now();
+
+        long studyTime = calculateStudyTimer(room.getStartTime(), endTime);
+        room.getParticipants().forEach(participant -> participant.updateTotalTime(studyTime));
+        room.endRoomTime(studyTime);
+
+        int studyToken = (int) (studyTime / 30);
+        room.getParticipants().forEach(participant -> participant.updateStudyToken(studyToken));
+        return new StudyTokenDto(studyToken);
+    }
+
+    //    시작 시간과 종료 시간을 분으로 계산
+    private long calculateStudyTimer(LocalDateTime startTime, LocalDateTime endTime) {
+        Duration duration = Duration.between(startTime, endTime);
+        return duration.toMinutes();
     }
 
     @Transactional(readOnly = true)
     public Page<Room> sort(RoomSearchCondition condition, Pageable pageable) {
         return roomRepository.searchPageSort(condition, pageable);
     }
+
+
 
     /*
     // 취향 방 추천

@@ -86,6 +86,10 @@ public class User extends UserBase implements UserDetails {
         this.userHashTags.add(tag);
     }
 
+    public void setMappingRoom(Room room) {
+        this.room = room;
+    }
+
     public void update(String password, String nickname) {
         this.password = password;
         this.nickname = nickname;

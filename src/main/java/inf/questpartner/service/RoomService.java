@@ -7,17 +7,21 @@ import inf.questpartner.domain.room.RoomHashTag;
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.room.CreateRoomRequest;
+import inf.questpartner.dto.room.ResRoomEnter;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
+import inf.questpartner.repository.users.UserRepository;
+import inf.questpartner.util.exception.ResourceNotFoundException;
 import inf.questpartner.util.exception.room.NotFoundRoomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+@Slf4j
 
 @Transactional
 @RequiredArgsConstructor
@@ -26,7 +30,7 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
     private final RoomHashTagRepository hashTagRepository;
-
+    private final UserRepository userRepository;
     public Room createRoom(CreateRoomRequest req, String hostEmail) {
         Room room = roomRepository.save(req.toRoomEntity(hostEmail));
 
@@ -36,6 +40,20 @@ public class RoomService {
         }
         return room;
     }
+
+    @Transactional(readOnly = true)
+    public ResRoomEnter enterRoom(Long id, User user) {
+        User enterUser = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User", "User Email", user.getEmail())
+        );
+        Room room = findById(id);
+        room.addParticipant(enterUser);
+
+        for (User participant : room.getParticipants()) {
+            log.info("participant nickname = {}", participant.getNickname());
+        }
+        return ResRoomEnter.fromEntity(room);
+    }
+
 
     @Transactional(readOnly = true)
     public Room findById(Long id) {

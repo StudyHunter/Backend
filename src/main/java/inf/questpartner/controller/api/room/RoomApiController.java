@@ -11,9 +11,12 @@ import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.RoomTag;
 import inf.questpartner.dto.room.CreateRoomRequest;
+import inf.questpartner.dto.room.ResRoomEnter;
+import inf.questpartner.repository.users.UserRepository;
 import inf.questpartner.service.RoomService;
 
 import inf.questpartner.service.UserService;
+import inf.questpartner.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.nio.file.ReadOnlyFileSystemException;
 import java.util.List;
 
 @Slf4j
@@ -40,7 +44,7 @@ public class RoomApiController {
 
     private final RoomService roomService;
     private final UserService userService;
-
+    private final UserRepository userRepository;
     // 방 생성
     @PostMapping("/new")
     public ResponseEntity<Room> createRoom(@RequestBody CreateRoomRequest form,  UserDetails userDetails) {
@@ -61,14 +65,10 @@ public class RoomApiController {
 
     // username 회원이 roomId 방에 입장
     @PostMapping("/{roomId}/enter")
-    public ResponseEntity<Room> enterRoom(@PathVariable(value = "roomId") Long id,  @AuthenticationPrincipal User user) {
-        Room room = roomService.findById(id);
-        room.addParticipant(user);
+    public ResponseEntity<ResRoomEnter> enterRoom(@PathVariable(value = "roomId") Long id,  @AuthenticationPrincipal User user) {
 
-        for (User participant : room.getParticipants()) {
-            log.info("participant nickname = {}", participant.getNickname());
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(room);
+        ResRoomEnter dto = roomService.enterRoom(id, user);
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     // username 회원이 roomId 방에서 나가기

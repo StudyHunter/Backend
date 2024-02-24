@@ -51,7 +51,7 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomThumbnail thumbnail; // 섬네일 선택지
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
 
     @Builder(builderMethodName = "createRoom")
@@ -72,6 +72,7 @@ public class Room {
     // 스터디룸에 참여자 참여
     public void addParticipant(User user) {
         this.participants.add(user);
+        user.setMappingRoom(this);
     }
 
    public void removeParticipant(User user) {

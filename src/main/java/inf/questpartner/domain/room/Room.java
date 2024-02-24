@@ -2,7 +2,6 @@ package inf.questpartner.domain.room;
 
 import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
-import inf.questpartner.domain.room.common.RoomType;
 
 import inf.questpartner.domain.room.common.tag.TimerStatus;
 import inf.questpartner.domain.users.user.User;
@@ -12,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,10 +33,11 @@ public class Room {
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
 
-    private int studyTimer; // 스터디 타이머
+    private LocalDateTime startTime;
+    private long studyTimer; // 스터디 타이머
 
-    @Enumerated(EnumType.STRING)
-    private TimerStatus timerStatus;
+//    @Enumerated(EnumType.STRING)
+//    private TimerStatus timerStatus;
 
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
@@ -64,6 +65,14 @@ public class Room {
         this.studyTimer = 0;
     }
 
+    public void startRoomTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void endRoomTime(long studyTimer) {
+        this.studyTimer = studyTimer;
+    }
+
     // 스터디룸에 남은 자리가 있는지 확인하는 로직
     public boolean hasExceededUsers() {
         return this.participants.size() > expectedUsers;
@@ -79,9 +88,7 @@ public class Room {
         this.participants.remove(user);
     }
 
-    public void studyEnd(int time) {
-        this.studyTimer = time;
-    }
+
 
     public void addHashTag(RoomHashTag tag) {
         this.roomHashTags.add(tag);

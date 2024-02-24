@@ -12,6 +12,8 @@ import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.RoomTag;
 import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.dto.room.ResRoomEnter;
+import inf.questpartner.dto.room.StartTimeDto;
+import inf.questpartner.dto.room.StudyTokenDto;
 import inf.questpartner.repository.users.UserRepository;
 import inf.questpartner.service.RoomService;
 
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.file.ReadOnlyFileSystemException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -45,9 +48,10 @@ public class RoomApiController {
     private final RoomService roomService;
     private final UserService userService;
     private final UserRepository userRepository;
+
     // 방 생성
     @PostMapping("/new")
-    public ResponseEntity<Room> createRoom(@RequestBody CreateRoomRequest form,  UserDetails userDetails) {
+    public ResponseEntity<Room> createRoom(@RequestBody CreateRoomRequest form, UserDetails userDetails) {
         Thread currentThread = Thread.currentThread();
         log.info("현재 실행 중인 스레드={}", currentThread);
 
@@ -56,16 +60,16 @@ public class RoomApiController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<Room>> search(RoomSearchCondition condition, @PageableDefault(size=6) Pageable pageable) {
+    public ResponseEntity<Page<Room>> search(RoomSearchCondition condition, @PageableDefault(size = 6) Pageable pageable) {
 
         Page<Room> result = roomService.sort(condition, pageable);
-        return  ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
 
     // username 회원이 roomId 방에 입장
     @PostMapping("/{roomId}/enter")
-    public ResponseEntity<ResRoomEnter> enterRoom(@PathVariable(value = "roomId") Long id,  @AuthenticationPrincipal User user) {
+    public ResponseEntity<ResRoomEnter> enterRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal User user) {
 
         ResRoomEnter dto = roomService.enterRoom(id, user);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
@@ -83,9 +87,18 @@ public class RoomApiController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/{roomId}/studyEnd")
-    public void endStudy(@PathVariable(value = "roomId") Long id, @RequestParam Integer time) {
+//    스터디 타이머 시작
+    @PostMapping("/{roomId}/startStudy")
+    public ResponseEntity<StartTimeDto> startStudy(@PathVariable(value = "roomId") Long id) {
+        StartTimeDto startTimeDto = roomService.startStudy(id);
+        return ResponseEntity.status(HttpStatus.OK).body(startTimeDto);
+    }
 
+//    스터디 타이머 종료
+    @PostMapping("/{roomId}/endStudy")
+    public ResponseEntity<StudyTokenDto> endStudy(@PathVariable(value = "roomId") Long id) {
+        StudyTokenDto studyTokenDto = roomService.endStudy(id);
+        return ResponseEntity.status(HttpStatus.OK).body(studyTokenDto);
     }
 
     @DeleteMapping("/{roomId}")

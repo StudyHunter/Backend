@@ -11,6 +11,7 @@ import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.RoomTag;
 import inf.questpartner.dto.room.CreateRoomRequest;
+import inf.questpartner.dto.room.ResRoomCreate;
 import inf.questpartner.dto.room.ResRoomEnter;
 import inf.questpartner.repository.users.UserRepository;
 import inf.questpartner.service.RoomService;
@@ -47,11 +48,11 @@ public class RoomApiController {
     private final UserRepository userRepository;
     // 방 생성
     @PostMapping("/new")
-    public ResponseEntity<Room> createRoom(@RequestBody CreateRoomRequest form,  UserDetails userDetails) {
+    public ResponseEntity<ResRoomCreate> createRoom(@RequestBody CreateRoomRequest form, @AuthenticationPrincipal User user) {
         Thread currentThread = Thread.currentThread();
         log.info("현재 실행 중인 스레드={}", currentThread);
 
-        Room room = roomService.createRoom(form, userDetails.getUsername());
+        ResRoomCreate room = roomService.createRoom(form, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(room);
     }
 

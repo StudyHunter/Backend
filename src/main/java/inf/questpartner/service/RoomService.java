@@ -7,6 +7,7 @@ import inf.questpartner.domain.room.RoomHashTag;
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.room.CreateRoomRequest;
+import inf.questpartner.dto.room.ResRoomCreate;
 import inf.questpartner.dto.room.ResRoomEnter;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
@@ -31,20 +32,23 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomHashTagRepository hashTagRepository;
     private final UserRepository userRepository;
-    public Room createRoom(CreateRoomRequest req, String hostEmail) {
-        Room room = roomRepository.save(req.toRoomEntity(hostEmail));
+    public ResRoomCreate createRoom(CreateRoomRequest req, User user) {
+        User enterUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
+
+        Room room = roomRepository.save(req.toRoomEntity(enterUser.getEmail()));
 
         for (TagOption tag : req.getTags()) {
             RoomHashTag hashTag = hashTagRepository.save(new RoomHashTag(room, tag));
             room.addHashTag(hashTag);
         }
-        return room;
+        return ResRoomCreate.fromEntity(room);
     }
 
     @Transactional(readOnly = true)
     public ResRoomEnter enterRoom(Long id, User user) {
-        User enterUser = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User", "User Email", user.getEmail())
-        );
+        User enterUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
         Room room = findById(id);
         room.addParticipant(enterUser);
 
@@ -69,7 +73,6 @@ public class RoomService {
         Room room = findById(id);
         room.studyEnd(time);
         room.getParticipants().forEach(participant -> participant.updateTotalTime(time));
-
     }
 
     @Transactional(readOnly = true)

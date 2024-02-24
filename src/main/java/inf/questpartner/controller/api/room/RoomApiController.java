@@ -1,25 +1,16 @@
 package inf.questpartner.controller.api.room;
 
-import inf.questpartner.controller.PageDto;
-import inf.questpartner.controller.dto.CurrentUser;
+
 import inf.questpartner.controller.dto.RoomSearchCondition;
-import inf.questpartner.controller.response.CreateRoomResponse;
 import inf.questpartner.domain.room.Room;
-import inf.questpartner.domain.room.common.RoomThumbnail;
-import inf.questpartner.domain.room.common.RoomType;
-import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
-import inf.questpartner.dto.RoomTag;
 import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.dto.room.ResRoomCreate;
 import inf.questpartner.dto.room.ResRoomEnter;
 import inf.questpartner.repository.users.UserRepository;
 import inf.questpartner.service.RoomService;
-
 import inf.questpartner.service.UserService;
-import inf.questpartner.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,14 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.nio.file.ReadOnlyFileSystemException;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -45,7 +29,7 @@ public class RoomApiController {
 
     private final RoomService roomService;
     private final UserService userService;
-    private final UserRepository userRepository;
+
     // 방 생성
     @PostMapping("/new")
     public ResponseEntity<ResRoomCreate> createRoom(@RequestBody CreateRoomRequest form, @AuthenticationPrincipal User user) {
@@ -97,13 +81,6 @@ public class RoomApiController {
 
 
 /*
-    // 검색 조회
-    @GetMapping
-    public Set<Room> findRoomByTag(@RequestParam List<TagOption> tags) {
-        List<Room> roomList = roomService.findAll();
-        return roomService.findRoomsByTag(tags, roomList);
-    }
-
     // 데이터 기반으로 추천 받기
     @GetMapping("/recommend")
     public List<RoomTag> recommendRooms(@RequestParam(value = "id") Long id) {
@@ -112,7 +89,6 @@ public class RoomApiController {
 
         return roomService.recommendLogic(user.toUserWishDto(), roomTags);
     }
-
  */
 
 }

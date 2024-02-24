@@ -1,10 +1,8 @@
 package inf.questpartner.domain.room;
 
+import inf.questpartner.domain.chat.ChattingRoom;
 import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
-import inf.questpartner.domain.room.common.RoomType;
-
-import inf.questpartner.domain.room.common.tag.TimerStatus;
 import inf.questpartner.domain.users.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -35,15 +33,9 @@ public class Room {
 
     private int studyTimer; // 스터디 타이머
 
-    @Enumerated(EnumType.STRING)
-    private TimerStatus timerStatus;
-
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomHashTag> roomHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
-
-   // @Enumerated(EnumType.STRING)
-   // private RoomType roomType; // 방 유형 -> STUDY(스터디), PROJECT(팀 프로젝트)
 
     @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus; // 모집 상태 (자리 남았는지? OPEN /CLOSED)
@@ -53,6 +45,10 @@ public class Room {
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
+
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "chatting_room_id")
+    private ChattingRoom chattingRoom;
 
     @Builder(builderMethodName = "createRoom")
     public Room(String hostEmail, String title, int expectedUsers, RoomThumbnail thumbnail) {
@@ -73,6 +69,10 @@ public class Room {
     public void addParticipant(User user) {
         this.participants.add(user);
         user.setMappingRoom(this);
+    }
+
+    public void createChatRoom(ChattingRoom chatRoom) {
+        this.chattingRoom = chatRoom;
     }
 
    public void removeParticipant(User user) {
@@ -98,18 +98,6 @@ public class Room {
                 ", 스터디에 참여한 회원이름" + participants.stream().map(User::getNickname).collect(Collectors.toList());
     }
 
-
-    // 방 태그검색 테스트용 --
-    /*
-    public RoomTag toRoomTagDto() {
-        return RoomTag.builder()
-                .groupSize(this.expectedUsers)
-                .expectedSchedule(this.expectedSchedule)
-                .tagList(this.tags)
-                .build();
-    }
-
-     */
 
 
 }

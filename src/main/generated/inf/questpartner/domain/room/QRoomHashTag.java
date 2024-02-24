@@ -46,7 +46,7 @@ public class QRoomHashTag extends EntityPathBase<RoomHashTag> {
 
     public QRoomHashTag(Class<? extends RoomHashTag> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.room = inits.isInitialized("room") ? new QRoom(forProperty("room")) : null;
+        this.room = inits.isInitialized("room") ? new QRoom(forProperty("room"), inits.get("room")) : null;
     }
 
 }

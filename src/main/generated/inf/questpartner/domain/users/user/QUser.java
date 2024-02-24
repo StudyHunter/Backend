@@ -76,7 +76,7 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.room = inits.isInitialized("room") ? new inf.questpartner.domain.room.QRoom(forProperty("room")) : null;
+        this.room = inits.isInitialized("room") ? new inf.questpartner.domain.room.QRoom(forProperty("room"), inits.get("room")) : null;
         this.studyTree = inits.isInitialized("studyTree") ? new inf.questpartner.domain.studytree.QStudyTree(forProperty("studyTree")) : null;
     }
 

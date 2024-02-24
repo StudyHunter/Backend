@@ -8,8 +8,8 @@ import lombok.Getter;
 @Getter
 public enum TagOption {
     AI("인공지능"),
-    DEEPLEARNING("딥러닝"),
-    CODINGTEST("코딩테스트"),
+    DEEP_LEARNING("딥러닝"),
+    CODING_TEST("코딩테스트"),
     ALGORITHM("알고리즘"),
     DEVELOP("개발"),
     INTERVIEW("면접준비"),
@@ -19,7 +19,10 @@ public enum TagOption {
     BACKEND("백엔드"),
     PORTFOLIO("포트폴리오"),
     STUDY("스터디"),
-
+    APP_DEVELOP("앱개발"),
+    DEVOPS("데브옵스"),
+    GAME("게임"),
+    SYSTEM("시스템"),
 
     /**
      * 기술 스택
@@ -34,9 +37,9 @@ public enum TagOption {
     /**
      * 공부 유형
      */
-    BOOKREVIEW("책 읽기"),
-    TEAMPROJECT("팀 프로젝트 활동"),
-    CODEREVIEW("코드 리뷰");
+    BOOK_REVIEW("책 읽기"),
+    TEAM_PROJECT("팀 프로젝트 활동"),
+    CODE_REVIEW("코드 리뷰");
 
     private String viewName; // 태그 명칭
 

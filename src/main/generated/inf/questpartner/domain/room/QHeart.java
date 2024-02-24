@@ -46,7 +46,7 @@ public class QHeart extends EntityPathBase<Heart> {
 
     public QHeart(Class<? extends Heart> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.room = inits.isInitialized("room") ? new QRoom(forProperty("room")) : null;
+        this.room = inits.isInitialized("room") ? new QRoom(forProperty("room"), inits.get("room")) : null;
         this.user = inits.isInitialized("user") ? new inf.questpartner.domain.users.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 

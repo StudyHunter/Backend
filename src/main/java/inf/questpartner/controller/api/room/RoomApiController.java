@@ -10,10 +10,7 @@ import inf.questpartner.domain.room.common.RoomType;
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.RoomTag;
-import inf.questpartner.dto.room.CreateRoomRequest;
-import inf.questpartner.dto.room.ResRoomEnter;
-import inf.questpartner.dto.room.StartTimeDto;
-import inf.questpartner.dto.room.StudyTokenDto;
+import inf.questpartner.dto.room.*;
 import inf.questpartner.repository.users.UserRepository;
 import inf.questpartner.service.RoomService;
 
@@ -29,15 +26,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.nio.file.ReadOnlyFileSystemException;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -47,15 +37,14 @@ public class RoomApiController {
 
     private final RoomService roomService;
     private final UserService userService;
-    private final UserRepository userRepository;
 
     // 방 생성
     @PostMapping("/new")
-    public ResponseEntity<Room> createRoom(@RequestBody CreateRoomRequest form, UserDetails userDetails) {
+    public ResponseEntity<ResRoomCreate> createRoom(@RequestBody CreateRoomRequest form, @AuthenticationPrincipal User user) {
         Thread currentThread = Thread.currentThread();
         log.info("현재 실행 중인 스레드={}", currentThread);
 
-        Room room = roomService.createRoom(form, userDetails.getUsername());
+        ResRoomCreate room = roomService.createRoom(form, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(room);
     }
 
@@ -87,14 +76,14 @@ public class RoomApiController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-//    스터디 타이머 시작
+    //    스터디 타이머 시작
     @PostMapping("/{roomId}/startStudy")
     public ResponseEntity<StartTimeDto> startStudy(@PathVariable(value = "roomId") Long id) {
         StartTimeDto startTimeDto = roomService.startStudy(id);
         return ResponseEntity.status(HttpStatus.OK).body(startTimeDto);
     }
 
-//    스터디 타이머 종료
+    //    스터디 타이머 종료
     @PostMapping("/{roomId}/endStudy")
     public ResponseEntity<StudyTokenDto> endStudy(@PathVariable(value = "roomId") Long id) {
         StudyTokenDto studyTokenDto = roomService.endStudy(id);
@@ -109,13 +98,6 @@ public class RoomApiController {
 
 
 /*
-    // 검색 조회
-    @GetMapping
-    public Set<Room> findRoomByTag(@RequestParam List<TagOption> tags) {
-        List<Room> roomList = roomService.findAll();
-        return roomService.findRoomsByTag(tags, roomList);
-    }
-
     // 데이터 기반으로 추천 받기
     @GetMapping("/recommend")
     public List<RoomTag> recommendRooms(@RequestParam(value = "id") Long id) {
@@ -124,7 +106,6 @@ public class RoomApiController {
 
         return roomService.recommendLogic(user.toUserWishDto(), roomTags);
     }
-
  */
 
 }

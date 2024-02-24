@@ -7,11 +7,11 @@ public enum RoomTagGroup {
 
 
     INTERESTS("관심분야", new TagOption[]{
-            TagOption.AI, TagOption.DEEPLEARNING, TagOption.CODINGTEST, TagOption.ALGORITHM, TagOption.DEVELOP, TagOption.INTERVIEW, TagOption.STARTUP}),
+            TagOption.AI, TagOption.DEEP_LEARNING, TagOption.CODING_TEST, TagOption.ALGORITHM, TagOption.DEVELOP, TagOption.INTERVIEW, TagOption.STARTUP}),
     SKILL("기술", new TagOption[]{
             TagOption.PYTHON, TagOption.JAVA, TagOption.JAVASCRIPT, TagOption.NODEJS, TagOption.REACT, TagOption.SPRING}),
     STUDYTYPE("공부유형", new TagOption[]{
-       TagOption.BOOKREVIEW, TagOption.TEAMPROJECT, TagOption.CODEREVIEW}),
+       TagOption.BOOK_REVIEW, TagOption.TEAM_PROJECT, TagOption.CODE_REVIEW}),
 
     EMPTY("없음", new TagOption[]{});
 

@@ -1,12 +1,14 @@
 package inf.questpartner.service;
 
 import inf.questpartner.controller.dto.RoomSearchCondition;
+import inf.questpartner.domain.chat.ChattingRoom;
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.RoomHashTag;
 
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.room.CreateRoomRequest;
+import inf.questpartner.dto.room.ResRoomCreate;
 import inf.questpartner.dto.room.ResRoomEnter;
 import inf.questpartner.dto.room.StartTimeDto;
 import inf.questpartner.dto.room.StudyTokenDto;
@@ -25,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Slf4j
 
 @Transactional
@@ -36,21 +37,25 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomHashTagRepository hashTagRepository;
     private final UserRepository userRepository;
+    public ResRoomCreate createRoom(CreateRoomRequest req, User user) {
+        User enterUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
 
-    public Room createRoom(CreateRoomRequest req, String hostEmail) {
-        Room room = roomRepository.save(req.toRoomEntity(hostEmail));
+        Room room = roomRepository.save(req.toRoomEntity(enterUser.getEmail()));
+        room.createChatRoom(new ChattingRoom());
 
         for (TagOption tag : req.getTags()) {
             RoomHashTag hashTag = hashTagRepository.save(new RoomHashTag(room, tag));
             room.addHashTag(hashTag);
         }
-        return room;
+        return ResRoomCreate.fromEntity(room);
     }
 
     @Transactional(readOnly = true)
     public ResRoomEnter enterRoom(Long id, User user) {
-        User enterUser = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User", "User Email", user.getEmail())
-        );
+        User enterUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
+
         Room room = findById(id);
         room.addParticipant(enterUser);
 

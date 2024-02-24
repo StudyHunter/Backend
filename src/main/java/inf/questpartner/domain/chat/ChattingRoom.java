@@ -19,7 +19,7 @@ import java.util.Set;
 import static jakarta.persistence.GenerationType.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
 public class ChattingRoom {
 

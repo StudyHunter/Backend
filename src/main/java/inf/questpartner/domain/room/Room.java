@@ -1,5 +1,6 @@
 package inf.questpartner.domain.room;
 
+import inf.questpartner.domain.chat.ChattingRoom;
 import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
 
@@ -55,6 +56,10 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
 
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "chatting_room_id")
+    private ChattingRoom chattingRoom;
+
     @Builder(builderMethodName = "createRoom")
     public Room(String hostEmail, String title, int expectedUsers, RoomThumbnail thumbnail) {
         this.hostEmail = hostEmail;
@@ -84,6 +89,10 @@ public class Room {
         user.setMappingRoom(this);
     }
 
+    public void createChatRoom(ChattingRoom chatRoom) {
+        this.chattingRoom = chatRoom;
+    }
+
    public void removeParticipant(User user) {
         this.participants.remove(user);
     }
@@ -105,18 +114,6 @@ public class Room {
                 ", 스터디에 참여한 회원이름" + participants.stream().map(User::getNickname).collect(Collectors.toList());
     }
 
-
-    // 방 태그검색 테스트용 --
-    /*
-    public RoomTag toRoomTagDto() {
-        return RoomTag.builder()
-                .groupSize(this.expectedUsers)
-                .expectedSchedule(this.expectedSchedule)
-                .tagList(this.tags)
-                .build();
-    }
-
-     */
 
 
 }

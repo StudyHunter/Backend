@@ -15,12 +15,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ResUserPreview {
 
+    private String profilePath;
     private String nickname;
     private Integer studyTime;
     private List<String> wishTags;
 
     @Builder
-    public ResUserPreview(String nickname, Integer studyTime, List<String> wishTags) {
+    public ResUserPreview(String profilePath, String nickname, Integer studyTime, List<String> wishTags) {
+        this.profilePath = profilePath;
         this.nickname = nickname;
         this.studyTime = studyTime;
         this.wishTags = wishTags;
@@ -28,6 +30,7 @@ public class ResUserPreview {
 
     public static ResUserPreview convertUser(User user) {
         return ResUserPreview.builder()
+                .profilePath(user.getProfileImg().getImgPath())
                 .studyTime(user.getStudyTime())
                 .nickname(user.getNickname())
                 .wishTags(toUserTagOption(user.getUserHashTags()))

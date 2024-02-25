@@ -9,6 +9,7 @@ import inf.questpartner.domain.users.user.UserWishHashTag;
 import inf.questpartner.dto.users.req.LoginRequest;
 import inf.questpartner.dto.users.req.SignupRequest;
 import inf.questpartner.dto.users.req.UserUpdate;
+import inf.questpartner.dto.users.res.ResUserPreview;
 import inf.questpartner.dto.users.res.UserResponse;
 import inf.questpartner.dto.users.res.UserTokenDto;
 import inf.questpartner.repository.users.UserRepository;
@@ -94,6 +95,12 @@ public class UserService {
     public User findByEmail(User user) {
         return userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
+    }
+
+    @Transactional(readOnly = true)
+    public ResUserPreview getUserPreview(User user) {
+        User currentUser = findByEmail(user);
+        return ResUserPreview.convertUser(currentUser);
     }
 
     /**

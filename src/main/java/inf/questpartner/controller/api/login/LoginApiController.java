@@ -4,6 +4,7 @@ import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.users.req.LoginRequest;
 import inf.questpartner.dto.users.req.SignupRequest;
 import inf.questpartner.dto.users.req.UserUpdate;
+import inf.questpartner.dto.users.res.ResUserPreview;
 import inf.questpartner.dto.users.res.UserResponse;
 import inf.questpartner.dto.users.res.UserTokenDto;
 import inf.questpartner.service.UserService;
@@ -21,6 +22,13 @@ import java.util.Map;
 public class LoginApiController {
 
     private final UserService userService;
+
+    @GetMapping
+    public ResponseEntity<ResUserPreview> getUserInfo(@AuthenticationPrincipal User user) {
+        ResUserPreview dto = userService.getUserPreview(user);
+
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
 
     @GetMapping("/checkId")
     public ResponseEntity<?> checkIdDuplicate(@RequestParam String email) {

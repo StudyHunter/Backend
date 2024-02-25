@@ -28,6 +28,8 @@ public class RoomApiController {
     private final RoomService roomService;
     private final UserService userService;
 
+
+
     // 방 생성
     @PostMapping("/new")
     public ResponseEntity<ResRoomCreate> createRoom(@RequestBody CreateRoomRequest form, @AuthenticationPrincipal User user) {

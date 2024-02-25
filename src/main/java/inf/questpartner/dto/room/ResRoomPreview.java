@@ -19,6 +19,7 @@ public class ResRoomPreview {
 
     private Long roomId;
 
+    private String thumbnailPath;
     private String hostEmail; // 방장 닉네임
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
@@ -26,8 +27,9 @@ public class ResRoomPreview {
     private int currentUsers; //현재 인원
 
     @Builder
-    public ResRoomPreview(Long roomId, String hostEmail, String title, int expectedUsers, List<String> roomHashTags, int currentUsers) {
+    public ResRoomPreview(Long roomId,String thumbnailPath, String hostEmail, String title, int expectedUsers, List<String> roomHashTags, int currentUsers) {
         this.roomId = roomId;
+        this.thumbnailPath = thumbnailPath;
         this.hostEmail = hostEmail;
         this.title = title;
         this.expectedUsers = expectedUsers;
@@ -39,6 +41,7 @@ public class ResRoomPreview {
 
         return ResRoomPreview.builder()
                 .roomId(room.getId())
+                .thumbnailPath(room.getThumbnail().getImgPath())
                 .hostEmail(room.getHostEmail())
                 .title(room.getTitle())
                 .expectedUsers(room.getExpectedUsers())

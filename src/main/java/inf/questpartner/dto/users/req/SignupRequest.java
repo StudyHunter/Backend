@@ -18,11 +18,12 @@ public class SignupRequest {
 
 
     @Builder
-    public SignupRequest(String email, String password, String passwordCheck, String nickname) {
+    public SignupRequest(String email, String password, String passwordCheck, String nickname, List<TagOption> tags) {
         this.email = email;
         this.password = password;
         this.passwordCheck = passwordCheck;
         this.nickname = nickname;
+        this.tags = tags;
     }
     public User ofEntity() {
         return User.builder()

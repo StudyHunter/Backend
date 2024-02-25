@@ -46,7 +46,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authorize
 						-> authorize
 
-						.requestMatchers("/rooms/search",
+						.requestMatchers("/rooms/search","/randomQuote",
 								"/user/checkId",
 								"/user/register",
 								"/user/login").permitAll()

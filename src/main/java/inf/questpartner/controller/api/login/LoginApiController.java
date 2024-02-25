@@ -1,6 +1,5 @@
 package inf.questpartner.controller.api.login;
 
-import inf.questpartner.controller.dto.CurrentUser;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.users.req.LoginRequest;
 import inf.questpartner.dto.users.req.SignupRequest;
@@ -38,8 +37,6 @@ public class LoginApiController {
     @PostMapping("/login")
     public ResponseEntity<UserTokenDto> login(@RequestBody LoginRequest dto) {
         UserTokenDto loginDTO = userService.login(dto);
-
-        CurrentUser user = new CurrentUser(dto);
 
         return ResponseEntity.status(HttpStatus.OK).header(loginDTO.getToken()).body(loginDTO);
     }

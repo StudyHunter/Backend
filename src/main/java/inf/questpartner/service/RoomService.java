@@ -10,6 +10,7 @@ import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.dto.room.ResRoomCreate;
 import inf.questpartner.dto.room.ResRoomEnter;
+import inf.questpartner.dto.room.ResRoomPreview;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
 import inf.questpartner.repository.users.UserRepository;
@@ -78,8 +79,9 @@ public class RoomService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Room> sort(RoomSearchCondition condition, Pageable pageable) {
-        return roomRepository.searchPageSort(condition, pageable);
+    public Page<ResRoomPreview> sort(RoomSearchCondition condition, Pageable pageable) {
+        Page<Room> rooms = roomRepository.searchPageSort(condition, pageable);
+        return ResRoomPreview.convert(rooms);
     }
 
     /*

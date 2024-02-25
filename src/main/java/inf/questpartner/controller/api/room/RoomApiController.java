@@ -7,6 +7,7 @@ import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.dto.room.ResRoomCreate;
 import inf.questpartner.dto.room.ResRoomEnter;
+import inf.questpartner.dto.room.ResRoomPreview;
 import inf.questpartner.repository.users.UserRepository;
 import inf.questpartner.service.RoomService;
 import inf.questpartner.service.UserService;
@@ -41,9 +42,9 @@ public class RoomApiController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<Room>> search(RoomSearchCondition condition, @PageableDefault(size=6) Pageable pageable) {
+    public ResponseEntity<Page<ResRoomPreview>> search(RoomSearchCondition condition, @PageableDefault(size=6) Pageable pageable) {
 
-        Page<Room> result = roomService.sort(condition, pageable);
+        Page<ResRoomPreview> result = roomService.sort(condition, pageable);
         return  ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -58,23 +59,18 @@ public class RoomApiController {
 
     // username 회원이 roomId 방에서 나가기
     @PostMapping("/{roomId}/exit/{username}")
-    public ResponseEntity<Long> exitRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Long> exitRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal User user) {
         Room room = roomService.findById(id);
 
-        String email = userDetails.getUsername();
-        User user = userService.findByEmail(email);
-        room.removeParticipant(user);
+        User enterUser = userService.findByEmail(user);
+        room.removeParticipant(enterUser);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/{roomId}/studyEnd")
-    public void endStudy(@PathVariable(value = "roomId") Long id, @RequestParam Integer time) {
-
-    }
 
     @DeleteMapping("/{roomId}")
-    public ResponseEntity<Long> deleteRoom(@PathVariable("roomId") Long id, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Long> deleteRoom(@PathVariable("roomId") Long id, @AuthenticationPrincipal User user) {
         roomService.deleteRoom(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

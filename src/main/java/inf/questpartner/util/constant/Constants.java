@@ -4,6 +4,8 @@ package inf.questpartner.util.constant;
  * 예시
  */
 public class Constants {
+
+    public static final int HOST_COUNT = 1;
     public static final String AUTH_STATUS = "auth";
 
     public static final String USER_ID = "email";

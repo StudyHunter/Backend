@@ -90,8 +90,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findByEmail(String email) {
-        return userRepository.findFirstByEmail(email);
+    public User findByEmail(User user) {
+        return userRepository.findByEmail(user.getEmail()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
     }
 
     /**

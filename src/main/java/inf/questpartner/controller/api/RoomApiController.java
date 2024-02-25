@@ -46,6 +46,7 @@ public class RoomApiController {
     }
 
     //방 목록 조회
+    //메인화면에서 방 목록과 다른 파트도 보이겠지만 일단은 rooms/list에서 방 목록 따로 조회하는걸로 해놓았어요!
     @GetMapping("/list")
     public List<Room> roomList(){
         /*List<Room> roomList = roomService.findByAll();
@@ -63,7 +64,7 @@ public class RoomApiController {
         return "room/roomDetail";
     }
 
-    //방 수정 폼
+    //방 수정
     @PatchMapping("/{roomId}/edit")
     public Room updateForm(@PathVariable("roomId") Long roomId, @ModelAttribute UpdateRoomRequest form){
         //서비스를 통해 방 정보 수정

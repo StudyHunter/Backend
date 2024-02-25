@@ -2,7 +2,6 @@ package inf.questpartner.dto.room;
 
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.RoomHashTag;
-import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.users.res.ResUserPreview;
 import lombok.Builder;
@@ -12,8 +11,6 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static inf.questpartner.util.constant.Constants.HOST_COUNT;
 
 @Getter
 @Setter
@@ -25,11 +22,11 @@ public class ResRoomEnter {
     private String title; // 방 제목
     private int currentUsers;
     private int expectedUsers; // 인원수 제한
-    private List<TagOption> roomHashTags;
+    private List<String> roomHashTags;
     private List<ResUserPreview> users;
 
     @Builder
-    public ResRoomEnter(Long roomId, String hostEmail, String title, int currentUsers, int expectedUsers, List<TagOption> tags, List<ResUserPreview> users) {
+    public ResRoomEnter(Long roomId, String hostEmail, String title, int currentUsers, int expectedUsers, List<String> tags, List<ResUserPreview> users) {
         this.roomId = roomId;
         this.hostEmail = hostEmail;
         this.title = title;
@@ -47,20 +44,20 @@ public class ResRoomEnter {
                 .hostEmail(room.getHostEmail())
                 .title(room.getTitle())
                 .expectedUsers(room.getExpectedUsers())
-                .tags(toTagOption(room.getRoomHashTags()))
+                .tags(toRoomTagOption(room.getRoomHashTags()))
                 .users(convertUserList(room.getParticipants()))
                 .currentUsers(getUserNum(room))
                 .build();
     }
 
-    private static int getUserNum(Room room) {
-        return room.getParticipants().size() + HOST_COUNT; // 총 인원수는 방장도 포함하여 센다.
+    private static List<String> toRoomTagOption(List<RoomHashTag> hashTags) {
+        return hashTags.stream()
+                .map(RoomHashTag::getTagName)
+                .collect(Collectors.toList());
     }
 
-    private static List<TagOption> toTagOption(List<RoomHashTag> hashTags) {
-        return hashTags.stream()
-                .map(RoomHashTag::getTagOption)
-                .collect(Collectors.toList());
+    private static int getUserNum(Room room) {
+        return room.getParticipants().size(); // 총 인원수는 방장도 포함하여 센다.
     }
 
 
@@ -70,6 +67,13 @@ public class ResRoomEnter {
                 .collect(Collectors.toList());
     }
 
+    /*
+    private static List<TagOption> toTagOption(List<RoomHashTag> hashTags) {
+        return hashTags.stream()
+                .map(RoomHashTag::getTagOption)
+                .collect(Collectors.toList());
+    }
+    */
 }
 
     

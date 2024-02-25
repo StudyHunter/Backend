@@ -32,4 +32,8 @@ public class UserWishHashTag {
         this.user = user;
         this.tagOption = tagOption;
     }
+
+    public String getTagName() {
+        return tagOption.getViewName();
+    }
 }

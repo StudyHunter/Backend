@@ -78,7 +78,7 @@ public class UserService {
         checkPassword(dto.getPassword(), dto.getPasswordCheck());
         String encodePwd = encoder.encode(dto.getPassword());
         User updateUser =  userRepository.findByEmail(user.getEmail()).orElseThrow(
-                () -> new ResourceNotFoundException("Member", "Member Email", user.getEmail())
+                () -> new ResourceNotFoundException("User", "User Email", user.getEmail())
         );
         updateUser.update(encodePwd, dto.getUsername());
         return UserResponse.fromEntity(updateUser);
@@ -88,6 +88,7 @@ public class UserService {
     public User findByNickname(String nickname) {
         return userRepository.findByNickname(nickname);
     }
+
 
     @Transactional(readOnly = true)
     public User findByEmail(User user) {

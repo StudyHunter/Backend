@@ -4,6 +4,7 @@ package inf.questpartner.service.service;
 import inf.questpartner.controller.dto.RoomSearchCondition;
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.common.tag.TagOption;
+import inf.questpartner.dto.room.ResRoomPreview;
 import inf.questpartner.service.RoomService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -32,9 +33,9 @@ class RoomServiceTest {
 
         Pageable pageable = PageRequest.of(0, 2);
 
-        Page<Room> result = roomService.sort(condition, pageable);
+        Page<ResRoomPreview> result = roomService.sort(condition, pageable);
 
-        for (Room entity : result.getContent()) {
+        for (ResRoomPreview entity : result.getContent()) {
             log.info(entity.toString());
         }
     }
@@ -46,9 +47,9 @@ class RoomServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Room> result = roomService.sort(condition, pageable);
+        Page<ResRoomPreview> result = roomService.sort(condition, pageable);
 
-        for (Room room : result.getContent()) {
+        for (ResRoomPreview room : result.getContent()) {
             log.info(room.toString());
         }
     }
@@ -60,9 +61,9 @@ class RoomServiceTest {
         condition.setTagOption(TagOption.AI);
         Pageable pageable = PageRequest.of(0, 2);
 
-        Page<Room> result = roomService.sort(condition, pageable);
+        Page<ResRoomPreview> result = roomService.sort(condition, pageable);
 
-        for (Room entity : result.getContent()) {
+        for (ResRoomPreview entity : result.getContent()) {
             log.info(entity.toString());
         }
     }

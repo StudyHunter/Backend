@@ -33,17 +33,22 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomHashTagRepository hashTagRepository;
     private final UserRepository userRepository;
+
     public ResRoomCreate createRoom(CreateRoomRequest req, User user) {
-        User enterUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
+        User hostUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
 
-        Room room = roomRepository.save(req.toRoomEntity(enterUser.getEmail()));
+        Room room = roomRepository.save(req.toRoomEntity(hostUser.getEmail()));
         room.createChatRoom(new ChattingRoom());
 
         for (TagOption tag : req.getTags()) {
             RoomHashTag hashTag = hashTagRepository.save(new RoomHashTag(room, tag));
             room.addHashTag(hashTag);
         }
+
+        //방장 참여자 정보에 넣어야 한다.
+        room.addParticipant(hostUser);
+
         return ResRoomCreate.fromEntity(room);
     }
 

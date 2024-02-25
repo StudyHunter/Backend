@@ -1,6 +1,5 @@
 package inf.questpartner.controller.api.room;
 
-
 import inf.questpartner.controller.dto.RoomSearchCondition;
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.users.user.User;
@@ -8,7 +7,6 @@ import inf.questpartner.dto.room.CreateRoomRequest;
 import inf.questpartner.dto.room.ResRoomCreate;
 import inf.questpartner.dto.room.ResRoomEnter;
 import inf.questpartner.dto.room.ResRoomPreview;
-import inf.questpartner.repository.users.UserRepository;
 import inf.questpartner.service.RoomService;
 import inf.questpartner.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -38,11 +35,12 @@ public class RoomApiController {
         log.info("현재 실행 중인 스레드={}", currentThread);
 
         ResRoomCreate room = roomService.createRoom(form, user);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(room);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<ResRoomPreview>> search(RoomSearchCondition condition, @PageableDefault(size=6) Pageable pageable) {
+    public ResponseEntity<Page<ResRoomPreview>> search(RoomSearchCondition condition, Pageable pageable) {
 
         Page<ResRoomPreview> result = roomService.sort(condition, pageable);
         return  ResponseEntity.status(HttpStatus.OK).body(result);
@@ -51,9 +49,9 @@ public class RoomApiController {
 
     // username 회원이 roomId 방에 입장
     @PostMapping("/{roomId}/enter")
-    public ResponseEntity<ResRoomEnter> enterRoom(@PathVariable(value = "roomId") Long id,  @AuthenticationPrincipal User user) {
-
+    public ResponseEntity<ResRoomEnter> enterRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal User user) {
         ResRoomEnter dto = roomService.enterRoom(id, user);
+
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 

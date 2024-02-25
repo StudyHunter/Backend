@@ -2,9 +2,8 @@ package inf.questpartner.service.service;
 
 
 import inf.questpartner.controller.dto.RoomSearchCondition;
-import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.common.tag.TagOption;
-import inf.questpartner.dto.room.ResRoomPreview;
+import inf.questpartner.dto.room.res.ResRoomPreview;
 import inf.questpartner.service.RoomService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;

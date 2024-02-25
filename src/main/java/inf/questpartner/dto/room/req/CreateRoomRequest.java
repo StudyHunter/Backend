@@ -1,4 +1,4 @@
-package inf.questpartner.dto.room;
+package inf.questpartner.dto.room.req;
 
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.common.RoomThumbnail;

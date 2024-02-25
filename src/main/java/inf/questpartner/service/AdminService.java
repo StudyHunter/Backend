@@ -3,7 +3,7 @@ package inf.questpartner.service;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.users.res.UserDetailResponse;
 import inf.questpartner.dto.users.UserListResponse;
-import inf.questpartner.dto.users.UserSearchCondition;
+import inf.questpartner.controller.dto.UserSearchCondition;
 import inf.questpartner.repository.admin.AdminRepository;
 import inf.questpartner.repository.users.UserRepository;
 import inf.questpartner.util.exception.users.UserException;

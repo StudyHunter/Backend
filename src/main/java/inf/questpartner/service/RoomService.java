@@ -7,10 +7,10 @@ import inf.questpartner.domain.room.RoomHashTag;
 
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
-import inf.questpartner.dto.room.CreateRoomRequest;
-import inf.questpartner.dto.room.ResRoomCreate;
-import inf.questpartner.dto.room.ResRoomEnter;
-import inf.questpartner.dto.room.ResRoomPreview;
+import inf.questpartner.dto.room.req.CreateRoomRequest;
+import inf.questpartner.dto.room.res.ResRoomCreate;
+import inf.questpartner.dto.room.res.ResRoomEnter;
+import inf.questpartner.dto.room.res.ResRoomPreview;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
 import inf.questpartner.repository.users.UserRepository;

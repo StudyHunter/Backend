@@ -30,7 +30,9 @@ public class User extends UserBase implements UserDetails {
 
     private String nickname; // 닉네임
 
-    private int studyTime; // 총 누적된 공부시간
+    private long studyTime; // 총 누적된 공부시간(분)
+
+    private int studyToken; // 토큰 개수
 
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus; // 회원 상태(STATUS)는 BAN(관리자에 의해 차단), NORMAL
@@ -38,17 +40,16 @@ public class User extends UserBase implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserWishHashTag> userHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
-   // private int wishGroupSize; // 스터디방 원하는 조건 : 인원 / 기간
+    // private int wishGroupSize; // 스터디방 원하는 조건 : 인원 / 기간
     // private int wishExpectedSchedule;
 
     @Enumerated(EnumType.STRING)
     private UserProfileImg profileImg; // 회원 프로필 사진
 
     @JsonIgnore
-    @ManyToOne(fetch =  FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
-
 
 
     @Builder
@@ -58,17 +59,17 @@ public class User extends UserBase implements UserDetails {
         this.userStatus = UserStatus.NORMAL;
         this.profileImg = UserProfileImg.IMG_FINN;
         this.studyTime = 0;
+        this.studyToken = 0;
     }
 
     /**
      * 1 : 1 단방향
-     *  USER는 하나의 트리만 가질 수 있다.
-     *  트리 또한 여러명의 유저가 함께 사용할 수 없다. 따라서 일대일 매핑으로 처리한다.
+     * USER는 하나의 트리만 가질 수 있다.
+     * 트리 또한 여러명의 유저가 함께 사용할 수 없다. 따라서 일대일 매핑으로 처리한다.
      */
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "STUDY_TREE_ID")
     private StudyTree studyTree;
-
 
 
     // user 관련 테스트용으로 만든 것 (임시로 둔 것)
@@ -118,8 +119,12 @@ public class User extends UserBase implements UserDetails {
         this.roles = UserLevel.USER.getCode();
     }
 
-    public void updateTotalTime(int time) {
+    public void updateTotalTime(long time) {
         this.studyTime += time;
+    }
+
+    public void updateStudyToken(int studyToken) {
+        this.studyToken += studyToken;
     }
 
     // 태그 알고리즘 로직들-- (수정중)
@@ -144,8 +149,10 @@ public class User extends UserBase implements UserDetails {
 
 
     //========== UserDetails implements ==========//
+
     /**
      * Token을 고유한 Email 값으로 생성합니다
+     *
      * @return email;
      */
     @Override
@@ -156,7 +163,7 @@ public class User extends UserBase implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add( new SimpleGrantedAuthority("ROLE_" + this.userLevel.name()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.userLevel.name()));
         return authorities;
     }
 

@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,8 +32,8 @@ public class Room {
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
 
-    private int studyTimer; // 스터디 타이머
-
+    private LocalDateTime startTime;
+    private long studyTimer; // 스터디 타이머
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomHashTag> roomHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
@@ -60,6 +61,14 @@ public class Room {
         this.studyTimer = 0;
     }
 
+    public void startRoomTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void endRoomTime(long studyTimer) {
+        this.studyTimer = studyTimer;
+    }
+
     // 스터디룸에 남은 자리가 있는지 확인하는 로직
     public boolean hasExceededUsers() {
         return this.participants.size() > expectedUsers;
@@ -75,12 +84,8 @@ public class Room {
         this.chattingRoom = chatRoom;
     }
 
-   public void removeParticipant(User user) {
+    public void removeParticipant(User user) {
         this.participants.remove(user);
-    }
-
-    public void studyEnd(int time) {
-        this.studyTimer = time;
     }
 
     public void addHashTag(RoomHashTag tag) {
@@ -97,7 +102,4 @@ public class Room {
                 ", 현재 모집상태 = " + roomStatus +
                 ", 스터디에 참여한 회원이름" + participants.stream().map(User::getNickname).collect(Collectors.toList());
     }
-
-
-
 }

@@ -137,7 +137,7 @@ public class RoomService {
         room.getParticipants().forEach(participant -> participant.updateTotalTime(studyTime));
         room.endRoomTime(studyTime);
 
-        int studyToken = (int) (studyTime / 30);
+        int studyToken = studyTime / 30;
         room.getParticipants().forEach(participant -> participant.updateStudyToken(studyToken));
         return new StudyTokenDto(studyToken);
     }

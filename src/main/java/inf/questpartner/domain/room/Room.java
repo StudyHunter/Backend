@@ -1,11 +1,9 @@
 package inf.questpartner.domain.room;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import inf.questpartner.domain.chat.ChattingRoom;
 import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
-import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,7 +14,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -116,10 +113,10 @@ public class Room {
     public String toString() {
         return "[Room Info] ->" + "방장 이메일 = " + hostEmail +
                 " 방제목 = " + title +
-                ", 방 태그들 = " + roomHashTags.stream().map(RoomHashTag::getTagOption).collect(Collectors.toList()) +
+                ", 방 태그들 = " + roomHashTags.stream().map(RoomHashTag::getTagOption).toList() +
                 ", 방 썸네일 = " + thumbnail.getTypeInfo() +
                 ", 방 제한된 인원수 = " + expectedUsers +
                 ", 현재 모집상태 = " + roomStatus +
-                ", 스터디에 참여한 회원이름" + participants.stream().map(User::getNickname).collect(Collectors.toList());
+                ", 스터디에 참여한 회원이름" + participants.stream().map(User::getNickname).toList();
     }
 }

@@ -1,4 +1,4 @@
-package inf.questpartner.dto.users;
+package inf.questpartner.controller.dto;
 
 import inf.questpartner.domain.users.common.UserLevel;
 import lombok.*;

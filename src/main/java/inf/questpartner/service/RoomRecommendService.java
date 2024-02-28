@@ -1,10 +1,7 @@
 package inf.questpartner.service;
 
-import inf.questpartner.domain.room.Room;
-import inf.questpartner.domain.room.common.tag.TagOption;
-import inf.questpartner.dto.RoomDto;
-import inf.questpartner.dto.UserProfile;
-import org.springframework.stereotype.Service;
+import inf.questpartner.dto.ect.RoomDto;
+import inf.questpartner.dto.ect.UserProfile;
 
 import java.util.ArrayList;
 import java.util.Comparator;

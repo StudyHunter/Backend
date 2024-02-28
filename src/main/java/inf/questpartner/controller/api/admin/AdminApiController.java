@@ -1,16 +1,15 @@
-package inf.questpartner.controller.api;
+package inf.questpartner.controller.api.admin;
 
 import inf.questpartner.controller.PageDto;
 import inf.questpartner.domain.users.common.UserLevel;
 import inf.questpartner.dto.users.res.UserDetailResponse;
 import inf.questpartner.dto.users.UserListResponse;
-import inf.questpartner.dto.users.UserSearchCondition;
+import inf.questpartner.controller.dto.UserSearchCondition;
 import inf.questpartner.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +23,7 @@ public class AdminApiController {
 
     //@Login(authority = UserLevel.ADMIN)
     @GetMapping("/users") //Page<UserListResponse>
-    public Page<UserListResponse> findByUsers(@ModelAttribute("userSearch") UserSearchCondition requestDto, Model model,@PageableDefault(size = 8) Pageable pageable) {
+    public Page<UserListResponse> findByUsers(@ModelAttribute("userSearch") UserSearchCondition requestDto, Model model, Pageable pageable) {
         Page<UserListResponse> result = adminService.findUsers(requestDto, pageable);
         model.addAttribute("users", result.getContent());
 

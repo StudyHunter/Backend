@@ -9,6 +9,7 @@ import inf.questpartner.domain.users.user.UserWishHashTag;
 import inf.questpartner.dto.users.req.LoginRequest;
 import inf.questpartner.dto.users.req.SignupRequest;
 import inf.questpartner.dto.users.req.UserUpdate;
+import inf.questpartner.dto.users.res.ResUserPreview;
 import inf.questpartner.dto.users.res.UserResponse;
 import inf.questpartner.dto.users.res.UserTokenDto;
 import inf.questpartner.repository.users.UserRepository;
@@ -78,7 +79,7 @@ public class UserService {
         checkPassword(dto.getPassword(), dto.getPasswordCheck());
         String encodePwd = encoder.encode(dto.getPassword());
         User updateUser =  userRepository.findByEmail(user.getEmail()).orElseThrow(
-                () -> new ResourceNotFoundException("Member", "Member Email", user.getEmail())
+                () -> new ResourceNotFoundException("User", "User Email", user.getEmail())
         );
         updateUser.update(encodePwd, dto.getUsername());
         return UserResponse.fromEntity(updateUser);
@@ -89,9 +90,17 @@ public class UserService {
         return userRepository.findByNickname(nickname);
     }
 
+
     @Transactional(readOnly = true)
-    public User findByEmail(String email) {
-        return userRepository.findFirstByEmail(email);
+    public User findByEmail(User user) {
+        return userRepository.findByEmail(user.getEmail()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
+    }
+
+    @Transactional(readOnly = true)
+    public ResUserPreview getUserPreview(User user) {
+        User currentUser = findByEmail(user);
+        return ResUserPreview.convertUser(currentUser);
     }
 
     /**

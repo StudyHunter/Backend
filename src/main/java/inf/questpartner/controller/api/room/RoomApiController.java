@@ -4,6 +4,10 @@ import inf.questpartner.controller.dto.RoomSearchCondition;
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.room.*;
+import inf.questpartner.dto.room.req.CreateRoomRequest;
+import inf.questpartner.dto.room.res.ResRoomCreate;
+import inf.questpartner.dto.room.res.ResRoomEnter;
+import inf.questpartner.dto.room.res.ResRoomPreview;
 import inf.questpartner.service.RoomService;
 
 import inf.questpartner.service.UserService;
@@ -12,11 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -40,29 +42,28 @@ public class RoomApiController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<Room>> search(RoomSearchCondition condition, @PageableDefault(size = 6) Pageable pageable) {
+    public ResponseEntity<Page<ResRoomPreview>> search(RoomSearchCondition condition, Pageable pageable) {
 
-        Page<Room> result = roomService.sort(condition, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        Page<ResRoomPreview> result = roomService.sort(condition, pageable);
+        return  ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
 
     // username 회원이 roomId 방에 입장
     @PostMapping("/{roomId}/enter")
     public ResponseEntity<ResRoomEnter> enterRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal User user) {
-
         ResRoomEnter dto = roomService.enterRoom(id, user);
+
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     // username 회원이 roomId 방에서 나가기
     @PostMapping("/{roomId}/exit/{username}")
-    public ResponseEntity<Long> exitRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Long> exitRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal User user) {
         Room room = roomService.findById(id);
 
-        String email = userDetails.getUsername();
-        User user = userService.findByEmail(email);
-        room.removeParticipant(user);
+        User enterUser = userService.findByEmail(user);
+        room.removeParticipant(enterUser);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -82,7 +83,7 @@ public class RoomApiController {
     }
 
     @DeleteMapping("/{roomId}")
-    public ResponseEntity<Long> deleteRoom(@PathVariable("roomId") Long id, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Long> deleteRoom(@PathVariable("roomId") Long id, @AuthenticationPrincipal User user) {
         roomService.deleteRoom(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

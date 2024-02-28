@@ -1,5 +1,7 @@
 package inf.questpartner.domain.room;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import inf.questpartner.domain.chat.ChattingRoom;
 import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
@@ -44,6 +46,7 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomThumbnail thumbnail; // 섬네일 선택지
 
+    @JsonIgnore
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
 

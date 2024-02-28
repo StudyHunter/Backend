@@ -7,11 +7,12 @@ import inf.questpartner.domain.room.RoomHashTag;
 
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
-import inf.questpartner.dto.room.CreateRoomRequest;
-import inf.questpartner.dto.room.ResRoomCreate;
-import inf.questpartner.dto.room.ResRoomEnter;
 import inf.questpartner.dto.room.StartTimeDto;
 import inf.questpartner.dto.room.StudyTokenDto;
+import inf.questpartner.dto.room.req.CreateRoomRequest;
+import inf.questpartner.dto.room.res.ResRoomCreate;
+import inf.questpartner.dto.room.res.ResRoomEnter;
+import inf.questpartner.dto.room.res.ResRoomPreview;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
 import inf.questpartner.repository.users.UserRepository;
@@ -39,16 +40,20 @@ public class RoomService {
     private final UserRepository userRepository;
 
     public ResRoomCreate createRoom(CreateRoomRequest req, User user) {
-        User enterUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
+        User hostUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
 
-        Room room = roomRepository.save(req.toRoomEntity(enterUser.getEmail()));
+        Room room = roomRepository.save(req.toRoomEntity(hostUser.getEmail()));
         room.createChatRoom(new ChattingRoom());
 
         for (TagOption tag : req.getTags()) {
             RoomHashTag hashTag = hashTagRepository.save(new RoomHashTag(room, tag));
             room.addHashTag(hashTag);
         }
+
+        //방장 참여자 정보에 넣어야 한다.
+        room.addParticipant(hostUser);
+
         return ResRoomCreate.fromEntity(room);
     }
 
@@ -105,8 +110,9 @@ public class RoomService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Room> sort(RoomSearchCondition condition, Pageable pageable) {
-        return roomRepository.searchPageSort(condition, pageable);
+    public Page<ResRoomPreview> sort(RoomSearchCondition condition, Pageable pageable) {
+        Page<Room> rooms = roomRepository.searchPageSort(condition, pageable);
+        return ResRoomPreview.convert(rooms);
     }
 
     /*

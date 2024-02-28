@@ -1,8 +1,6 @@
 package inf.questpartner.repository.admin;
 
 
-import com.querydsl.core.QueryResults;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import inf.questpartner.domain.users.common.UserLevel;
@@ -10,7 +8,7 @@ import inf.questpartner.domain.users.common.UserLevel;
 
 import inf.questpartner.dto.users.QUserListResponse;
 import inf.questpartner.dto.users.UserListResponse;
-import inf.questpartner.dto.users.UserSearchCondition;
+import inf.questpartner.controller.dto.UserSearchCondition;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

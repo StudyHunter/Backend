@@ -1,10 +1,8 @@
-package inf.questpartner.dto.room;
+package inf.questpartner.dto.room.req;
 
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.common.RoomThumbnail;
-import inf.questpartner.domain.room.common.RoomType;
 import inf.questpartner.domain.room.common.tag.TagOption;
-import inf.questpartner.domain.users.user.User;
 import lombok.Data;
 import java.util.List;
 

@@ -1,10 +1,10 @@
 package inf.questpartner.controller.api.login;
 
-import inf.questpartner.controller.dto.CurrentUser;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.users.req.LoginRequest;
 import inf.questpartner.dto.users.req.SignupRequest;
 import inf.questpartner.dto.users.req.UserUpdate;
+import inf.questpartner.dto.users.res.ResUserPreview;
 import inf.questpartner.dto.users.res.UserResponse;
 import inf.questpartner.dto.users.res.UserTokenDto;
 import inf.questpartner.service.UserService;
@@ -23,6 +23,13 @@ public class LoginApiController {
 
     private final UserService userService;
 
+    @GetMapping
+    public ResponseEntity<ResUserPreview> getUserInfo(@AuthenticationPrincipal User user) {
+        ResUserPreview dto = userService.getUserPreview(user);
+
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
     @GetMapping("/checkId")
     public ResponseEntity<?> checkIdDuplicate(@RequestParam String email) {
         userService.checkIdDuplicate(email);
@@ -38,8 +45,6 @@ public class LoginApiController {
     @PostMapping("/login")
     public ResponseEntity<UserTokenDto> login(@RequestBody LoginRequest dto) {
         UserTokenDto loginDTO = userService.login(dto);
-
-        CurrentUser user = new CurrentUser(dto);
 
         return ResponseEntity.status(HttpStatus.OK).header(loginDTO.getToken()).body(loginDTO);
     }

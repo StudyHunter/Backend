@@ -29,7 +29,7 @@ public class User extends UserBase implements UserDetails {
 
     private String nickname; // 닉네임
 
-    private long studyTime; // 총 누적된 공부시간(분)
+    private Integer studyTime; // 총 누적된 공부시간(분)
 
     private int studyToken; // 토큰 개수
 
@@ -118,7 +118,7 @@ public class User extends UserBase implements UserDetails {
         this.roles = UserLevel.USER.getCode();
     }
 
-    public void updateTotalTime(long time) {
+    public void updateTotalTime(Integer time) {
         this.studyTime += time;
     }
 

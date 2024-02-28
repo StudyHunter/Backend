@@ -94,7 +94,7 @@ public class RoomService {
         Room room = findById(id);
         LocalDateTime endTime = LocalDateTime.now();
 
-        long studyTime = calculateStudyTimer(room.getStartTime(), endTime);
+        Integer studyTime = calculateStudyTimer(room.getStartTime(), endTime);
         room.getParticipants().forEach(participant -> participant.updateTotalTime(studyTime));
         room.endRoomTime(studyTime);
 
@@ -104,9 +104,9 @@ public class RoomService {
     }
 
     //    시작 시간과 종료 시간을 분으로 계산
-    private long calculateStudyTimer(LocalDateTime startTime, LocalDateTime endTime) {
+    private Integer calculateStudyTimer(LocalDateTime startTime, LocalDateTime endTime) {
         Duration duration = Duration.between(startTime, endTime);
-        return duration.toMinutes();
+        return (int) duration.toMinutes();
     }
 
     @Transactional(readOnly = true)

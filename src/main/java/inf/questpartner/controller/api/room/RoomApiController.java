@@ -5,9 +5,11 @@ import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.room.*;
 import inf.questpartner.dto.room.req.CreateRoomRequest;
+import inf.questpartner.dto.room.req.UpdateRoomRequest;
 import inf.questpartner.dto.room.res.ResRoomCreate;
 import inf.questpartner.dto.room.res.ResRoomEnter;
 import inf.questpartner.dto.room.res.ResRoomPreview;
+import inf.questpartner.dto.room.res.ResRoomUpdate;
 import inf.questpartner.service.RoomService;
 
 import inf.questpartner.service.UserService;
@@ -45,14 +47,26 @@ public class RoomApiController {
     public ResponseEntity<Page<ResRoomPreview>> search(RoomSearchCondition condition, Pageable pageable) {
 
         Page<ResRoomPreview> result = roomService.sort(condition, pageable);
-        return  ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    //방 수정
+    @PatchMapping("/{roomId}")
+    public ResponseEntity<ResRoomUpdate> updateForm(@PathVariable(value = "roomId") Long roomId,
+                                                    @RequestBody UpdateRoomRequest form,
+                                                    @AuthenticationPrincipal User user) {
+
+//        Thread currentThread = Thread.currentThread();
+//        log.info("현재 실행 중인 스레드={}", currentThread);
+
+        ResRoomUpdate room = roomService.updateRoom(roomId, form, user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(room);
+    }
 
     // username 회원이 roomId 방에 입장
     @PostMapping("/{roomId}/enter")
-    public ResponseEntity<ResRoomEnter> enterRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal User user) {
-        ResRoomEnter dto = roomService.enterRoom(id, user);
+    public ResponseEntity<ResRoomEnter> enterRoom(@PathVariable(value = "roomId") Long roomId, @AuthenticationPrincipal User user) {
+        ResRoomEnter dto = roomService.enterRoom(roomId, user);
 
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
@@ -87,6 +101,16 @@ public class RoomApiController {
         roomService.deleteRoom(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    //방 목록 조회
+//    추가로 ResponseEntity 작업 필요함
+    //메인화면에서 방 목록과 다른 파트도 보이겠지만 일단은 rooms/list에서 방 목록 따로 조회하는걸로 해놓았어요!
+//    @GetMapping("/list")
+//    public List<Room> roomList(){
+//        /*List<Room> roomList = roomService.findByAll();
+//        return "room/roomList";*/
+//        return roomService.findByAll();
+//    }
 
 
 /*

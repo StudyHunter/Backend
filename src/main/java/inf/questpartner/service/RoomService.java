@@ -10,9 +10,11 @@ import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.room.StartTimeDto;
 import inf.questpartner.dto.room.StudyTokenDto;
 import inf.questpartner.dto.room.req.CreateRoomRequest;
+import inf.questpartner.dto.room.req.UpdateRoomRequest;
 import inf.questpartner.dto.room.res.ResRoomCreate;
 import inf.questpartner.dto.room.res.ResRoomEnter;
 import inf.questpartner.dto.room.res.ResRoomPreview;
+import inf.questpartner.dto.room.res.ResRoomUpdate;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
 import inf.questpartner.repository.users.UserRepository;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 
@@ -71,14 +74,50 @@ public class RoomService {
         return ResRoomEnter.fromEntity(room);
     }
 
+    //방 목록 조회
+    @Transactional(readOnly = true)
+    public List<Room> findByAll() {
+        return roomRepository.findAll();
+    }
 
+    //    조회
     @Transactional(readOnly = true)
     public Room findById(Long id) {
         return roomRepository.findById(id).orElseThrow(() -> new NotFoundRoomException("존재하지 않는 방입니다."));
     }
 
-    public void deleteRoom(Long id) {
-        Room room = findById(id);
+    //수정
+    @Transactional
+    public ResRoomUpdate updateRoom(Long roomId, UpdateRoomRequest req, User user) {
+        User hostUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
+
+        //DTO -> 엔티티로 변환
+        Room room = req.toRoomEntity(hostUser.getEmail());
+
+        // 방 ID를 사용하여 해당 방을 데이터베이스에서 조회
+        Room target = roomRepository.findById(roomId)
+                .orElseThrow(() -> new NotFoundRoomException("존재하지 않는 방입니다."));
+        // 요청으로부터 받은 정보로 방 정보 업데이트
+        target.patch(room);
+
+        // 기존에 저장된 태그들을 모두 삭제
+        List<RoomHashTag> oldTags = target.getRoomHashTags();
+        hashTagRepository.deleteAll(oldTags);
+        target.getRoomHashTags().clear();
+
+        // 새로 받은 태그로 저장
+        for (TagOption tag : req.getTags()) {
+            RoomHashTag hashTag = new RoomHashTag(target, tag);
+            target.updateHashtag(hashTag);
+        }
+
+        // 업데이트된 방 정보를 저장하고 반환
+        return ResRoomUpdate.fromEntity(target);
+    }
+
+    public void deleteRoom(Long roomId) {
+        Room room = findById(roomId);
         roomRepository.delete(room);
     }
 

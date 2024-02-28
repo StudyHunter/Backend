@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import inf.questpartner.domain.chat.ChattingRoom;
 import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
+import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -64,6 +65,16 @@ public class Room {
         this.studyTimer = 0;
     }
 
+    //수정
+    public void patch(Room room){
+        if (room.title !=  null)
+            this.title = room.title;
+        if (room.thumbnail != null)
+            this.thumbnail = room.thumbnail;
+    }
+
+
+
     public void startRoomTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
@@ -83,6 +94,8 @@ public class Room {
         user.setMappingRoom(this);
     }
 
+
+
     public void createChatRoom(ChattingRoom chatRoom) {
         this.chattingRoom = chatRoom;
     }
@@ -92,6 +105,10 @@ public class Room {
     }
 
     public void addHashTag(RoomHashTag tag) {
+        this.roomHashTags.add(tag);
+    }
+
+    public void updateHashtag(RoomHashTag tag) {
         this.roomHashTags.add(tag);
     }
 

@@ -1,10 +1,10 @@
 package inf.questpartner.repository.chat;
 
-import inf.questpartner.domain.chat.Chatting;
+import inf.questpartner.domain.chat.Chat;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-/*
- 예시
- */
-public interface ChatRepository extends JpaRepository<Chatting, Long> {
+import java.util.List;
+
+public interface ChatRepository extends JpaRepository<Chat, Long> {
+    List<Chat> findAllByRoomId(Long roomId);
 }

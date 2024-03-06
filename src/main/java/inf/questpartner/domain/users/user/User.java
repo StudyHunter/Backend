@@ -39,9 +39,6 @@ public class User extends UserBase implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserWishHashTag> userHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
-    // private int wishGroupSize; // 스터디방 원하는 조건 : 인원 / 기간
-    // private int wishExpectedSchedule;
-
     @Enumerated(EnumType.STRING)
     private UserProfileImg profileImg; // 회원 프로필 사진
 
@@ -101,21 +98,8 @@ public class User extends UserBase implements UserDetails {
         this.userStatus = UserStatus.BAN;
     }
 
-    private String roles;
-
-    public List<String> getRoleList() {
-        if (this.roles == null) {
-            return Collections.emptyList(); // 빈 목록 반환 또는 다른 처리 수행
-        }
-        return Arrays.asList(this.roles.split(","));
-    }
-
     public void updateNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public void settingRoles() {
-        this.roles = UserLevel.USER.getCode();
     }
 
     public void updateTotalTime(Integer time) {
@@ -125,8 +109,6 @@ public class User extends UserBase implements UserDetails {
     public void updateStudyToken(int studyToken) {
         this.studyToken += studyToken;
     }
-
-    // 태그 알고리즘 로직들-- (수정중)
 
     public boolean checkUserBanStatus() {
         return this.userStatus == UserStatus.BAN;
@@ -154,6 +136,20 @@ public class User extends UserBase implements UserDetails {
      *
      * @return email;
      */
+
+    private String roles;
+
+    public void settingRoles() {
+        this.roles = UserLevel.USER.getCode();
+    }
+
+    public List<String> getRoleList() {
+        if (this.roles == null) {
+            return Collections.emptyList(); // 빈 목록 반환 또는 다른 처리 수행
+        }
+        return Arrays.asList(this.roles.split(","));
+    }
+
     @Override
     public String getUsername() {
         return email;

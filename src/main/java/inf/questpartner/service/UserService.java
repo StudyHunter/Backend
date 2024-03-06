@@ -42,6 +42,7 @@ public class UserService {
         isExistUserEmail(email);
         return HttpStatus.OK;
     }
+
     public UserResponse signUp(SignupRequest dto) {
 
         isExistUserEmail(dto.getEmail());
@@ -78,7 +79,7 @@ public class UserService {
     public UserResponse update(User user, UserUpdate dto) {
         checkPassword(dto.getPassword(), dto.getPasswordCheck());
         String encodePwd = encoder.encode(dto.getPassword());
-        User updateUser =  userRepository.findByEmail(user.getEmail()).orElseThrow(
+        User updateUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new ResourceNotFoundException("User", "User Email", user.getEmail())
         );
         updateUser.update(encodePwd, dto.getUsername());
@@ -92,19 +93,14 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public User findByEmail(User user) {
-        return userRepository.findByEmail(user.getEmail()).orElseThrow(
-                () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
-    }
-
-    @Transactional(readOnly = true)
-    public ResUserPreview getUserPreview(User user) {
-        User currentUser = findByEmail(user);
-        return ResUserPreview.convertUser(currentUser);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User", "User Email", email));
     }
 
     /**
      * 사용자 인증
+     *
      * @param email
      * @param pwd
      */
@@ -121,6 +117,7 @@ public class UserService {
 
     /**
      * 아이디(이메일) 중복 체크
+     *
      * @param email
      */
     private void isExistUserEmail(String email) {
@@ -132,6 +129,7 @@ public class UserService {
 
     /**
      * 비밀번호와 비밀번호 확인이 같은지 체크
+     *
      * @param password
      * @param passwordCheck
      */
@@ -142,9 +140,9 @@ public class UserService {
     }
 
 
-
     /**
      * 사용자가 입력한 비번과 DB에 저장된 비번이 같은지 체크 : 인코딩 확인
+     *
      * @param rawPassword
      * @param encodedPassword
      */

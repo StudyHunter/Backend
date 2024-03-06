@@ -46,24 +46,25 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authorize
 						-> authorize
 
-						.requestMatchers("/chat/**",
+						.requestMatchers("/static/**", "/public/**",
 								"/rooms/search","/randomQuote",
 								"/user/checkId",
 								"/user/register",
 								"/user/login").permitAll()
+						.anyRequest().authenticated())
 
-						.requestMatchers("/user/**").hasRole("USER")
-						.requestMatchers("/rooms/**").hasRole("USER")
-						.requestMatchers("/rooms/{roomId}/**").hasRole("USER"))
-
-				// 추가 구성 시작
-				.authorizeHttpRequests(
-						authorize -> authorize
-								.requestMatchers(AUTH_WHITELIST)
-								.permitAll()
-								.anyRequest()
-								.authenticated()
-				)
+//						.requestMatchers("/user/**").hasRole("USER")
+//						.requestMatchers("/rooms/**").hasRole("USER")
+//						.requestMatchers("/rooms/{roomId}/**").hasRole("USER"))
+//
+//				// 추가 구성 시작
+//				.authorizeHttpRequests(
+//						authorize -> authorize
+//								.requestMatchers(AUTH_WHITELIST)
+//								.permitAll()
+//								.anyRequest()
+//								.authenticated()
+//				)
 
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.exceptionHandling(excep -> excep.authenticationEntryPoint(jwtAuthenticationEntryPoint))

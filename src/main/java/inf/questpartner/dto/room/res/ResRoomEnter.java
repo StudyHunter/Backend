@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ResRoomEnter {
     private Long roomId;
+    private Long studyChatRoomId;
     private String thumbnailPath;
     private String hostEmail; // 방장 닉네임
     private String title; // 방 제목
@@ -26,8 +27,9 @@ public class ResRoomEnter {
     private List<ResUserPreview> users;
 
     @Builder
-    public ResRoomEnter(Long roomId, String thumbnailPath, String hostEmail, String title, int currentUsers, int expectedUsers, List<String> tags, List<ResUserPreview> users) {
+    public ResRoomEnter(Long roomId,Long studyChatRoomId, String thumbnailPath, String hostEmail, String title, int currentUsers, int expectedUsers, List<String> tags, List<ResUserPreview> users) {
         this.roomId = roomId;
+        this.studyChatRoomId = studyChatRoomId;
         this.thumbnailPath = thumbnailPath;
         this.hostEmail = hostEmail;
         this.title = title;
@@ -42,6 +44,7 @@ public class ResRoomEnter {
 
         return ResRoomEnter.builder()
                 .roomId(room.getId())
+                .studyChatRoomId(room.getStudyChatRoomId())
                 .thumbnailPath(room.getThumbnail().getImgPath())
                 .hostEmail(room.getHostEmail())
                 .title(room.getTitle())

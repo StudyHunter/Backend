@@ -2,20 +2,30 @@ package inf.questpartner.config.chat;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.messaging.simp.config.ChannelRegistration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.*;
 
-@RequiredArgsConstructor
 @Configuration
-@EnableWebSocket   //이게 websocket 서버로서 동작하겠다는 어노테이션
-public class WebSocketConfig implements WebSocketConfigurer {
-    private final ChatHandler webSocketHandler;
+@RequiredArgsConstructor
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    private final ChatHandler chatHandler;
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.setApplicationDestinationPrefixes("/send");
+        registry.enableSimpleBroker("/room");
+    }
 
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/ws/chat").setAllowedOrigins("*");
-        // handler 등록,   js에서 new Websocket할 때 경로 지정
-        //다른 url에서도 접속할 수있게(CORS방지)
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*").withSockJS();
+    }
+
+    // 여기 아래 부분 코드 추가
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(chatHandler);
     }
 }

@@ -1,7 +1,7 @@
 package inf.questpartner.service;
 
 import inf.questpartner.controller.dto.RoomSearchCondition;
-import inf.questpartner.domain.chat.ChattingRoom;
+import inf.questpartner.domain.chat.JoinChat;
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.RoomHashTag;
 
@@ -15,6 +15,7 @@ import inf.questpartner.dto.room.res.ResRoomCreate;
 import inf.questpartner.dto.room.res.ResRoomEnter;
 import inf.questpartner.dto.room.res.ResRoomPreview;
 import inf.questpartner.dto.room.res.ResRoomUpdate;
+import inf.questpartner.repository.chat.JoinChatRepository;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
 import inf.questpartner.repository.users.UserRepository;
@@ -41,13 +42,15 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomHashTagRepository hashTagRepository;
     private final UserRepository userRepository;
+//    private final ChatService chatService;
+    private final JoinChatRepository joinChatRepository;
 
     public ResRoomCreate createRoom(CreateRoomRequest req, User user) {
         User hostUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
 
         Room room = roomRepository.save(req.toRoomEntity(hostUser.getEmail()));
-        room.createChatRoom(new ChattingRoom());
+//        room.createChatRoom(new ChattingRoom());
 
         for (TagOption tag : req.getTags()) {
             RoomHashTag hashTag = hashTagRepository.save(new RoomHashTag(room, tag));
@@ -56,6 +59,18 @@ public class RoomService {
 
         //방장 참여자 정보에 넣어야 한다.
         room.addParticipant(hostUser);
+
+        JoinChat joinChat = JoinChat.builder()
+                .user(hostUser)
+                .room(room)
+                .build();
+
+        joinChatRepository.save(joinChat);
+        room.settingChatRoom(joinChat.getId());
+
+        // 채팅방 생성
+//        Long chatRoomId = chatService.createRoom(hostUser);
+//        room.settingChatRoom(chatRoomId);
 
         return ResRoomCreate.fromEntity(room);
     }

@@ -18,11 +18,7 @@ public class QRoom extends EntityPathBase<Room> {
 
     private static final long serialVersionUID = 1241740159L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QRoom room = new QRoom("room");
-
-    public final inf.questpartner.domain.chat.QChattingRoom chattingRoom;
 
     public final NumberPath<Integer> expectedUsers = createNumber("expectedUsers", Integer.class);
 
@@ -36,6 +32,8 @@ public class QRoom extends EntityPathBase<Room> {
 
     public final EnumPath<inf.questpartner.domain.room.common.RoomStatus> roomStatus = createEnum("roomStatus", inf.questpartner.domain.room.common.RoomStatus.class);
 
+    public final NumberPath<Long> studyChatRoomId = createNumber("studyChatRoomId", Long.class);
+
     public final NumberPath<Integer> studyTimer = createNumber("studyTimer", Integer.class);
 
     public final EnumPath<inf.questpartner.domain.room.common.RoomThumbnail> thumbnail = createEnum("thumbnail", inf.questpartner.domain.room.common.RoomThumbnail.class);
@@ -43,24 +41,15 @@ public class QRoom extends EntityPathBase<Room> {
     public final StringPath title = createString("title");
 
     public QRoom(String variable) {
-        this(Room.class, forVariable(variable), INITS);
+        super(Room.class, forVariable(variable));
     }
 
     public QRoom(Path<? extends Room> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QRoom(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QRoom(PathMetadata metadata, PathInits inits) {
-        this(Room.class, metadata, inits);
-    }
-
-    public QRoom(Class<? extends Room> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.chattingRoom = inits.isInitialized("chattingRoom") ? new inf.questpartner.domain.chat.QChattingRoom(forProperty("chattingRoom")) : null;
+        super(Room.class, metadata);
     }
 
 }

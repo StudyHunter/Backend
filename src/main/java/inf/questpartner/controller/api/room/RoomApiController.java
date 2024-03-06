@@ -57,11 +57,11 @@ public class RoomApiController {
     }
 
     // username 회원이 roomId 방에서 나가기
-    @PostMapping("/{roomId}/exit/{username}")
+    @PostMapping("/{roomId}/exit")
     public ResponseEntity<Long> exitRoom(@PathVariable(value = "roomId") Long id, @AuthenticationPrincipal User user) {
         Room room = roomService.findById(id);
 
-        User enterUser = userService.findByEmail(user);
+        User enterUser = userService.findByEmail(user.getEmail());
         room.removeParticipant(enterUser);
 
         return ResponseEntity.status(HttpStatus.OK).build();

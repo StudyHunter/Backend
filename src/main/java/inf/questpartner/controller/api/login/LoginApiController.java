@@ -1,5 +1,6 @@
 package inf.questpartner.controller.api.login;
 
+import inf.questpartner.config.login.jwt.JwtProperties;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.users.req.LoginRequest;
 import inf.questpartner.dto.users.req.SignupRequest;
@@ -11,9 +12,13 @@ import inf.questpartner.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Map;
 
 @RestController
@@ -22,12 +27,13 @@ import java.util.Map;
 public class LoginApiController {
 
     private final UserService userService;
+    private final JwtProperties jwtProperties;
 
-    @GetMapping
-    public ResponseEntity<ResUserPreview> getUserInfo(@AuthenticationPrincipal User user) {
-        ResUserPreview dto = userService.getUserPreview(user);
+    @GetMapping("/username")
+    @ResponseBody
+    public String currentUserName(@Header("token") String token) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(dto);
+        return jwtProperties.getUsernameFromToken(token);
     }
 
     @GetMapping("/checkId")
@@ -37,7 +43,7 @@ public class LoginApiController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody SignupRequest dto) {
+    public ResponseEntity<UserResponse> register(@RequestBody  SignupRequest dto) {
         UserResponse successMember = userService.signUp(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(successMember);
     }

@@ -92,16 +92,11 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public User findByEmail(User user) {
-        return userRepository.findByEmail(user.getEmail()).orElseThrow(
-                () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User", "User Email", email));
     }
 
-    @Transactional(readOnly = true)
-    public ResUserPreview getUserPreview(User user) {
-        User currentUser = findByEmail(user);
-        return ResUserPreview.convertUser(currentUser);
-    }
 
     /**
      * 사용자 인증

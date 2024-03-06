@@ -2,7 +2,7 @@ package inf.questpartner.domain.room;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import inf.questpartner.domain.chat.ChattingRoom;
+
 import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
 import inf.questpartner.domain.users.user.User;
@@ -35,6 +35,7 @@ public class Room {
 
     private int studyTimer; // 스터디 타이머
 
+    private Long studyChatRoomId;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomHashTag> roomHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
@@ -48,10 +49,6 @@ public class Room {
     @JsonIgnore
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
-
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "chatting_room_id")
-    private ChattingRoom chattingRoom;
 
     @Builder(builderMethodName = "createRoom")
     public Room(String hostEmail, String title, int expectedUsers, RoomThumbnail thumbnail) {
@@ -74,10 +71,9 @@ public class Room {
         user.setMappingRoom(this);
     }
 
-    public void createChatRoom(ChattingRoom chatRoom) {
-        this.chattingRoom = chatRoom;
+    public void settingChatRoom(Long chatRoomId) {
+        this.studyChatRoomId = chatRoomId;
     }
-
    public void removeParticipant(User user) {
         this.participants.remove(user);
     }

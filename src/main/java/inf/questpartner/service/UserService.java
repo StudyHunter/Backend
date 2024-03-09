@@ -27,6 +27,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -65,8 +67,13 @@ public class UserService {
         authenticate(loginDto.getEmail(), loginDto.getPassword());
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.getEmail());
         checkEncodePassword(loginDto.getPassword(), userDetails.getPassword());
+
+        // 로그인된 회원 닉네임
+        User loginUser = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "User Email", loginDto.getEmail()));
+
         String token = jwtProperties.generateToken(userDetails);
-        return UserTokenDto.fromEntity(userDetails, token);
+        return UserTokenDto.fromEntity(loginUser, token);
     }
 
     public UserResponse check(User user, String password) {

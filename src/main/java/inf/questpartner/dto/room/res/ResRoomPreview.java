@@ -17,8 +17,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class ResRoomPreview {
 
-    private Long roomId;
+    private Long roomId; //스터디 방 pk
 
+    private Long chatBoxId; // 채팅창 pk
     private String thumbnailPath;
     private String hostEmail; // 방장 닉네임
     private String title; // 방 제목
@@ -27,8 +28,9 @@ public class ResRoomPreview {
     private int currentUsers; //현재 인원
 
     @Builder
-    public ResRoomPreview(Long roomId,String thumbnailPath, String hostEmail, String title, int expectedUsers, List<String> roomHashTags, int currentUsers) {
+    public ResRoomPreview(Long roomId, Long chatBoxId, String thumbnailPath, String hostEmail, String title, int expectedUsers, List<String> roomHashTags, int currentUsers) {
         this.roomId = roomId;
+        this.chatBoxId = chatBoxId;
         this.thumbnailPath = thumbnailPath;
         this.hostEmail = hostEmail;
         this.title = title;
@@ -41,6 +43,7 @@ public class ResRoomPreview {
 
         return ResRoomPreview.builder()
                 .roomId(room.getId())
+                .chatBoxId(room.getStudyChatBoxId())
                 .thumbnailPath(room.getThumbnail().getImgPath())
                 .hostEmail(room.getHostEmail())
                 .title(room.getTitle())
@@ -60,20 +63,6 @@ public class ResRoomPreview {
     private static int getUserNum(Room room) {
         return room.getParticipants().size(); // 총 인원수는 방장도 포함하여 센다.
     }
-
-    /*
-    private static List<TagOption> toTagOption(List<RoomHashTag> hashTags) {
-        return hashTags.stream()
-                .map(RoomHashTag::getTagOption)
-                .collect(Collectors.toList());
-    }
-     */
-
-
-    private static int toUserNum(List<User> users) {
-        return users.size();
-    }
-
 
 
     public static Page<ResRoomPreview> convert(Page<Room> roomPage) {

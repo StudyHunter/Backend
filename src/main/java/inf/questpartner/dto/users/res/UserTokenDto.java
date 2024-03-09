@@ -1,5 +1,6 @@
 package inf.questpartner.dto.users.res;
 
+import inf.questpartner.domain.users.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,17 +17,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class UserTokenDto {
     private String email;
     private String token;
+    private String nickname;
 
     @Builder
-    public UserTokenDto(String email, String token) {
+    public UserTokenDto(String email, String nickname, String token) {
         this.email = email;
+        this.nickname = nickname;
         this.token = token;
     }
 
     // Entity -> DTO
-    public static UserTokenDto fromEntity(UserDetails member, String token) {
+    public static UserTokenDto fromEntity(User user, String token) {
         return UserTokenDto.builder()
-                .email(member.getUsername())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
                 .token(token)
                 .build();
     }

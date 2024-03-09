@@ -46,7 +46,7 @@ public class LoginApiController {
     public ResponseEntity<UserTokenDto> login(@RequestBody LoginRequest dto) {
         UserTokenDto loginDTO = userService.login(dto);
 
-        return ResponseEntity.status(HttpStatus.OK).header(loginDTO.getToken()).body(loginDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(loginDTO);
     }
 
     @PostMapping("/checkPwd")

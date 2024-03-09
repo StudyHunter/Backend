@@ -27,8 +27,6 @@ public class RoomApiController {
     private final RoomService roomService;
     private final UserService userService;
 
-
-
     // 방 생성
     @PostMapping("/new")
     public ResponseEntity<ResRoomCreate> createRoom(@RequestBody CreateRoomRequest form, @AuthenticationPrincipal User user) {
@@ -75,15 +73,5 @@ public class RoomApiController {
     }
 
 
-/*
-    // 데이터 기반으로 추천 받기
-    @GetMapping("/recommend")
-    public List<RoomTag> recommendRooms(@RequestParam(value = "id") Long id) {
-        User user = userService.findById(id);
-        List<RoomTag> roomTags = roomService.findRoomTags();
-
-        return roomService.recommendLogic(user.toUserWishDto(), roomTags);
-    }
- */
 
 }

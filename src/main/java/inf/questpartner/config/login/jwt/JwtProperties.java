@@ -69,4 +69,8 @@ public class JwtProperties implements Serializable {
 		final String username = getUsernameFromToken(token);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
+
+	public Boolean validateToken(String token) {
+		return !isTokenExpired(token);
+	}
 }

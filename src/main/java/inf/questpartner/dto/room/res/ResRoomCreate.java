@@ -14,16 +14,19 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 public class ResRoomCreate {
-    private Long roomId;
-    private String thumbnailPath;
+    private Long roomId; // 스터디 방 pk
+    private Long chatBoxId; // 채팅창 pk
+
+    private String thumbnailPath; // 방 썸네일 url
     private String hostEmail; // 방장 닉네임
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
     private List<TagOption> roomHashTags;
 
     @Builder
-    public ResRoomCreate(Long roomId, String thumbnailPath, String hostEmail, String title, int expectedUsers, List<TagOption> tags) {
+    public ResRoomCreate(Long roomId, Long chatBoxId, String thumbnailPath, String hostEmail, String title, int expectedUsers, List<TagOption> tags) {
         this.roomId = roomId;
+        this.chatBoxId = chatBoxId;
         this.thumbnailPath = thumbnailPath;
         this.hostEmail = hostEmail;
         this.title = title;
@@ -35,6 +38,7 @@ public class ResRoomCreate {
 
         return ResRoomCreate.builder()
                 .roomId(room.getId())
+                .chatBoxId(room.getStudyChatBoxId())
                 .thumbnailPath(room.getThumbnail().getImgPath())
                 .hostEmail(room.getHostEmail())
                 .title(room.getTitle())

@@ -1,8 +1,6 @@
 package inf.questpartner.domain.room;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import inf.questpartner.domain.chat.ChattingRoom;
 import inf.questpartner.domain.room.common.RoomStatus;
 import inf.questpartner.domain.room.common.RoomThumbnail;
 import inf.questpartner.domain.users.user.User;
@@ -29,6 +27,7 @@ public class Room {
     @Column(name = "room_id")
     private Long id;
 
+    private Long studyChatBoxId; // 채팅창 pk 저장하는 변수
     private String hostEmail; // 방장 닉네임
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
@@ -49,9 +48,6 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "chatting_room_id")
-    private ChattingRoom chattingRoom;
 
     @Builder(builderMethodName = "createRoom")
     public Room(String hostEmail, String title, int expectedUsers, RoomThumbnail thumbnail) {
@@ -74,10 +70,6 @@ public class Room {
         user.setMappingRoom(this);
     }
 
-    public void createChatRoom(ChattingRoom chatRoom) {
-        this.chattingRoom = chatRoom;
-    }
-
    public void removeParticipant(User user) {
         this.participants.remove(user);
     }
@@ -88,6 +80,10 @@ public class Room {
 
     public void addHashTag(RoomHashTag tag) {
         this.roomHashTags.add(tag);
+    }
+
+    public void settingChatBox(Long chatBoxId) {
+        this.studyChatBoxId = chatBoxId;
     }
 
     @Override

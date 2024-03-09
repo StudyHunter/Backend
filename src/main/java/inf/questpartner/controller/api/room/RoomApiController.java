@@ -112,15 +112,5 @@ public class RoomApiController {
 //        return roomService.findByAll();
 //    }
 
-/*
-    // 데이터 기반으로 추천 받기
-    @GetMapping("/recommend")
-    public List<RoomTag> recommendRooms(@RequestParam(value = "id") Long id) {
-        User user = userService.findById(id);
-        List<RoomTag> roomTags = roomService.findRoomTags();
-
-        return roomService.recommendLogic(user.toUserWishDto(), roomTags);
-    }
- */
 
 }

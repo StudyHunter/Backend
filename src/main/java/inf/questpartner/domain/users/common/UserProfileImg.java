@@ -2,7 +2,7 @@ package inf.questpartner.domain.users.common;
 
 import lombok.Getter;
 
-import static inf.questpartner.util.constant.Constants.*;
+import static inf.questpartner.util.Constants.*;
 
 
 @Getter

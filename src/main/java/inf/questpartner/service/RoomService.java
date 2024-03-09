@@ -1,7 +1,6 @@
 package inf.questpartner.service;
 
 import inf.questpartner.controller.dto.RoomSearchCondition;
-import inf.questpartner.domain.chat.JoinChat;
 import inf.questpartner.domain.room.Room;
 import inf.questpartner.domain.room.RoomHashTag;
 
@@ -15,7 +14,6 @@ import inf.questpartner.dto.room.res.ResRoomCreate;
 import inf.questpartner.dto.room.res.ResRoomEnter;
 import inf.questpartner.dto.room.res.ResRoomPreview;
 import inf.questpartner.dto.room.res.ResRoomUpdate;
-import inf.questpartner.repository.chat.JoinChatRepository;
 import inf.questpartner.repository.room.RoomHashTagRepository;
 import inf.questpartner.repository.room.RoomRepository;
 import inf.questpartner.repository.users.UserRepository;
@@ -42,16 +40,17 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomHashTagRepository hashTagRepository;
     private final UserRepository userRepository;
-//    private final ChatService chatService;
-    private final JoinChatRepository joinChatRepository;
+    private final ChatBoxService chatBoxService;
 
     public ResRoomCreate createRoom(CreateRoomRequest req, User user) {
+        // 방 생성하는 host(user) 엔티티 생성
         User hostUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
 
+        // 스터디 방 생성
         Room room = roomRepository.save(req.toRoomEntity(hostUser.getEmail()));
-//        room.createChatRoom(new ChattingRoom());
 
+        // 스터디 방 태그 설정
         for (TagOption tag : req.getTags()) {
             RoomHashTag hashTag = hashTagRepository.save(new RoomHashTag(room, tag));
             room.addHashTag(hashTag);
@@ -60,22 +59,14 @@ public class RoomService {
         //방장 참여자 정보에 넣어야 한다.
         room.addParticipant(hostUser);
 
-        JoinChat joinChat = JoinChat.builder()
-                .user(hostUser)
-                .room(room)
-                .build();
-
-        joinChatRepository.save(joinChat);
-        room.settingChatRoom(joinChat.getId());
-
-        // 채팅방 생성
-//        Long chatRoomId = chatService.createRoom(hostUser);
-//        room.settingChatRoom(chatRoomId);
+        //채팅창 활성화
+       Long chatBoxId = chatBoxService.createRoom(hostUser);
+       room.settingChatBox(chatBoxId);
 
         return ResRoomCreate.fromEntity(room);
     }
 
-    @Transactional(readOnly = true)
+
     public ResRoomEnter enterRoom(Long id, User user) {
         User enterUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
@@ -86,16 +77,14 @@ public class RoomService {
         for (User participant : room.getParticipants()) {
             log.info("participant nickname = {}", participant.getNickname());
         }
+
+        // 스터디 방에 입장하면 채팅창에도 참여할 수 있다.
+        chatBoxService.joinToChatRoom(enterUser, room.getStudyChatBoxId());
+
         return ResRoomEnter.fromEntity(room);
     }
 
-    //방 목록 조회
-    @Transactional(readOnly = true)
-    public List<Room> findByAll() {
-        return roomRepository.findAll();
-    }
 
-    //    조회
     @Transactional(readOnly = true)
     public Room findById(Long id) {
         return roomRepository.findById(id).orElseThrow(() -> new NotFoundRoomException("존재하지 않는 방입니다."));
@@ -124,7 +113,7 @@ public class RoomService {
         // 새로 받은 태그로 저장
         for (TagOption tag : req.getTags()) {
             RoomHashTag hashTag = new RoomHashTag(target, tag);
-            target.updateHashtag(hashTag);
+            target.addHashTag(hashTag);
         }
 
         // 업데이트된 방 정보를 저장하고 반환
@@ -169,49 +158,5 @@ public class RoomService {
         return ResRoomPreview.convert(rooms);
     }
 
-    /*
-    // 취향 방 추천
-    @Transactional(readOnly = true)
-    public List<RoomTag> recommendLogic(UserWishTag user, List<RoomTag> roomTags) {
-        for (RoomTag roomTag : roomTags) {
-            double matchingScore = calculateMatchingScore(user, roomTag);
-            roomTag.setMatchingScore(matchingScore);
-        }
-
-        List<RoomTag> modifiableRoomTags = new ArrayList<>(roomTags);
-        modifiableRoomTags.sort(Comparator.comparingDouble(RoomTag::getMatchingScore).reversed());
-
-        return Collections.unmodifiableList(modifiableRoomTags);
-    }
-
-    private static double calculateMatchingScore(UserWishTag userWishTag, RoomTag roomTag) {
-        // 예상 기간 매칭 점수 계산
-        double scheduleScore = calculateScheduleScore(userWishTag.getExpectedSchedule(), roomTag.getExpectedSchedule());
-
-        // 방 태그 매칭 점수 계산
-        double tagScore = calculateTagScore(userWishTag.getTagList(), roomTag.getTagList());
-
-        // 종합적인 매칭 점수 반환 (가중치 적용 가능)
-        return (scheduleScore + tagScore) / 2;
-    }
-
-    private static double calculateScheduleScore(int userExpectedSchedule, int roomExpectedSchedule) {
-        // 예상 기간이 얼마나 일치하는지 계산
-        int difference = Math.abs(userExpectedSchedule - roomExpectedSchedule);
-        return 1.0 / (1 + difference); // 간단한 매칭 점수 계산 방법
-    }
-
-    private static double calculateTagScore(List<TagOption> userTags, List<TagOption> roomTags) {
-        // 두 리스트에서 공통으로 포함된 태그의 개수 계산
-        long commonTagsCount = userTags.stream()
-                .filter(roomTags::contains)
-                .count();
-
-        // 두 리스트 중 크기가 더 작은 쪽의 태그 개수를 기준으로 점수 계산
-        int smallerListSize = Math.min(userTags.size(), roomTags.size());
-        return (double) commonTagsCount / smallerListSize;
-    }
-
-     */
 
 }

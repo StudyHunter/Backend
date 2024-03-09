@@ -1,12 +1,14 @@
 package inf.questpartner.domain.chat;
 
-import inf.questpartner.domain.room.Room;
+
 import inf.questpartner.domain.users.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Data
@@ -15,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class JoinChat {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "join_chat_id")
     private Long id;
 
@@ -24,6 +26,7 @@ public class JoinChat {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
+    @JoinColumn(name = "chat_box_id")
+    private ChatBox chatBox;
+
 }

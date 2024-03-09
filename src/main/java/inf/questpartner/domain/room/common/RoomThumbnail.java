@@ -1,6 +1,6 @@
 package inf.questpartner.domain.room.common;
 
-import inf.questpartner.util.constant.Constants;
+import inf.questpartner.util.Constants;
 import lombok.Getter;
 
 

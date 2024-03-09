@@ -14,6 +14,7 @@ public class UserResponse {
     private String email;
 
 
+
     @Builder
     public UserResponse(String email) {
         this.email = email;

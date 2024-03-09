@@ -1,7 +1,8 @@
 package inf.questpartner.config.login.jwt;
 
-import io.jsonwebtoken.*;
-import lombok.extern.slf4j.Slf4j;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@Slf4j
 public class JwtProperties implements Serializable {
 	private static final long serialVersionUID = -2550185165626007488L;
 
@@ -42,7 +42,7 @@ public class JwtProperties implements Serializable {
 	}
 
 	// check token expired
-	public Boolean isTokenExpired(String token) {
+	private Boolean isTokenExpired(String token) {
 		final Date expiration = getExpirationDateFromToken(token);
 		return expiration.before(new Date());
 	}
@@ -70,25 +70,7 @@ public class JwtProperties implements Serializable {
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
 
-	// 토큰 정보를 검증하는 메서드
-	public void validateTokenInChat(String token) {
-		try {
-			Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-		} catch (SignatureException ex) {
-			log.error("Invalid JWT signature");
-			throw ex;
-		} catch (MalformedJwtException ex) {
-			log.error("Invalid JWT token");
-			throw ex;
-		} catch (ExpiredJwtException ex) {
-			log.error("Expired JWT token");
-			throw ex;
-		} catch (UnsupportedJwtException ex) {
-			log.error("Unsupported JWT token");
-			throw ex;
-		} catch (IllegalArgumentException ex) {
-			log.error("JWT claims string is empty.");
-			throw ex;
-		}
+	public Boolean validateToken(String token) {
+		return !isTokenExpired(token);
 	}
 }

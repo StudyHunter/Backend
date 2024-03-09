@@ -1,12 +1,9 @@
-package inf.questpartner.util.constant;
+package inf.questpartner.util;
 
 /**
  * 예시
  */
 public class Constants {
-    public static final String AUTH_STATUS = "auth";
-
-    public static final String USER_ID = "email";
 
     public static final String THUMB_CODING_VER1 = "https://github.com/StudyHunter/Backend/assets/57389368/d6026366-2428-4189-bc5b-4750ca40f1f5";
     public static final String THUMB_CODING_VER2 = "https://github.com/StudyHunter/Backend/assets/57389368/11f22898-bc0c-4a47-9ca5-d0d7fdc1acbe";

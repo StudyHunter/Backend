@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -27,6 +28,7 @@ public class Room {
     @Column(name = "room_id")
     private Long id;
 
+    private Long studyChatBoxId; // 채팅창 pk 저장하는 변수
     private String hostEmail; // 방장 닉네임
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
@@ -34,7 +36,6 @@ public class Room {
     private LocalDateTime startTime;
     private long studyTimer; // 스터디 타이머
 
-    private Long studyChatRoomId;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<RoomHashTag> roomHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
@@ -48,6 +49,7 @@ public class Room {
     @JsonIgnore
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
+
 
     @Builder(builderMethodName = "createRoom")
     public Room(String hostEmail, String title, int expectedUsers, RoomThumbnail thumbnail) {
@@ -87,12 +89,7 @@ public class Room {
         user.setMappingRoom(this);
     }
 
-
-    public void settingChatRoom(Long chatRoomId) {
-        this.studyChatRoomId = chatRoomId;
-    }
-
-    public void removeParticipant(User user) {
+   public void removeParticipant(User user) {
         this.participants.remove(user);
     }
 
@@ -100,18 +97,22 @@ public class Room {
         this.roomHashTags.add(tag);
     }
 
-    public void updateHashtag(RoomHashTag tag) {
-        this.roomHashTags.add(tag);
+
+    public void settingChatBox(Long chatBoxId) {
+        this.studyChatBoxId = chatBoxId;
     }
 
     @Override
     public String toString() {
         return "[Room Info] ->" + "방장 이메일 = " + hostEmail +
                 " 방제목 = " + title +
-                ", 방 태그들 = " + roomHashTags.stream().map(RoomHashTag::getTagOption).toList() +
+                ", 방 태그들 = " + roomHashTags.stream().map(RoomHashTag::getTagOption).collect(Collectors.toList()) +
                 ", 방 썸네일 = " + thumbnail.getTypeInfo() +
                 ", 방 제한된 인원수 = " + expectedUsers +
                 ", 현재 모집상태 = " + roomStatus +
-                ", 스터디에 참여한 회원이름" + participants.stream().map(User::getNickname).toList();
+                ", 스터디에 참여한 회원이름" + participants.stream().map(User::getNickname).collect(Collectors.toList());
     }
+
+
+
 }

@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 public class ResRoomEnter {
-    private Long roomId;
-    private Long studyChatRoomId;
+    private Long roomId; // 스터디방 pk
+    private Long chatBoxId; // 채팅창 pk
     private String thumbnailPath;
     private String hostEmail; // 방장 닉네임
     private String title; // 방 제목
@@ -27,9 +27,9 @@ public class ResRoomEnter {
     private List<ResUserPreview> users;
 
     @Builder
-    public ResRoomEnter(Long roomId,Long studyChatRoomId, String thumbnailPath, String hostEmail, String title, int currentUsers, int expectedUsers, List<String> tags, List<ResUserPreview> users) {
+    public ResRoomEnter(Long roomId, Long chatBoxId, String thumbnailPath, String hostEmail, String title, int currentUsers, int expectedUsers, List<String> tags, List<ResUserPreview> users) {
         this.roomId = roomId;
-        this.studyChatRoomId = studyChatRoomId;
+        this.chatBoxId = chatBoxId;
         this.thumbnailPath = thumbnailPath;
         this.hostEmail = hostEmail;
         this.title = title;
@@ -44,7 +44,7 @@ public class ResRoomEnter {
 
         return ResRoomEnter.builder()
                 .roomId(room.getId())
-                .studyChatRoomId(room.getStudyChatRoomId())
+                .chatBoxId(room.getStudyChatBoxId())
                 .thumbnailPath(room.getThumbnail().getImgPath())
                 .hostEmail(room.getHostEmail())
                 .title(room.getTitle())
@@ -72,13 +72,7 @@ public class ResRoomEnter {
                 .collect(Collectors.toList());
     }
 
-    /*
-    private static List<TagOption> toTagOption(List<RoomHashTag> hashTags) {
-        return hashTags.stream()
-                .map(RoomHashTag::getTagOption)
-                .collect(Collectors.toList());
-    }
-    */
+
 }
 
     

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hello WebSocket</title>
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /** {*/
+        /*    padding: 0;*/
+        /*    margin: 0;*/
+        /*    box-sizing: border-box;*/
+        /*}*/
+        body {
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            background-color: #A8C0D6;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .wrap {
+            padding: 40px 0;
+        }
+
+        .wrap .chat {
+            display: flex;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .wrap .chat .icon {
+            position: relative;
+            overflow: hidden;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #eee;
+        }
+
+        .wrap .chat .icon i {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            font-size: 2.5rem;
+            color: #aaa;
+            transform: translateX(-50%);
+        }
+
+        .wrap .chat .textbox {
+            position: relative;
+            display: inline-block;
+            max-width: calc(100% - 70px);
+            padding: 10px;
+            margin-top: 7px;
+            font-size: 13px;
+            border-radius: 10px;
+        }
+
+        .wrap .chat .textbox::before {
+            position: absolute;
+            display: block;
+            top: 0;
+            font-size: 1.5rem;
+        }
+
+        .wrap .ch1 .textbox {
+            margin-left: 20px;
+            background-color: #ddd;
+        }
+
+        .wrap .ch1 .textbox::before {
+            left: -15px;
+            content: "◀";
+            color: #ddd;
+        }
+
+        .wrap .ch2 {
+            flex-direction: row-reverse;
+        }
+
+        .wrap .ch2 .textbox {
+            margin-right: 20px;
+            background-color: #F9EB54;
+        }
+
+        .wrap .ch2 .textbox::before {
+            right: -15px;
+            content: "▶";
+            color: #F9EB54;
+        }
+        #chatting {
+            max-height: calc(100vh - 140px); /* 스크롤 영역의 최대 높이 지정 */
+            overflow-y: scroll; /* 세로 스크롤 활성화 */
+            padding-bottom: 20px; /* 스크롤 밑 여백 */
+        }
+
+        #main-content {
+            position: fixed;
+            bottom: 0;
+            /*left: 0;*/
+            width: 100%;
+            height: 50px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+
+        #message {
+            width: calc(100% - 120px); /* input 요소의 너비 지정 */
+            margin-right: 10px; /* input 요소와 send 버튼 사이의 간격 */
+        }
+
+        #send {
+            width: 60px; /* send 버튼의 너비 지정 */
+        }
+
+        .send-area {
+            display: flex; /* 가로로 정렬 */
+            align-items: center; /* 수직 가운데 정렬 */
+            width: 100%;
+            margin: 0 auto; /* 수평 가운데 정렬 */
+        }
+
+        .btn-4 {
+            background-image: linear-gradient(to right, #a1c4fd 0%, #c2e9fb 51%, #a1c4fd 100%);
+        }
+
+        #message {
+            width: 80%; /* 왼쪽에 붙여서 화면의 80%를 차지 */
+            margin-right: 10px; /* input 요소와 send 버튼 사이의 간격 */
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="wrap" id="chatting">
+    <!--        <div class="chat ch1">-->
+    <!--            <div class="icon"><i class="fa-solid fa-user"></i></div>-->
+    <!--            <div class="sender">김진수</div>-->
+    <!--            <div class="textbox">안녕하세요. 반갑습니다.</div>-->
+    <!--        </div>-->
+    <!--        <div class="chat ch2">-->
+    <!--            <div class="icon"><i class="fa-solid fa-user"></i></div>-->
+    <!--            <div class="sender">김채원</div>-->
+    <!--            <div class="textbox">안녕하세요. 친절한효자손입니다. 그동안 잘 지내셨어요?</div>-->
+    <!--        </div>-->
+</div>
+
+<div id="main-content">
+    <form id="chat-form">
+        <div class="send-area">
+            <label>내용</label>
+            <input type="text" id="message" placeholder="메시지 내용">
+
+            <button id="send" type="submit" class="btn btn-4">Send</button>
+        </div>
+    </form>
+</div>
+</body>
+<script th:inline="javascript">
+    // WebSocket 연결을 관리하는 클라이언트
+    let stompClient = null;
+
+    // 서버에서 받아온 방 ID와 채팅 목록
+    let chatBoxId = [[${chatBoxId}]];
+    let chatList = [[${chatList}]];
+    const token = localStorage.getItem('token');
+    const nickname = localStorage.getItem('nickname');
+
+    // 웹 소켓 연결 생성
+    function connect() {
+        var socket = new SockJS('/ws-stomp');
+        stompClient = Stomp.over(socket);
+
+        let headers = {Authorization: token};
+        stompClient.connect(headers, function (frame) {
+            console.log('Connected: ' + frame);
+            loadChat(chatList); // 저장된 채팅 불러오기
+
+            // 구독 설정
+            stompClient.subscribe('/room/' + chatBoxId, function (chatMessage) {
+                console.log(JSON.parse(chatMessage.body));
+                showChat(JSON.parse(chatMessage.body));
+            });
+        });
+    }
+
+    // 스크롤 항상 아래로 유지
+    function scrollChatToBottom() {
+        let chatContainer = document.getElementById('chatting');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function disconnect() {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+        }
+        console.log("Disconnected");
+    }
+
+
+    // 입력된 채팅 전송
+    function sendChat() {
+        const message = $("#message").val();
+        // WebSocket 통신을 위한 헤더 설정
+        const headers = {
+            "token": token // 토큰 값을 여기에 넣어주세요
+        };
+        stompClient.send("/send/" + chatBoxId, headers, JSON.stringify({message: message}))
+        $("#message").val("");
+    }
+
+    // 저장된 채팅 불러와 화면에 표시
+    function loadChat(chatList) {
+        if (chatList != null) {
+            for (let chat of chatList) {
+                let chatHtml = '';
+                if (chat.sender !== nickname) {
+                    chatHtml = `<div class="chat ch1">
+                    <div class="icon"><i class="fa-solid fa-user"></i></div>
+                    <div class="sender">${chat.sender}</div>
+                    <div class="textbox">${chat.message}</div>
+                </div>`;
+                } else if (chat.sender === nickname) {
+                    chatHtml = `<div class="chat ch2">
+                    <div class="icon"><i class="fa-solid fa-user"></i></div>
+                    <div class="sender">${chat.sender}</div>
+                    <div class="textbox">${chat.message}</div>
+                </div>`;
+                }
+                $("#chatting").append(chatHtml);
+            }
+        }
+    }
+
+
+    // 실시간으로 받은 채팅을 화면에 표시
+    function showChat(chatMessage) {
+        let chatHtml = '';
+        if (chatMessage.sender !== nickname) {
+            chatHtml = `<div class="chat ch1">
+            <div class="icon"><i class="fa-solid fa-user"></i></div>
+            <div class="sender">${chatMessage.sender}</div>
+            <div class="textbox">${chatMessage.message}</div>
+        </div>`;
+        } else if (chatMessage.sender === nickname) {
+            chatHtml = `<div class="chat ch2">
+            <div class="icon"><i class="fa-solid fa-user"></i></div>
+            <div class="sender">${chatMessage.sender}</div>
+            <div class="textbox">${chatMessage.message}</div>
+        </div>`;
+        }
+        $("#chatting").append(chatHtml);
+        scrollChatToBottom(); // 스크롤 항상 아래로 유지
+    }
+
+    // 폼 제출 시 기본 동작 방지
+    $(function () {
+        $("#chat-form").on('submit', function (e) {
+            e.preventDefault();
+        });
+        // 버튼 클릭 이벤트에 함수 할당
+        $("#send").click(function () {
+            sendChat();
+        });
+    });
+
+</script>
+
+<script>
+    // 창이 로드되면 자동으로 연결 시도
+    window.onload = function () {
+        connect();
+    }
+
+    // 창을 닫을 때 연결 종료
+    window.beforeunload = function () {
+        disconnect();
+    }
+</script>
+</html>

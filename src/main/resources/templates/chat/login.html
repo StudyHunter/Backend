@@ -65,7 +65,7 @@
 <body>
 <div class="login-container">
   <div class="login-header">Login</div>
-  <form action="/login" method="post" id="login-form">
+  <form action="/user/login" method="post" id="login-form">
     <input class="login-input" type="text" id="email" name="email" placeholder="Login email" required>
     <input class="login-input" type="password" id="password" name="password" placeholder="Password" required>
     <button class="login-button" type="submit">Log In</button>
@@ -86,7 +86,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/login',
+                url: '/user/login',
                 contentType: 'application/json',
                 data: JSON.stringify({ email: email, password: password }),
                 success: function (res) {

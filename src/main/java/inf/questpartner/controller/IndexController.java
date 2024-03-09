@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-//@Controller
-//@RequiredArgsConstructor
+@Controller
+@RequiredArgsConstructor
 public class IndexController {
 
-    /*
+
     private final ChatBoxService roomService;
     private final ChatService chatService;
 
@@ -44,5 +44,5 @@ public class IndexController {
         return "chat/roomIn";
     }
 
-     */
+
 }

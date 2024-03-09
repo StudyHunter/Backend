@@ -3,6 +3,8 @@ package inf.questpartner.config.login.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -12,6 +14,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.security.Key;
 
 @Component
 public class JwtProperties implements Serializable {
@@ -19,6 +22,19 @@ public class JwtProperties implements Serializable {
 
 	@Value("${jwt.tokenExpirationTime}") private Integer tokenExpirationTime;
 	@Value("${jwt.secret}") private String secret;
+
+	private final Key key;
+
+	public JwtProperties(@Value("${jwt.secret}") String secretKey) {
+		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+		this.key = Keys.hmacShaKeyFor(keyBytes);
+	}
+
+	public String getEmailFromJwt(String jwt) {
+		String token = jwt.substring(7);
+		String subject = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject();
+		return subject;
+	}
 
 	// extract username from jwt token
 	public String getUsernameFromToken(String token) {

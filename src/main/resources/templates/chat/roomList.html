@@ -41,56 +41,12 @@
         tr:hover {
             background-color: #e0e0e0;
         }
-
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .head {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px; /* 조금 떨어트림을 적용 */
-        }
-
-        .btn-create {
-            margin-right: 20px; /* a 태그 오른쪽에 간격을 줌 */
-            text-decoration: none;
-            color: #333;
-            transition: color 0.3s;
-        }
-
-        .btn-create:hover {
-            color: #007bff;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Room List</h1>
 
-
-
-    <div class="overlay" id="overlay"></div>
     <table>
         <thead>
         <tr>
@@ -100,12 +56,60 @@
         <tbody>
         <tr th:each="room : ${roomList}">
             <td>
-                <a th:href="@{/{roomId}(roomId=${room.getId()})}" th:text="${room.getName()}"></a>
+                <!-- Thymeleaf에서 서버에서 미리 생성된 URL을 가져와서 href 속성에 설정 -->
+                <a class="room-link" href="#"  th:text="${room.getName()}" th:data-chatboxid="${room.getId()}"></a>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
+<script>
+    // 페이지 이동 함수 정의
+    function navigateWithToken(chatBoxId) {
+        // 토큰 가져오기
+        var token = localStorage.getItem('token');
+        localStorage.setItem('chatBoxId', chatBoxId);
+
+        // 헤더에 토큰을 포함하여 페이지 이동
+        window.location.href = '/view/join';
+        // 이후 서버로 요청이 보내지며, 헤더에 토큰이 포함됩니다.
+    }
+
+    // 서버에서 채팅 리스트를 가져와 로컬 변수에 저장하는 함수
+    function getChatListFromServer(chatBoxId) {
+        var email = localStorage.getItem('email');
+
+        $.ajax({
+            type: 'GET',
+            url: '/view/' + chatBoxId,
+            data: { email: email }, // email을 쿼리 파라미터로 전달
+            success: function(response) {
+                // 서버에서 받은 채팅 리스트를 localChatList에 저장
+                localStorage.setItem('localChatList', JSON.stringify(response));
+                console.log("채팅 리스트를 로컬 변수에 저장했습니다:", localChatList);
+            },
+            error: function(xhr, status, error) {
+                console.error("서버에서 채팅 리스트를 가져오는 도중 오류가 발생했습니다:", error);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        // Room 링크 클릭 시 이벤트 처리
+        $('.room-link').click(function(event) {
+            event.preventDefault(); // 기존의 링크 동작 방지
+            const chatBoxId = $(this).data('chatboxid'); // 해당 링크의 chatBoxId 가져오기
+
+            // 서버에서 채팅 리스트를 가져와 로컬 변수에 저장
+            getChatListFromServer(chatBoxId);
+
+            // 페이지 이동 함수 호출
+            navigateWithToken(chatBoxId);
+        });
+    });
+</script>
+
+
 
 </body>
 </html>

@@ -46,12 +46,13 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authorize
 						-> authorize
 
-						.requestMatchers("/view/login", "/roomList", "/{chatBoxId}",
+						.requestMatchers("/view/**", "/roomList",
 								"/rooms/search","/randomQuote",
 								"/user/checkId",
 								"/user/register",
 								"/user/login",
-								"/static/**", "/public/**").permitAll()
+								"/static/**", "/public/**",
+								"/webjars/**", "/ws-stomp/**", "/{chatBoxId}").permitAll()
 
 						.requestMatchers("/user/**").hasRole("USER")
 						.requestMatchers("/rooms/**").hasRole("USER")

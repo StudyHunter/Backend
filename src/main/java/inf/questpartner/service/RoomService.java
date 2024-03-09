@@ -71,7 +71,7 @@ public class RoomService {
         }
 
         // 스터디 방에 입장하면 채팅창에도 참여할 수 있다.
-        chatBoxService.joinToChatRoom(enterUser, room.getStudyChatBoxId());
+        chatBoxService.joinToChatRoom(enterUser.getEmail(), room.getStudyChatBoxId());
 
         return ResRoomEnter.fromEntity(room);
     }

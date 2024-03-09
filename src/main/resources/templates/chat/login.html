@@ -96,8 +96,13 @@
 
                     // 토큰을 localStorage에 저장
                     localStorage.setItem('token', token);
-                    localStorage.setItem('name', name);
+                    localStorage.setItem('email', email);
                     localStorage.setItem('nickname', nickname);
+
+                    // localStorage에서 값을 가져와서 콘솔에 출력
+                    console.log("Token:", localStorage.getItem('token'));
+                    console.log("email:", localStorage.getItem('email'));
+                    console.log("Nickname:", localStorage.getItem('nickname'));
 
                     window.location.href = '/roomList';
                 },

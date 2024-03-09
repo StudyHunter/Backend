@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <title>Hello WebSocket</title>
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
@@ -170,8 +171,8 @@
     let stompClient = null;
 
     // 서버에서 받아온 방 ID와 채팅 목록
-    let chatBoxId = [[${chatBoxId}]];
-    let chatList = [[${chatList}]];
+    let chatBoxId = localStorage.getItem('chatBoxId');
+    let chatList = localStorage.getItem('localChatList');
     const token = localStorage.getItem('token');
     const nickname = localStorage.getItem('nickname');
 
@@ -180,7 +181,7 @@
         var socket = new SockJS('/ws-stomp');
         stompClient = Stomp.over(socket);
 
-        let headers = {Authorization: token};
+        let headers = {Authorization: "Bearer " + token};
         stompClient.connect(headers, function (frame) {
             console.log('Connected: ' + frame);
             loadChat(chatList); // 저장된 채팅 불러오기
@@ -207,16 +208,17 @@
     }
 
 
-    // 입력된 채팅 전송
-    function sendChat() {
-        const message = $("#message").val();
-        // WebSocket 통신을 위한 헤더 설정
-        const headers = {
-            "token": token // 토큰 값을 여기에 넣어주세요
-        };
-        stompClient.send("/send/" + chatBoxId, headers, JSON.stringify({message: message}))
-        $("#message").val("");
-    }
+// 입력된 채팅 전송
+function sendChat() {
+    const message = $("#message").val();
+    // WebSocket 통신을 위한 헤더 설정
+    const headers = {
+        "Authorization": "Bearer " + token // "Authorization" 키로 토큰을 보냄
+    };
+    stompClient.send("/send/" + chatBoxId, headers, JSON.stringify({message: message}));
+    $("#message").val("");
+}
+
 
     // 저장된 채팅 불러와 화면에 표시
     function loadChat(chatList) {

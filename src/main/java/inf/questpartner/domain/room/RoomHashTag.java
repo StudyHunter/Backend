@@ -32,7 +32,6 @@ public class RoomHashTag {
         this.tagOption = tagOption;
     }
 
-
     public String getTagName() {
         return tagOption.getViewName();
     }

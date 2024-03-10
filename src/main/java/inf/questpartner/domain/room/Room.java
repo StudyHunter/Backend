@@ -112,7 +112,4 @@ public class Room {
                 ", 현재 모집상태 = " + roomStatus +
                 ", 스터디에 참여한 회원이름" + participants.stream().map(User::getNickname).collect(Collectors.toList());
     }
-
-
-
 }

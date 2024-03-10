@@ -1,14 +1,12 @@
 package inf.questpartner.controller;
 
 import inf.questpartner.domain.chat.ChatBox;
-import inf.questpartner.domain.users.user.User;
 import inf.questpartner.dto.chat.ChatDto;
 import inf.questpartner.service.ChatBoxService;
 import inf.questpartner.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +47,4 @@ public class IndexController {
     public String viewChatBox() {
         return "chat/roomin";
     }
-
-
 }

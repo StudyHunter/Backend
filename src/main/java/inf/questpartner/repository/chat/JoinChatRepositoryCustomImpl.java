@@ -4,7 +4,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import inf.questpartner.domain.chat.JoinChat;
 import jakarta.persistence.EntityManager;
+
 import java.util.List;
+
 import static inf.questpartner.domain.chat.QChatBox.chatBox;
 import static inf.questpartner.domain.chat.QJoinChat.*;
 import static inf.questpartner.domain.users.user.QUser.user;

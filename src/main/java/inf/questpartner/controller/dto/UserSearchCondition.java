@@ -11,6 +11,4 @@ public class UserSearchCondition {
     private Long id;
     private String email;
     private UserLevel userLevel;
-
-
 }

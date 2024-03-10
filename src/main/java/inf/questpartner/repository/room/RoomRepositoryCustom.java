@@ -8,9 +8,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface RoomRepositoryCustom {
 
-
     Page<Room> searchPageSort(RoomSearchCondition condition, Pageable pageable);
-
-
-
 }

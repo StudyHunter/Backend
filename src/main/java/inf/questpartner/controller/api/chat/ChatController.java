@@ -32,7 +32,6 @@ public class ChatController {
     private final ChatService chatService;
     private final UserRepository userRepository;
     private final JwtProperties jwtProperties;
-    private final UserService userService;
     @MessageMapping("/{chatBoxId}")
     @SendTo("/room/{chatBoxId}") // 여길 구독하고 있는 곳으로 메시지 전송
     public ChatDto messageHandler(@DestinationVariable("chatBoxId") Long roomId, ChatDto message,  @Header("Authorization") String token) {

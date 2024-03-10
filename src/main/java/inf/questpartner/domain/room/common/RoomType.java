@@ -17,5 +17,4 @@ public enum RoomType {
         this.code = code;
         this.roomType = roomType;
     }
-
 }

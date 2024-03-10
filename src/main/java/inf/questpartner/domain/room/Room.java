@@ -74,9 +74,15 @@ public class Room {
         this.participants.remove(user);
     }
 
-    public void studyEnd(int time) {
-        this.studyTimer = time;
-    }
+    // 방 삭제하기 위해, 모두 내보내기
+   public void removeParticipantAll() {
+        // user - room 매핑 관계 끊기
+       for (User participant : this.participants) {
+           participant.unsetMappingRoom();
+       }
+       // 회원정보 List<> 비우기
+       this.participants.clear();
+   }
 
     public void addHashTag(RoomHashTag tag) {
         this.roomHashTags.add(tag);

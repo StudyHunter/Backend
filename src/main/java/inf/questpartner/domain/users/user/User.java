@@ -84,6 +84,9 @@ public class User extends UserBase implements UserDetails {
     public void addHashTag(UserWishHashTag tag) {
         this.userHashTags.add(tag);
     }
+    public void unsetMappingRoom() {
+        this.room = null;
+    }
 
     public void setMappingRoom(Room room) {
         this.room = room;

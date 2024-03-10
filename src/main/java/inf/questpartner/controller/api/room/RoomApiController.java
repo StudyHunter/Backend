@@ -68,7 +68,13 @@ public class RoomApiController {
 
     @DeleteMapping("/{roomId}")
     public ResponseEntity<Long> deleteRoom(@PathVariable("roomId") Long id, @AuthenticationPrincipal User user) {
+        Room room = roomService.findById(id);
+
+        // 삭제하기 전에, 방에 있는 회원 내보내기
+        room.removeParticipantAll();
+        // 삭제
         roomService.deleteRoom(id);
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

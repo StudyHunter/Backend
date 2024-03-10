@@ -32,14 +32,17 @@ public class ChatController {
     private final ChatService chatService;
     private final UserRepository userRepository;
     private final JwtProperties jwtProperties;
-
+    private final UserService userService;
     @MessageMapping("/{chatBoxId}")
     @SendTo("/room/{chatBoxId}") // 여길 구독하고 있는 곳으로 메시지 전송
-    public ChatDto messageHandler(@DestinationVariable("chatBoxId") Long roomId, ChatDto message, @Header("token") String token) {
-        String email = jwtProperties.getUsernameFromToken(token);
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "User Email", email));
+    public ChatDto messageHandler(@DestinationVariable("chatBoxId") Long roomId, ChatDto message,  @Header("Authorization") String token) {
+        log.info("chat controller -> token check={}", token);
+        String email = jwtProperties.getEmailFromJwt(token);
+        log.info("chat controller jwt check --> email {}", email);
 
-        return chatService.createChat(roomId, message.getMessage(), user.getNickname());
+        User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "User Email", email));
+
+        return chatService.createChat(roomId, message.getMessage(), currentUser.getNickname());
     }
 
     @GetMapping("/{chatBoxId}")

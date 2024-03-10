@@ -42,9 +42,9 @@ public class ChatBoxService {
     }
 
    //스터디방에 새로운 사람이 들어왔다.
-    public void joinToChatRoom(User user, Long chatRoomId) {
-        User enterUser = userRepository.findByEmail(user.getEmail()).orElseThrow(
-                () -> new ResourceNotFoundException("User", "User Email", user.getEmail()));
+    public void joinToChatRoom(String email, Long chatRoomId) {
+        User enterUser = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User", "User Email", email));
 
         ChatBox chatBox = chatBoxRepository.findById(chatRoomId)
                 .orElseThrow(() -> new NotFoundRoomException("존재하지 않는 채팅방입니다."));

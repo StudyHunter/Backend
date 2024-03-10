@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -21,10 +21,10 @@ public class ResRoomCreate {
     private String hostEmail; // 방장 닉네임
     private String title; // 방 제목
     private int expectedUsers; // 인원수 제한
-    private List<TagOption> roomHashTags;
+    private Set<TagOption> roomHashTags;
 
     @Builder
-    public ResRoomCreate(Long roomId, Long chatBoxId, String thumbnailPath, String hostEmail, String title, int expectedUsers, List<TagOption> tags) {
+    public ResRoomCreate(Long roomId, Long chatBoxId, String thumbnailPath, String hostEmail, String title, int expectedUsers, Set<TagOption> tags) {
         this.roomId = roomId;
         this.chatBoxId = chatBoxId;
         this.thumbnailPath = thumbnailPath;
@@ -47,10 +47,10 @@ public class ResRoomCreate {
                 .build();
     }
 
-    private static List<TagOption> toTagOption(List<RoomHashTag> hashTags) {
+    private static Set<TagOption> toTagOption(Set<RoomHashTag> hashTags) {
         return hashTags.stream()
                 .map(RoomHashTag::getTagOption)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
 

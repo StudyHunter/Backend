@@ -20,15 +20,17 @@ public class QRoom extends EntityPathBase<Room> {
 
     public static final QRoom room = new QRoom("room");
 
+    public final NumberPath<Integer> currentUserNum = createNumber("currentUserNum", Integer.class);
+
     public final NumberPath<Integer> expectedUsers = createNumber("expectedUsers", Integer.class);
 
     public final StringPath hostEmail = createString("hostEmail");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final ListPath<inf.questpartner.domain.users.user.User, inf.questpartner.domain.users.user.QUser> participants = this.<inf.questpartner.domain.users.user.User, inf.questpartner.domain.users.user.QUser>createList("participants", inf.questpartner.domain.users.user.User.class, inf.questpartner.domain.users.user.QUser.class, PathInits.DIRECT2);
+    public final SetPath<inf.questpartner.domain.users.user.User, inf.questpartner.domain.users.user.QUser> participants = this.<inf.questpartner.domain.users.user.User, inf.questpartner.domain.users.user.QUser>createSet("participants", inf.questpartner.domain.users.user.User.class, inf.questpartner.domain.users.user.QUser.class, PathInits.DIRECT2);
 
-    public final ListPath<RoomHashTag, QRoomHashTag> roomHashTags = this.<RoomHashTag, QRoomHashTag>createList("roomHashTags", RoomHashTag.class, QRoomHashTag.class, PathInits.DIRECT2);
+    public final SetPath<RoomHashTag, QRoomHashTag> roomHashTags = this.<RoomHashTag, QRoomHashTag>createSet("roomHashTags", RoomHashTag.class, QRoomHashTag.class, PathInits.DIRECT2);
 
     public final EnumPath<inf.questpartner.domain.room.common.RoomStatus> roomStatus = createEnum("roomStatus", inf.questpartner.domain.room.common.RoomStatus.class);
 

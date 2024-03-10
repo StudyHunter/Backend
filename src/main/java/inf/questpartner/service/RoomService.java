@@ -50,6 +50,8 @@ public class RoomService {
 
         //방장 참여자 정보에 넣어야 한다.
         room.addParticipant(hostUser);
+        log.info("확인용-> 방장도 리스트에 추가 {}", hostUser.getNickname());
+        log.info("확인용-> 방을 생성하면 무조건 1명이상이다. {}", room.getParticipants().size());
 
         //채팅창 활성화
        Long chatBoxId = chatBoxService.createRoom(hostUser);
@@ -88,10 +90,15 @@ public class RoomService {
     }
 
 
+    @Transactional(readOnly = true)
+    public Page<ResRoomPreview> findAll(Pageable pageable) {
+        Page<Room> rooms = roomRepository.findAllWithTagAndUser(pageable);
+        return ResRoomPreview.convert(rooms);
+    }
 
     @Transactional(readOnly = true)
     public Page<ResRoomPreview> sort(RoomSearchCondition condition, Pageable pageable) {
-        Page<Room> rooms = roomRepository.searchPageSort(condition, pageable);
+        Page<Room> rooms = roomRepository.findByTagOption(condition, pageable);
         return ResRoomPreview.convert(rooms);
     }
 

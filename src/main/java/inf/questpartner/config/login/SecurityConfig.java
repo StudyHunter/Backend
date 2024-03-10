@@ -47,7 +47,7 @@ public class SecurityConfig {
 						-> authorize
 
 						.requestMatchers("/view/**", "/roomList",
-								"/rooms/search","/randomQuote",
+								"/rooms/search","/randomQuote", "rooms/list",
 								"/user/checkId",
 								"/user/register",
 								"/user/login",

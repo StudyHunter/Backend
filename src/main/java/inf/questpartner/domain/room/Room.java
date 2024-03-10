@@ -10,8 +10,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -33,10 +33,11 @@ public class Room {
     private int expectedUsers; // 인원수 제한
 
     private int studyTimer; // 스터디 타이머
+    private int currentUserNum; // 현재 인원 수
 
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    private List<RoomHashTag> roomHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
+    private Set<RoomHashTag> roomHashTags = new HashSet<>(); // 방에 여러 태그를 붙일 수 있다.
 
     @Enumerated(EnumType.STRING)
     private RoomStatus roomStatus; // 모집 상태 (자리 남았는지? OPEN /CLOSED)
@@ -46,7 +47,7 @@ public class Room {
 
     @JsonIgnore
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<User> participants = new ArrayList<>(); // 방 참여자들 (연관 관계)
+    private  Set<User> participants = new HashSet<>(); // 방 참여자들 (연관 관계)
 
 
     @Builder(builderMethodName = "createRoom")
@@ -57,6 +58,7 @@ public class Room {
         this.roomStatus = RoomStatus.OPEN;
         this.thumbnail = thumbnail;
         this.studyTimer = 0;
+        this.currentUserNum = 0;
     }
 
     // 스터디룸에 남은 자리가 있는지 확인하는 로직
@@ -68,10 +70,12 @@ public class Room {
     public void addParticipant(User user) {
         this.participants.add(user);
         user.setMappingRoom(this);
+        this.currentUserNum += 1;
     }
 
    public void removeParticipant(User user) {
         this.participants.remove(user);
+        this.currentUserNum -= 1;
     }
 
     // 방 삭제하기 위해, 모두 내보내기
@@ -82,6 +86,7 @@ public class Room {
        }
        // 회원정보 List<> 비우기
        this.participants.clear();
+       this.currentUserNum = 0;
    }
 
     public void addHashTag(RoomHashTag tag) {

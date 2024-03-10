@@ -45,6 +45,12 @@ public class RoomApiController {
         return  ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<Page<ResRoomPreview>> roomList(Pageable pageable) {
+        Page<ResRoomPreview> result = roomService.findAll(pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
 
     // username 회원이 roomId 방에 입장
     @PostMapping("/{roomId}/enter")

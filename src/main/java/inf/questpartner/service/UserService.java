@@ -2,7 +2,7 @@ package inf.questpartner.service;
 
 import inf.questpartner.config.login.auth.CustomUserDetailsService;
 import inf.questpartner.config.login.jwt.JwtProperties;
-import inf.questpartner.domain.room.RoomHashTag;
+
 import inf.questpartner.domain.room.common.tag.TagOption;
 import inf.questpartner.domain.users.user.User;
 import inf.questpartner.domain.users.user.UserWishHashTag;

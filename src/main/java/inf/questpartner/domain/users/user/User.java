@@ -37,8 +37,6 @@ public class User extends UserBase implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserWishHashTag> userHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
-   // private int wishGroupSize; // 스터디방 원하는 조건 : 인원 / 기간
-    // private int wishExpectedSchedule;
 
     @Enumerated(EnumType.STRING)
     private UserProfileImg profileImg; // 회원 프로필 사진
@@ -46,7 +44,7 @@ public class User extends UserBase implements UserDetails {
     @JsonIgnore
     @ManyToOne(fetch =  FetchType.LAZY)
     @JoinColumn(name = "room_id")
-    private Room room;
+    private Room room;  // 스터디 방
 
 
 
@@ -69,6 +67,19 @@ public class User extends UserBase implements UserDetails {
     private StudyTree studyTree;
 
 
+    /**
+     * Room - User 매핑관계 관리를 위한 로직
+     */
+
+    public void setMappingRoom(Room room) {
+        this.room = room;
+    }
+
+    public void unsetMappingRoom() {
+        this.room = null;
+    }
+
+
 
     // user 관련 테스트용으로 만든 것 (임시로 둔 것)
     public UserDetailResponse toUserDetailDto() {
@@ -81,17 +92,6 @@ public class User extends UserBase implements UserDetails {
                 .build();
     }
 
-    public void addHashTag(UserWishHashTag tag) {
-        this.userHashTags.add(tag);
-    }
-    public void unsetMappingRoom() {
-        this.room = null;
-    }
-
-    public void setMappingRoom(Room room) {
-        this.room = room;
-    }
-
     public void update(String password, String nickname) {
         this.password = password;
         this.nickname = nickname;
@@ -102,54 +102,26 @@ public class User extends UserBase implements UserDetails {
     public void updateUserStatus() {
         this.userStatus = UserStatus.BAN;
     }
-
-    private String roles;
-
-    public List<String> getRoleList() {
-        if (this.roles == null) {
-            return Collections.emptyList(); // 빈 목록 반환 또는 다른 처리 수행
-        }
-        return Arrays.asList(this.roles.split(","));
-    }
-
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void settingRoles() {
-        this.roles = UserLevel.USER.getCode();
-    }
-
-    public void updateTotalTime(int time) {
-        this.studyTime += time;
-    }
-
-    // 태그 알고리즘 로직들-- (수정중)
-
-    public boolean checkUserBanStatus() {
-        return this.userStatus == UserStatus.BAN;
-    }
-
-
-    public void addWishTags(UserWishHashTag tag) {
-        this.userHashTags.add(tag);
-    }
-
-
-    public void updatePassword(String password) {
-        this.password = password;
-    }
-
     public boolean isBan() {
         return this.userStatus == UserStatus.BAN;
     }
 
 
+    // 태그 알고리즘 로직들-- (수정중)
+
+    public void addHashTag(UserWishHashTag tag) {
+        this.userHashTags.add(tag);
+    }
+
+
+
     //========== UserDetails implements ==========//
+
     /**
      * Token을 고유한 Email 값으로 생성합니다
      * @return email;
      */
+
     @Override
     public String getUsername() {
         return email;

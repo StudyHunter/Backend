@@ -6,7 +6,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * 비밀번호 인코딩 설정
- * - 순환참조 방지
  */
 @Configuration
 public class PwdEncoderConfig {

@@ -1,5 +1,6 @@
 package inf.questpartner.repository.room;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import inf.questpartner.controller.dto.RoomSearchCondition;
@@ -10,10 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 import static inf.questpartner.domain.room.QRoom.room;
 import static inf.questpartner.domain.room.QRoomHashTag.roomHashTag;
+import static inf.questpartner.domain.users.user.QUser.*;
 import static org.springframework.util.StringUtils.hasText;
 
 public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
@@ -25,25 +26,29 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
     }
 
 
-    public Page<Room> searchPageSort(RoomSearchCondition condition, Pageable pageable) {
-        List<Room> content = queryFactory.selectFrom(room)
-                .leftJoin(room.roomHashTags, roomHashTag)
-                .leftJoin(room.participants)
-                .where(titleContains(condition.getTitle()),
-                        tagOptionContains(condition.getTagOption()))
+    @Override
+    public Page<Room> findAllWithTagAndUser(Pageable pageable) {
+        QueryResults<Room> result = queryFactory.selectFrom(room)
+                .leftJoin(room.roomHashTags, roomHashTag).fetchJoin()
+                .leftJoin(room.participants, user).fetchJoin()
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch();
+                .fetchResults();
 
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+    }
 
-        int totalSize = queryFactory.selectFrom(room)
-                .leftJoin(room.roomHashTags, roomHashTag)
-                .leftJoin(room.participants)
-                .where(titleContains(condition.getTitle()),
-                        tagOptionContains(condition.getTagOption()))
-                .fetch().size();
+    @Override
+    public Page<Room> findByTagOption(RoomSearchCondition condition, Pageable pageable) {
+        QueryResults<Room> result = queryFactory.selectFrom(room)
+                .leftJoin(room.roomHashTags, roomHashTag).fetchJoin()
+                .leftJoin(room.participants, user).fetchJoin()
+                .where(tagOptionContains(condition.getTagOption()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
 
-        return new PageImpl<>(content, pageable, totalSize);
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
     }
 
     private static BooleanExpression tagOptionContains(TagOption tagOption) {

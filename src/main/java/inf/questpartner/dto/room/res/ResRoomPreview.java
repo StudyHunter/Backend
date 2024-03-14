@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -50,11 +51,11 @@ public class ResRoomPreview {
                 .title(room.getTitle())
                 .expectedUsers(room.getExpectedUsers())
                 .roomHashTags(toRoomTagOption(room.getRoomHashTags()))
-                .currentUsers(getUserNum(room))
+                .currentUsers(room.getCurrentUserNum())
                 .build();
     }
 
-    private static List<String> toRoomTagOption(List<RoomHashTag> hashTags) {
+    private static List<String> toRoomTagOption(Set<RoomHashTag> hashTags) {
         return hashTags.stream()
                 .map(RoomHashTag::getTagName)
                 .collect(Collectors.toList());

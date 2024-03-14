@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -55,7 +56,7 @@ public class ResRoomEnter {
                 .build();
     }
 
-    private static List<String> toRoomTagOption(List<RoomHashTag> hashTags) {
+    private static List<String> toRoomTagOption(Set<RoomHashTag> hashTags) {
         return hashTags.stream()
                 .map(RoomHashTag::getTagName)
                 .collect(Collectors.toList());
@@ -66,7 +67,7 @@ public class ResRoomEnter {
     }
 
 
-    public static List<ResUserPreview> convertUserList(List<User> userList) {
+    public static List<ResUserPreview> convertUserList(Set<User> userList) {
         return userList.stream()
                 .map(ResUserPreview::convertUser)
                 .collect(Collectors.toList());

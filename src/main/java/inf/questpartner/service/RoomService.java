@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 
@@ -106,7 +107,7 @@ public class RoomService {
         target.patch(room);
 
         // 기존에 저장된 태그들을 모두 삭제
-        List<RoomHashTag> oldTags = target.getRoomHashTags();
+        Set<RoomHashTag> oldTags = target.getRoomHashTags();
         hashTagRepository.deleteAll(oldTags);
         target.getRoomHashTags().clear();
 
@@ -146,6 +147,11 @@ public class RoomService {
         return new StudyTokenDto(studyToken);
     }
 
+    @Transactional(readOnly = true)
+    public Page<ResRoomPreview> findAll(Pageable pageable) {
+        Page<Room> rooms = roomRepository.findAllWithTagAndUser(pageable);
+        return ResRoomPreview.convert(rooms);
+    }
     //    시작 시간과 종료 시간을 분으로 계산
     private Integer calculateStudyTimer(LocalDateTime startTime, LocalDateTime endTime) {
         Duration duration = Duration.between(startTime, endTime);
@@ -154,7 +160,7 @@ public class RoomService {
 
     @Transactional(readOnly = true)
     public Page<ResRoomPreview> sort(RoomSearchCondition condition, Pageable pageable) {
-        Page<Room> rooms = roomRepository.searchPageSort(condition, pageable);
+        Page<Room> rooms = roomRepository.findByTagOption(condition, pageable);
         return ResRoomPreview.convert(rooms);
     }
 

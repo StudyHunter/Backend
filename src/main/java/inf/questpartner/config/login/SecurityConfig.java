@@ -24,11 +24,6 @@ public class SecurityConfig {
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final CorsConfigurationSource corsConfigurationSource;
 
-	private static final String[] AUTH_WHITELIST = {
-			"/api/**", "/graphiql", "/graphql", "/swagger/index.html",
-			"/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
-			"/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html"
-	};
 
 	@Bean
 	public AuthenticationManager authenticationManager(
@@ -47,7 +42,7 @@ public class SecurityConfig {
 						-> authorize
 
 						.requestMatchers("/view/**", "/roomList",
-								"/rooms/search","/randomQuote",
+								"/rooms/search","/randomQuote", "rooms/list",
 								"/user/checkId",
 								"/user/register",
 								"/user/login",
@@ -57,15 +52,6 @@ public class SecurityConfig {
 						.requestMatchers("/user/**").hasRole("USER")
 						.requestMatchers("/rooms/**").hasRole("USER")
 						.requestMatchers("/rooms/{roomId}/**").hasRole("USER"))
-
-				// 추가 구성 시작
-				.authorizeHttpRequests(
-						authorize -> authorize
-								.requestMatchers(AUTH_WHITELIST)
-								.permitAll()
-								.anyRequest()
-								.authenticated()
-				)
 
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.exceptionHandling(excep -> excep.authenticationEntryPoint(jwtAuthenticationEntryPoint))

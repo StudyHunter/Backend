@@ -50,6 +50,12 @@ public class RoomApiController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<Page<ResRoomPreview>> roomList(Pageable pageable) {
+        Page<ResRoomPreview> result = roomService.findAll(pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
     //방 수정
     @PatchMapping("/{roomId}")
     public ResponseEntity<ResRoomUpdate> updateForm(@PathVariable(value = "roomId") Long roomId,
@@ -98,18 +104,16 @@ public class RoomApiController {
 
     @DeleteMapping("/{roomId}")
     public ResponseEntity<Long> deleteRoom(@PathVariable("roomId") Long id, @AuthenticationPrincipal User user) {
+        Room room = roomService.findById(id);
+
+        // 삭제하기 전에, 방에 있는 회원 내보내기
+        room.removeParticipantAll();
+        // 삭제
         roomService.deleteRoom(id);
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    //방 목록 조회
-//    추가로 ResponseEntity 작업 필요함
-    //메인화면에서 방 목록과 다른 파트도 보이겠지만 일단은 rooms/list에서 방 목록 따로 조회하는걸로 해놓았어요!
-//    @GetMapping("/list")
-//    public List<Room> roomList(){
-//        /*List<Room> roomList = roomService.findByAll();
-//        return "room/roomList";*/
-//        return roomService.findByAll();
-//    }
+
 
 }

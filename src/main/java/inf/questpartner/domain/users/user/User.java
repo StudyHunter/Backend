@@ -39,13 +39,14 @@ public class User extends UserBase implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserWishHashTag> userHashTags = new ArrayList<>(); // 방에 여러 태그를 붙일 수 있다.
 
+
     @Enumerated(EnumType.STRING)
     private UserProfileImg profileImg; // 회원 프로필 사진
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
-    private Room room;
+    private Room room;  // 스터디 방
 
 
     @Builder
@@ -68,6 +69,20 @@ public class User extends UserBase implements UserDetails {
     private StudyTree studyTree;
 
 
+    /**
+     * Room - User 매핑관계 관리를 위한 로직
+     */
+
+    public void setMappingRoom(Room room) {
+        this.room = room;
+    }
+
+    public void unsetMappingRoom() {
+        this.room = null;
+    }
+
+
+
     // user 관련 테스트용으로 만든 것 (임시로 둔 것)
     public UserDetailResponse toUserDetailDto() {
         return UserDetailResponse.builder()
@@ -77,14 +92,6 @@ public class User extends UserBase implements UserDetails {
                 .userLevel(this.userLevel)
                 .userStatus(this.userStatus)
                 .build();
-    }
-
-    public void addHashTag(UserWishHashTag tag) {
-        this.userHashTags.add(tag);
-    }
-
-    public void setMappingRoom(Room room) {
-        this.room = room;
     }
 
     public void update(String password, String nickname) {
@@ -115,40 +122,20 @@ public class User extends UserBase implements UserDetails {
     }
 
 
-    public void addWishTags(UserWishHashTag tag) {
+    public void addHashTag(UserWishHashTag tag) {
         this.userHashTags.add(tag);
-    }
-
-
-    public void updatePassword(String password) {
-        this.password = password;
     }
 
     public boolean isBan() {
         return this.userStatus == UserStatus.BAN;
     }
 
-
     //========== UserDetails implements ==========//
 
     /**
      * Token을 고유한 Email 값으로 생성합니다
-     *
      * @return email;
      */
-
-    private String roles;
-
-    public void settingRoles() {
-        this.roles = UserLevel.USER.getCode();
-    }
-
-    public List<String> getRoleList() {
-        if (this.roles == null) {
-            return Collections.emptyList(); // 빈 목록 반환 또는 다른 처리 수행
-        }
-        return Arrays.asList(this.roles.split(","));
-    }
 
     @Override
     public String getUsername() {
@@ -158,7 +145,7 @@ public class User extends UserBase implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.userLevel.name()));
+        authorities.add( new SimpleGrantedAuthority("ROLE_" + this.userLevel.name()));
         return authorities;
     }
 

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -44,7 +45,7 @@ public class ResRoomUpdate {
                 .build();
     }
 
-    private static List<TagOption> toTagOption(List<RoomHashTag> hashTags) {
+    private static List<TagOption> toTagOption(Set<RoomHashTag> hashTags) {
         return hashTags.stream()
                 .map(RoomHashTag::getTagOption)
                 .collect(Collectors.toList());

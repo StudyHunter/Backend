@@ -1,17 +1,21 @@
 # StudyHunter
 함께 공부할 스터디 팀원을 모집하는 웹 서비스
 
-----
+## 사용 기술
+#### Backend
+Java(17), Spring Boot 3.1.1, Spring Data JPA, QueryDSL, Gradle,    JWT, Websocket, STOMP, MySQL Workbench
 
-## Skills
+#### Frontend
+REACT, JAVASCRIPT
 
-<img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> <img src="https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=springboot&logoColor=white"> <img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=springboot&logoColor=white">
-
+#### Server
+NAVER CLOUD PLATFORM
+    
 ## 팀원 소개
 #### Backend <br>
-__김규리__ | [역할] <br>
+__김규리__ | 테이블 설계 참여 (ERD 설계, API 문서 작성), 태그로 강의 검색 구현, 채팅 구현, JWT를 이용하여 로그인 구현 <br>
 __이준호__ | 네이버 클라우드를 통해 서버 구성, MySQL 구현, putty를 통한 SpringBoot와 MySql, 프론트엔드 연동 <br>
-__최호희__ | [역할] <br> 
+__최호희__ | 스터디 방 생성, 스터디 명언 조회 <br> 
 <br>
 
 ## 프로젝트 기간
@@ -19,15 +23,8 @@ __시작__ | &nbsp; 2024년 1월 8일 <br>
 __종료__ | &nbsp; 2024년 2월 28일 (약 2개월)
 <br>
 
-## 플로우 차트, ERD 테이블
-<details>
-    <summary>자세히</summary>
-
-![image](https://github.com/StudyHunter/Backend/assets/121706341/92fb1ae9-ed10-4a10-884a-e61e4597da95)
-<br>
-![image](https://github.com/StudyHunter/Backend/assets/121706341/90a4db4b-8444-464c-82fd-373457cb7dec)
-</details>
-<br>
+## ERD 
+![image](https://github.com/Kim-Gyuri/studying_programming_archive/assets/57389368/344faae2-bf58-4ded-9fd1-86a1281c9b09)
 
 ## 요구사항 정의서
 <details>
@@ -48,3 +45,4 @@ __종료__ | &nbsp; 2024년 2월 28일 (약 2개월)
 ![image](https://github.com/StudyHunter/Backend/assets/121706341/91084e89-68ef-42c7-be01-fa4f4c4d7aa6)
 </details>
 
+> API 명세서는 [NOTION](https://www.notion.so/API-12ecc93b83de4c9d87c3f2b8b2e86e19?pvs=4)에서 볼 수 있다.

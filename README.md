@@ -3,10 +3,15 @@
 
 ## 사용 기술
 #### Backend
-Java(17), Spring Boot 3.1.1, Spring Data JPA, QueryDSL, Gradle,    JWT, Websocket, STOMP, MySQL Workbench
+<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+
+
+Spring Data JPA, QueryDSL, Gradle, JWT, Websocket, STOMP
 
 #### Frontend
-REACT, JAVASCRIPT
+
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white"> <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white">
+
 
 #### Server
 NAVER CLOUD PLATFORM
@@ -24,7 +29,10 @@ __종료__ | &nbsp; 2024년 2월 28일 (약 2개월)
 <br>
 
 ## ERD 
-![image](https://github.com/Kim-Gyuri/studying_programming_archive/assets/57389368/344faae2-bf58-4ded-9fd1-86a1281c9b09)
+
+![image](https://github.com/user-attachments/assets/d0a328b9-517b-44fd-8095-ed6001642fa5)
+
+![image](https://github.com/user-attachments/assets/17a7d3fc-f4a2-4c3f-ade9-22d41c3f2980)
 
 ## 요구사항 정의서
 <details>
